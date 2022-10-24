@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.Hardware.Sensors;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.wolfpackmachina.bettersensors.HardwareMapProvider;
 
 public class Color_Sensor {
     public ColorSensor colorSensor;
@@ -11,7 +10,6 @@ public class Color_Sensor {
     public int redCacheValue, blueCacheValue, greenCacheValue = 0;
 
     public void init(String mapName) {
-        HardwareMapProvider.setMap(hardwareMap);
 
         colorSensor = hardwareMap.get(ColorSensor.class, mapName);
 //        colorSensorV3 = new com.wolfpackmachina.bettersensors.Sensors.ColorSensor(mapName, 0);
