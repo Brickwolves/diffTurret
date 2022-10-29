@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
 
+import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.derivativeWeight;
+import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.integralWeight;
+import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.proportionalWeight;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
@@ -46,8 +50,8 @@ import java.util.List;
  */
 @Config
 public class LupineMecanumDrive extends MecanumDrive {
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(1.2, 0, 0.002);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(1.1, 0, 0);
 
     public static double LATERAL_MULTIPLIER = 1;
 
@@ -144,6 +148,14 @@ public class LupineMecanumDrive extends MecanumDrive {
         setLocalizer(new TwoWheelTrackingLocalizer(hardwareMap, this));
 
         trajectorySequenceRunner = new TrajectorySequenceRunner(follower, HEADING_PID);
+    }
+
+    public static TrajectoryVelocityConstraint regulateSpeed1(double speed){
+        return getVelocityConstraint(speed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH);
+    }
+
+    public static TrajectoryAccelerationConstraint regulateSpeed2(){
+        return LupineMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL);
     }
 
     public TrajectoryBuilder trajectoryBuilder(Pose2d startPose) {

@@ -16,4 +16,11 @@ public class PositionsAndSpeeds {
 
     public static double coneBlue = 100;
     public static double coneRed = 100;
+
+    public static double speed1 = 30;
+    public static double speed2 = 30;
+    public static double speed3 = 30;
+    public static double speed4 = 30;
+    public static double speed5 = 30;
+
 }
