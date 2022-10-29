@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
+import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.IMU;
@@ -9,7 +10,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Sensors.IMU;
  */
 public class Robot {
 
-   public Mecanum drivetrain;
+   public LupineMecanumDrive drivetrain;
    public IMU gyro;
    public Grabber grabber;
 
@@ -20,7 +21,7 @@ public class Robot {
 
    public void initRobot() {
 
-      drivetrain = new Mecanum();
+      drivetrain = new LupineMecanumDrive(hardwareMap);
       grabber = new Grabber();
 
       gyro = new IMU("imu");
