@@ -111,7 +111,10 @@ public class MathUtils {
     }
 
     public static Point odoToTiles(Point odoInput){
-        return odoInput;
+        Point odoReturn = new Point();
+        odoReturn.x = odoInput.x / 24;
+        odoReturn.y = odoInput.y / 24;
+        return odoReturn;
     }
 
     public static Point tilesToOdo(Point tilesInput){

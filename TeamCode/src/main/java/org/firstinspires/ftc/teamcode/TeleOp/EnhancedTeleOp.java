@@ -21,21 +21,30 @@ import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.SHI
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.X;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.Y;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.rateOfChange;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.speed1;
+import static org.firstinspires.ftc.teamcode.Hardware.LupineMecanumDrive.regulateSpeed1;
+import static org.firstinspires.ftc.teamcode.Hardware.LupineMecanumDrive.regulateSpeed2;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.IMU_DATUM;
 import static org.firstinspires.ftc.teamcode.Utilities.MathUtils.odoToTiles;
+import static org.firstinspires.ftc.teamcode.Utilities.MathUtils.tilesToOdo;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.derivativeWeight;
 import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.integralWeight;
 import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.proportionalWeight;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Controls.ButtonControls;
 import org.firstinspires.ftc.teamcode.Controls.Controller;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
+import org.firstinspires.ftc.teamcode.Odometry.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.Utilities.Loggers.Side;
 import org.firstinspires.ftc.teamcode.Utilities.MathUtils;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
@@ -54,10 +63,10 @@ public class EnhancedTeleOp extends OpMode {
     private boolean pid_on_last_cycle = false;
     private boolean KETurns = false;
     private boolean enhancedMode = false;
-    private Point targetPosOnField = new Point(0,0);
+    private Point targetPosOnField = new Point(0, 0);
 
-    private Point exampleOdoPoint = new Point(0,0);
-
+    private Point exampleOdoPoint = new Point(0, 0);
+    private String enhanced = "not enhanced :(";
 
 
     public enum SlidesState {HIGH, MIDDLE, LOW, GROUND, DOWN, DEPOSIT}
@@ -81,9 +90,6 @@ public class EnhancedTeleOp extends OpMode {
         setOpMode(this);
 
 
-
-
-
         pid = new PID(proportionalWeight, integralWeight, derivativeWeight);
 
 
@@ -100,6 +106,7 @@ public class EnhancedTeleOp extends OpMode {
 
         multTelemetry.addData("Status", "Initialized");
         multTelemetry.addData("imu datum", IMU_DATUM);
+        multTelemetry.addData("ENHANCED?", enhanced);
         multTelemetry.update();
     }
 
@@ -142,47 +149,47 @@ public class EnhancedTeleOp extends OpMode {
         double power;
 
         //Scoring
-        if(controller2.get(DPAD_UP, TAP) && slidesState != SlidesState.HIGH){
+        if (controller2.get(DPAD_UP, TAP) && slidesState != SlidesState.HIGH) {
             slidesState = SlidesState.HIGH;
             robot.grabber.time.reset();
         }
 
-        if(controller2.get(DPAD_L, TAP) && slidesState != SlidesState.MIDDLE){
+        if (controller2.get(DPAD_L, TAP) && slidesState != SlidesState.MIDDLE) {
             slidesState = SlidesState.MIDDLE;
             robot.grabber.time.reset();
         }
 
-        if(controller2.get(DPAD_R, TAP) && slidesState != SlidesState.LOW){
+        if (controller2.get(DPAD_R, TAP) && slidesState != SlidesState.LOW) {
             slidesState = SlidesState.LOW;
             robot.grabber.time.reset();
         }
 
-        if(controller2.get(DPAD_DN, TAP) && slidesState != SlidesState.GROUND){
+        if (controller2.get(DPAD_DN, TAP) && slidesState != SlidesState.GROUND) {
             slidesState = SlidesState.GROUND;
             robot.grabber.time.reset();
         }
 
-        if(controller2.get(CIRCLE,TAP) && slidesState != SlidesState.DEPOSIT){
+        if (controller2.get(CIRCLE, TAP) && slidesState != SlidesState.DEPOSIT) {
             robot.grabber.wentDown = false;
             slidesState = SlidesState.DEPOSIT;
             robot.grabber.time.reset();
         }
 
-        if(controller2.get(SQUARE, TAP) && slidesState != SlidesState.DOWN){
+        if (controller2.get(SQUARE, TAP) && slidesState != SlidesState.DOWN) {
             slidesState = SlidesState.DOWN;
             robot.grabber.time.reset();
         }
 
-        if(controller.get(RB2, DOWN)){
+        if (controller.get(RB2, DOWN)) {
             slidesState = SlidesState.DOWN;
             robot.grabber.intake();
-        }else if (controller.get(RB1, DOWN)){
+        } else if (controller.get(RB1, DOWN)) {
             robot.grabber.runIntakeBackwards();
-        }else{
+        } else {
             robot.grabber.stopIntake();
         }
 
-        switch(slidesState){
+        switch (slidesState) {
             case HIGH:
                 robot.grabber.high();
                 break;
@@ -208,12 +215,13 @@ public class EnhancedTeleOp extends OpMode {
         // Turn off PID if we manually turn
         // Turn on PID if we're not manually turning and the robot's stops rotating
         double currentRateOfChange = robot.gyro.rateOfChange();
-        if (rotation != 0){ pid_on = false;}
-        else if (currentRateOfChange <= rateOfChange) pid_on = true;
+        if (rotation != 0) {
+            pid_on = false;
+        } else if (currentRateOfChange <= rateOfChange) pid_on = true;
 
 
         //IMU RESET
-        if(controller.get(CROSS, TAP)){
+        if (controller.get(CROSS, TAP)) {
             robot.gyro.reset();
         }
 
@@ -259,13 +267,14 @@ public class EnhancedTeleOp extends OpMode {
             //FIND POSITION VIA ODO
             targetPosOnField.x = odoToTiles(exampleOdoPoint).x;
             targetPosOnField.y = odoToTiles(exampleOdoPoint).y;
+            enhanced = "ENHANCED";
 
 
         }
 
 
         //NON ENHANCED POWER DISTRIBUTION
-        if(!enhancedMode) {
+        if (!enhancedMode) {
             double drive = controller.get(LEFT, INVERT_SHIFTED_Y);
             double strafe = controller.get(LEFT, SHIFTED_X);
             double turn = controller.get(RIGHT, X);
@@ -282,38 +291,40 @@ public class EnhancedTeleOp extends OpMode {
         }
 
         //ENHANCED MODE
-        if(enhancedMode){
+        if (enhancedMode) {
 
             //Change target position
-            if(controller.get(DPAD_L, TAP) && targetPosOnField.x != 1){
+            if (controller.get(DPAD_L, TAP) && targetPosOnField.x != 1) {
                 targetPosOnField.x -= 1;
             }
-            if(controller.get(DPAD_UP, TAP) && targetPosOnField.y != 6){
+            if (controller.get(DPAD_UP, TAP) && targetPosOnField.y != 6) {
                 targetPosOnField.y += 1;
 
-            }if(controller.get(DPAD_R, TAP) && targetPosOnField.x != 6){
+            }
+            if (controller.get(DPAD_R, TAP) && targetPosOnField.x != 6) {
                 targetPosOnField.x += 1;
             }
 
-            if(controller.get(DPAD_DN, TAP)  && targetPosOnField.y != 1){
+            if (controller.get(DPAD_DN, TAP) && targetPosOnField.y != 1) {
                 targetPosOnField.y -= 1;
             }
 
             //Go to target position
-                //?????????
+            Trajectory teleOp = robot.drivetrain.trajectoryBuilder(new Pose2d(exampleOdoPoint.x, exampleOdoPoint.y))
+                    .lineTo(new Vector2d(targetPosOnField.x, targetPosOnField.y),
+                            regulateSpeed1(speed1),
+                            regulateSpeed2())
+                    .build();
+        }
 
 
-            //Automatic switch out of enhanced
-            if(controller.get(LEFT, X) != 0 || controller.get(RIGHT, X) != 0 || controller.get(LEFT, Y) != 0 || controller.get(RIGHT, Y) != 0){
-                enhancedMode = false;
-            }
-
-
-
-
-
+        //Automatic switch out of enhanced
+        if (controller.get(LEFT, X) != 0 || controller.get(RIGHT, X) != 0 || controller.get(LEFT, Y) != 0 || controller.get(RIGHT, Y) != 0) {
+            enhancedMode = false;
 
         }
+
+
 
 
 

@@ -40,6 +40,7 @@ import org.firstinspires.ftc.teamcode.Odometry.trajectorysequence.TrajectorySequ
 import org.firstinspires.ftc.teamcode.Odometry.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.Odometry.trajectorysequence.TrajectorySequenceRunner;
 import org.firstinspires.ftc.teamcode.Odometry.util.LynxModuleUtil;
+import org.opencv.core.Point;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -354,4 +355,5 @@ public class LupineMecanumDrive extends MecanumDrive {
         bl.setPower(power);
         br.setPower(power);
     }
+
 }
