@@ -1,11 +1,6 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
 import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.currentDuckPos;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.speed1;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.speed2;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.speed3;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.speed4;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.speed5;
 import static org.firstinspires.ftc.teamcode.Hardware.LupineMecanumDrive.regulateSpeed1;
 import static org.firstinspires.ftc.teamcode.Hardware.LupineMecanumDrive.regulateSpeed2;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
@@ -56,19 +51,19 @@ public class TestAuto extends LinearOpMode {
         //To change speed, pass regulateSpeed1(*whateverspeedyouwant*) as an argument of Pose2D, followed by regulateSpeed2()
         Trajectory traj1 = robot.drivetrain.trajectoryBuilder(new Pose2d(-30,70,Math.toRadians(270)))
                 .lineTo(new Vector2d(-38, 65),
-                        regulateSpeed1(speed1),
+                        regulateSpeed1(30),
                         regulateSpeed2())
                 .splineTo(new Vector2d(-36, 20), Math.toRadians(270),
-                        regulateSpeed1(speed1),
+                        regulateSpeed1(30),
                         regulateSpeed2())
                 .splineTo(new Vector2d(-50, 20), Math.toRadians(180),
-                        regulateSpeed1(speed2),
+                        regulateSpeed1(30),
                         regulateSpeed2())
                 .splineTo(new Vector2d(-15, 20), Math.toRadians(90),
-                        regulateSpeed1(speed4),
+                        regulateSpeed1(30),
                         regulateSpeed2())
                 .splineTo(new Vector2d(-10, 30), Math.toRadians(0),
-                        regulateSpeed1(speed5),
+                        regulateSpeed1(30),
                         regulateSpeed2())
                 .build();
 //
