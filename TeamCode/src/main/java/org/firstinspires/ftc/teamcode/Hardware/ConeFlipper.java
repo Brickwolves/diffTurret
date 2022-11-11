@@ -14,7 +14,7 @@ public class ConeFlipper {
         flipper = hardwareMap.get(Servo.class, "flip");
     }
 
-    public void up(){
+      public void up(){
         flipper.setPosition(flipUp);
     }
     public void down(){

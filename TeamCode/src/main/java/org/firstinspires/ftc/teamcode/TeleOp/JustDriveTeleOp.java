@@ -139,6 +139,13 @@ public class JustDriveTeleOp extends OpMode {
             robot.gyro.reset();
         }
 
+        //Cone flipper
+//        if(controller2.get(CROSS, TOGGLE)){
+//            robot.coneFlipper.down();
+//        }else{
+//            robot.coneFlipper.up();
+//        }
+
         //TURN WRAPPING
         if (controller.get(DPAD_R, TAP)) {
             setPoint = MathUtils.closestAngle(270, robot.gyro.getAngle());

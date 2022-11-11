@@ -209,6 +209,13 @@ public class EnhancedTeleOp extends OpMode {
                 robot.grabber.down();
         }
 
+        //Coneflipper
+//        if(controller2.get(CROSS, TOGGLE)){
+//            robot.coneFlipper.down();
+//        }else{
+//            robot.coneFlipper.up();
+//        }
+
         //PID and Kinetic Turning
         double rotation = controller.get(RIGHT, X);
 
