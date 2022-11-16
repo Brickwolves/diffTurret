@@ -68,6 +68,7 @@ public class EnhancedTeleOp extends OpMode {
     private Point exampleOdoPoint = new Point(0, 0);
     private String enhanced = "not enhanced :(";
 
+    Trajectory teleOp;
 
     public enum SlidesState {HIGH, MIDDLE, LOW, GROUND, DOWN, DEPOSIT}
 
@@ -317,7 +318,7 @@ public class EnhancedTeleOp extends OpMode {
             }
 
             //Go to target position
-            Trajectory teleOp = robot.drivetrain.trajectoryBuilder(new Pose2d(exampleOdoPoint.x, exampleOdoPoint.y))
+            teleOp = robot.drivetrain.trajectoryBuilder(new Pose2d(exampleOdoPoint.x, exampleOdoPoint.y))
                     .lineTo(new Vector2d(targetPosOnField.x, targetPosOnField.y),
                             regulateSpeed1(speed1),
                             regulateSpeed2())
