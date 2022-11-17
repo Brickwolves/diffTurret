@@ -4,6 +4,9 @@ import static org.firstinspires.ftc.teamcode.Hardware.LupineMecanumDrive.regulat
 import static org.firstinspires.ftc.teamcode.Hardware.LupineMecanumDrive.regulateSpeed2;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
+import static org.firstinspires.ftc.teamcode.VisionPipelines.SignalPipeline.SignalSide.ONE_GREEN;
+import static org.firstinspires.ftc.teamcode.VisionPipelines.SignalPipeline.SignalSide.THREE_PINK;
+import static org.firstinspires.ftc.teamcode.VisionPipelines.SignalPipeline.SignalSide.TWO_ORANGE;
 
 import android.os.Build;
 
@@ -24,8 +27,8 @@ import org.firstinspires.ftc.teamcode.Utilities.Loggers.Side;
 import org.firstinspires.ftc.teamcode.VisionPipelines.SignalPipeline;
 
 
-@Autonomous(name="Test Auto", group="Autonomous Linear Opmode")
-public class TestAuto extends LinearOpMode {
+@Autonomous(name="Blue Right Auto", group="Autonomous Linear Opmode")
+public class BlueRightAuto extends LinearOpMode {
     Robot robot;
     Camera camera;
     // Declare OpMode members.
@@ -54,36 +57,25 @@ public class TestAuto extends LinearOpMode {
 
         //To change speed, pass regulateSpeed1(*whateverspeedyouwant*) as an argument of Pose2D, followed by regulateSpeed2()
         Trajectory traj1 = robot.drivetrain.trajectoryBuilder(new Pose2d(-30,70,Math.toRadians(270)))
-                .lineTo(new Vector2d(-38, 65),
-                        regulateSpeed1(30),
-                        regulateSpeed2())
-                .splineTo(new Vector2d(-36, 20), Math.toRadians(270),
-                        regulateSpeed1(30),
-                        regulateSpeed2())
-                .splineTo(new Vector2d(-50, 20), Math.toRadians(180),
-                        regulateSpeed1(30),
-                        regulateSpeed2())
-                .splineTo(new Vector2d(-15, 20), Math.toRadians(90),
-                        regulateSpeed1(30),
-                        regulateSpeed2())
-                .splineTo(new Vector2d(-10, 30), Math.toRadians(0),
+                .lineTo(new Vector2d(-34, 68),
                         regulateSpeed1(30),
                         regulateSpeed2())
                 .build();
-//
-//        Trajectory traj2 = robot.drivetrain.trajectoryBuilder(new Pose2d(robot.drivetrain.getPoseEstimate().getX(),robot.drivetrain.getPoseEstimate().getY(),robot.drivetrain.getExternalHeading()))
-//                .strafeRight(20)
-//                .build();
-//        Trajectory traj3 = robot.drivetrain.trajectoryBuilder(new Pose2d())
-//                .back(28)
-//                .build();
-//
-//        Trajectory traj4 = robot.drivetrain.trajectoryBuilder(traj1.end())
-//                .strafeLeft(35)
-//                .build();
 
+        Trajectory traj2 = robot.drivetrain.trajectoryBuilder(new Pose2d(-30,70,Math.toRadians(270)))
+                .lineTo(new Vector2d(-50, 68),
+                        regulateSpeed1(30),
+                        regulateSpeed2())
+                .build();
 
+        Trajectory traj3 = robot.drivetrain.trajectoryBuilder(new Pose2d(-30,70,Math.toRadians(270)))
+                .lineTo(new Vector2d(-70, 68),
+                        regulateSpeed1(30),
+                        regulateSpeed2())
+                .build();
 
+        multTelemetry.addData("signal side", signalSide);
+        multTelemetry.update();
 
 
 
@@ -91,12 +83,15 @@ public class TestAuto extends LinearOpMode {
 
         if (opModeIsActive()) {
 
-            robot.drivetrain.followTrajectory(traj1);
-           // robot.drivetrain.followTrajectory(traj2);
-//            robot.drivetrain.followTrajectory(traj3);
-//            robot.drivetrain.followTrajectory(traj4);
-
+            if(signalSide == ONE_GREEN) {
+                robot.drivetrain.followTrajectory(traj1);
+            }
+            if(signalSide == TWO_ORANGE) {
+                robot.drivetrain.followTrajectory(traj2);
+            }
+            if(signalSide == THREE_PINK) {
+                robot.drivetrain.followTrajectory(traj3);
+            }
         }
     }
 }
-
