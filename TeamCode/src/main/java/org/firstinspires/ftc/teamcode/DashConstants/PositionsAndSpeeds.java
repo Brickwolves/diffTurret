@@ -10,7 +10,7 @@ public class PositionsAndSpeeds {
     public static int groundJunction = 50; //50
     public static int depositDrop = 1000;  //1000
 
-    public static double intakeSpeed = .5;
+
 
     public static double rateOfChange = 120;
 
@@ -19,8 +19,6 @@ public class PositionsAndSpeeds {
 
     public static double speed1 = 30;
 
-    public static double flipUp = 0;
-
-    public static double flipDown = .5;
-
+    public static double open = 0;
+    public static double close = 0.5;
 }

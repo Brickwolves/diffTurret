@@ -1,13 +1,14 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.close;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.coneBlue;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.coneRed;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.depositDrop;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.groundJunction;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.highJunction;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.intakeSpeed;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.lowJunction;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.midJunction;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.open;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
 
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -21,11 +22,11 @@ import org.firstinspires.ftc.teamcode.Utilities.Loggers.Side;
 public class Grabber {
 
 
-    public CRServo grab1;
-    public CRServo grab2;
+//    public CRServo grab1;
+//    public CRServo grab2;
     public DcMotor spool;
     public Servo squeezer;
-    public Color_Sensor grabColor;
+//    public Color_Sensor grabColor;
 
     public boolean wentDown = false;
 
@@ -36,14 +37,14 @@ public class Grabber {
 
 
     public Grabber(){
-        grab1 = hardwareMap.get(CRServo.class, "grab1");
-        grab2 = hardwareMap.get(CRServo.class, "grab2");
+//        grab1 = hardwareMap.get(CRServo.class, "grab1");
+//        grab2 = hardwareMap.get(CRServo.class, "grab2");
 
         squeezer = hardwareMap.get(Servo.class, "squeeze");
         squeezer.setPosition(0);
 
-        grabColor = new Color_Sensor();
-        grabColor.init("grabColor");
+//        grabColor = new Color_Sensor();
+//        grabColor.init("grabColor");
 
         spool = hardwareMap.get(DcMotor.class, "spool");
         spool.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -56,33 +57,40 @@ public class Grabber {
 
     }
 
-    public boolean isLoaded(){
-        if(Side.red) {
-            return grabColor.updateRed() > coneRed;
-        }else{
-            return grabColor.updateBlue() > coneBlue;
-        }
+//    public boolean isLoaded(){
+//        if(Side.red) {
+//            return grabColor.updateRed() > coneRed;
+//        }else{
+//            return grabColor.updateBlue() > coneBlue;
+//        }
+//    }
+//
+//    public void intake(){
+//        squeezer.setPosition(.1);
+//
+//        if(!isLoaded()) {
+//            grab1.setPower(-intakeSpeed);
+//            grab2.setPower(intakeSpeed);
+//        }else{
+//            stopIntake();
+//        }
+//    }
+//
+//    public void stopIntake(){
+//        grab1.setPower(0);
+//        grab2.setPower(0);
+//    }
+//
+//    public void runIntakeBackwards(){
+//        grab1.setPower(1);
+//        grab2.setPower(-1);
+//    }
+
+    public void open(){
+        squeezer.setPosition(open);
     }
-
-    public void intake(){
-        squeezer.setPosition(.1);
-
-        if(!isLoaded()) {
-            grab1.setPower(-intakeSpeed);
-            grab2.setPower(intakeSpeed);
-        }else{
-            stopIntake();
-        }
-    }
-
-    public void stopIntake(){
-        grab1.setPower(0);
-        grab2.setPower(0);
-    }
-
-    public void runIntakeBackwards(){
-        grab1.setPower(1);
-        grab2.setPower(-1);
+    public void close(){
+        squeezer.setPosition(close);
     }
 
     public void high(){

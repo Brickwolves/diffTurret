@@ -181,13 +181,13 @@ public class EnhancedTeleOp extends OpMode {
             robot.grabber.time.reset();
         }
 
+        // if right trigger send slides down open intake
         if (controller.get(RB2, DOWN)) {
             slidesState = SlidesState.DOWN;
-            robot.grabber.intake();
+            robot.grabber.open();
+            //if right button close intake
         } else if (controller.get(RB1, DOWN)) {
-            robot.grabber.runIntakeBackwards();
-        } else {
-            robot.grabber.stopIntake();
+            robot.grabber.close();
         }
 
         switch (slidesState) {
