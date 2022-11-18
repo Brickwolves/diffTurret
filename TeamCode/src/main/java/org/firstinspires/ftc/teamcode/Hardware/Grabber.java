@@ -25,6 +25,7 @@ public class Grabber {
 //    public CRServo grab1;
 //    public CRServo grab2;
     public DcMotor spool;
+    public DcMotor spool2;
     public Servo squeezer;
 //    public Color_Sensor grabColor;
 
@@ -48,9 +49,15 @@ public class Grabber {
 
         spool = hardwareMap.get(DcMotor.class, "spool");
         spool.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        spool.setTargetPosition(80);
+        spool.setTargetPosition(0);
         spool.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         spool.setPower(.2);
+
+        spool2 = hardwareMap.get(DcMotor.class, "spool2");
+        spool2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        spool2.setTargetPosition(0);
+        spool2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        spool2.setPower(.2);
 
 //        grabColor1 = new Color_Sensor();
 //        grabColor2 = new Color_Sensor();
@@ -94,30 +101,40 @@ public class Grabber {
     }
 
     public void high(){
-        spool.setPower(.8);
+        spool.setPower(.3);
+        spool2.setPower(.3);
         spool.setTargetPosition(highJunction);
+        spool2.setTargetPosition(-highJunction);
     }
 
     public void middle(){
-        spool.setPower(.8);
+        spool.setPower(.3);
         spool.setTargetPosition(midJunction);
+        spool2.setPower(.3);
+        spool2.setTargetPosition(-midJunction);
 
     }
 
     public void low(){
-        spool.setPower(.4);
+        spool.setPower(.3);
         spool.setTargetPosition(lowJunction);
+        spool2.setPower(.3);
+        spool2.setTargetPosition(-lowJunction);
     }
 
     public void ground(){
         spool.setPower(.3);
         spool.setTargetPosition(groundJunction);
+        spool2.setPower(.3);
+        spool2.setTargetPosition(-groundJunction);
     }
 
     public void deposit() {
-        spool.setPower(.5);
+        spool.setPower(.3);
+        spool2.setPower(.3);
         if(!wentDown) {
             spool.setTargetPosition((spool.getCurrentPosition() - depositDrop));
+            spool2.setTargetPosition(-(spool.getCurrentPosition() - depositDrop));
             wentDown = true;
         }
         if(time.seconds() > .6) {
@@ -126,8 +143,10 @@ public class Grabber {
     }
 
     public void down(){
-        spool.setPower(1);
-        spool.setTargetPosition(80);
+        spool.setPower(.4);
+        spool.setTargetPosition(0);
+        spool2.setPower(.4);
+        spool2.setTargetPosition(0);
     }
 
 
