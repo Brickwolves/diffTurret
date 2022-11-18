@@ -37,48 +37,15 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.DEBUG_MODE;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MAX_CB;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MAX_CR;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MAX_Y;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MIN_CB;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MIN_CR;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.GREEN_MIN_Y;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MAX_CB;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MAX_CR;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MAX_Y;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MIN_CB;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MIN_CR;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.ORANGE_MIN_Y;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MAX_CB;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MAX_CR;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MAX_Y;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MIN_CB;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MIN_CR;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MIN_Y;
 import static org.firstinspires.ftc.teamcode.Utilities.VisionUtils.sortRectsByMaxOption;
-import static org.opencv.core.Core.inRange;
-import static org.opencv.imgproc.Imgproc.CHAIN_APPROX_SIMPLE;
-import static org.opencv.imgproc.Imgproc.RETR_TREE;
-import static org.opencv.imgproc.Imgproc.boundingRect;
 import static org.opencv.imgproc.Imgproc.cvtColor;
 import static org.opencv.imgproc.Imgproc.drawContours;
 import static org.opencv.imgproc.Imgproc.findContours;
 import static org.opencv.imgproc.Imgproc.rectangle;
 
-import org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision;
 import org.firstinspires.ftc.teamcode.Utilities.VisionUtils;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfPoint;
-import org.opencv.core.Rect;
-import org.opencv.core.Scalar;
-import org.opencv.imgproc.Imgproc;
-import org.openftc.easyopencv.OpenCvPipeline;
 
-import java.util.ArrayList;
-import java.util.List;
-
-    public class SignalPipeline extends OpenCvPipeline {
+public class SignalPipeline extends OpenCvPipeline {
 //this is for detecting the signal sleeve at the beginning of auto
 //to be used for auto only
 //loosely copied from WM23 ColorPicker and LupineBTI DuckPipelineDetect
@@ -107,7 +74,8 @@ import java.util.List;
         public SignalSide signalSide;
 
 
-        public enum ParkingSpace {
+
+        public enum ParkingTarget {
 
             ONE_LEFT,
             TWO_MIDDLE,
@@ -115,7 +83,11 @@ import java.util.List;
 
         }
 
-        public ParkingSpace parkingSpace;
+
+
+       public ParkingTarget parkingTarget;
+
+
 
         @Override
         public Mat processFrame(Mat input) {
@@ -159,14 +131,7 @@ import java.util.List;
 
 
 
-            switch(signalSide){
-                case ONE_GREEN:
-                    parkingSpace = ParkingSpace.ONE_LEFT;
-                case TWO_ORANGE:
-                    parkingSpace = ParkingSpace.TWO_MIDDLE;
-                case THREE_PINK:
-                    parkingSpace = ParkingSpace.THREE_RIGHT;
-            }
+
 
             //analysis of position - which color is the signal sleeve and where should we park?
             if (greenRect != null && orangeRect == null && pinkRect == null){

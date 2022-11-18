@@ -19,10 +19,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Hardware.LupineMecanumDrive;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 import org.firstinspires.ftc.teamcode.Hardware.Vision.Camera;
-import org.firstinspires.ftc.teamcode.Odometry.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.Utilities.Loggers.Side;
 import org.firstinspires.ftc.teamcode.VisionPipelines.SignalPipeline;
 
@@ -34,6 +32,7 @@ public class BlueRightAuto extends LinearOpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     public SignalPipeline.SignalSide signalSide;
+
 
 
     public void initialize() {
@@ -50,9 +49,10 @@ public class BlueRightAuto extends LinearOpMode {
         initialize();
 
         robot = new Robot();
-
+        camera = new Camera("junkCam", true);
 
         robot.drivetrain.setPoseEstimate(new Pose2d(-36,66,Math.toRadians(270)));
+
 
 
         //To change speed, pass regulateSpeed1(*whateverspeedyouwant*) as an argument of Pose2D, followed by regulateSpeed2()
@@ -78,10 +78,23 @@ public class BlueRightAuto extends LinearOpMode {
         multTelemetry.update();
 
 
-
         waitForStart();
 
         if (opModeIsActive()) {
+
+
+            //vision stuff dw about it
+            switch(signalSide){
+                case ONE_GREEN:
+                    robot.drivetrain.followTrajectory(traj1);
+                case TWO_ORANGE:
+                    robot.drivetrain.followTrajectory(traj2);
+                case THREE_PINK:
+                    robot.drivetrain.followTrajectory(traj3);
+            }
+
+
+            /*
 
             if(signalSide == ONE_GREEN) {
                 robot.drivetrain.followTrajectory(traj1);
@@ -92,6 +105,8 @@ public class BlueRightAuto extends LinearOpMode {
             if(signalSide == THREE_PINK) {
                 robot.drivetrain.followTrajectory(traj3);
             }
+
+             */
         }
     }
 }
