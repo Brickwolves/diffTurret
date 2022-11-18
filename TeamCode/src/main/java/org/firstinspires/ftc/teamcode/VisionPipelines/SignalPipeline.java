@@ -71,6 +71,7 @@ public class SignalPipeline extends OpenCvPipeline {
 
         }
 
+
         public SignalSide signalSide;
 
 
@@ -128,9 +129,6 @@ public class SignalPipeline extends OpenCvPipeline {
             if (greenRect == null || orangeRect == null || pinkRect == null){
                 return output;
             }
-
-
-
 
 
             //analysis of position - which color is the signal sleeve and where should we park?

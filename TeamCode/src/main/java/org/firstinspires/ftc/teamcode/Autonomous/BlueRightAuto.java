@@ -82,31 +82,16 @@ public class BlueRightAuto extends LinearOpMode {
 
         if (opModeIsActive()) {
 
-
-            //vision stuff dw about it
-            switch(signalSide){
-                case ONE_GREEN:
-                    robot.drivetrain.followTrajectory(traj1);
-                case TWO_ORANGE:
-                    robot.drivetrain.followTrajectory(traj2);
-                case THREE_PINK:
-                    robot.drivetrain.followTrajectory(traj3);
-            }
-
-
-            /*
-
-            if(signalSide == ONE_GREEN) {
+            if (signalSide == ONE_GREEN){
                 robot.drivetrain.followTrajectory(traj1);
             }
-            if(signalSide == TWO_ORANGE) {
+            if (signalSide == TWO_ORANGE){
                 robot.drivetrain.followTrajectory(traj2);
             }
-            if(signalSide == THREE_PINK) {
+            if (signalSide == THREE_PINK){
                 robot.drivetrain.followTrajectory(traj3);
             }
 
-             */
         }
     }
 }
