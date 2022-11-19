@@ -8,12 +8,12 @@ public class Dash_Vision {
     public static boolean DEBUG_MODE = true;
 
     //for GREEN on signal sleeve
-    public static double GREEN_MAX_Y = 95;
-    public static double GREEN_MAX_CR = 125;
-    public static double GREEN_MAX_CB = 255;
+    public static double GREEN_MAX_Y = 150;
+    public static double GREEN_MAX_CR = 130;
+    public static double GREEN_MAX_CB = 125;
     public static double GREEN_MIN_Y = 0;
-    public static double GREEN_MIN_CR = 0;
-    public static double GREEN_MIN_CB = 0;
+    public static double GREEN_MIN_CR = 100;
+    public static double GREEN_MIN_CB = 100;
 
     //for ORANGE on signal sleeve
     public static double ORANGE_MAX_Y = 95;

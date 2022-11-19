@@ -7,6 +7,10 @@ apply plugin: 'com.android.library'
 
 android {
 
+    repositories {
+        mavenCentral()
+    }
+
     defaultConfig {
         minSdkVersion 23
         //noinspection ExpiredTargetSdkVersion
@@ -21,6 +25,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
     namespace = 'com.qualcomm.ftcrobotcontroller'
+
 }
 
 apply from: '../build.dependencies.gradle'

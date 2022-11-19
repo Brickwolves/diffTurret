@@ -25,7 +25,7 @@ import org.firstinspires.ftc.teamcode.Utilities.Loggers.Side;
 import org.firstinspires.ftc.teamcode.VisionPipelines.SignalPipeline;
 
 
-@Autonomous(name="Blue Right Auto", group="Autonomous Linear Opmode")
+@Autonomous(name="Red Left Auto", group="Autonomous Linear Opmode")
 public class RedLeftAuto extends LinearOpMode {
     Robot robot;
     Camera camera;

@@ -19,14 +19,17 @@ import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MAX_
 import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MIN_CB;
 import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MIN_CR;
 import static org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision.PINK_MIN_Y;
+import static org.firstinspires.ftc.teamcode.Utilities.VisionUtils.sortRectsByMaxOption;
 import static org.opencv.core.Core.inRange;
 import static org.opencv.imgproc.Imgproc.CHAIN_APPROX_SIMPLE;
 import static org.opencv.imgproc.Imgproc.RETR_TREE;
 import static org.opencv.imgproc.Imgproc.boundingRect;
+import static org.opencv.imgproc.Imgproc.cvtColor;
 import static org.opencv.imgproc.Imgproc.drawContours;
 import static org.opencv.imgproc.Imgproc.findContours;
 import static org.opencv.imgproc.Imgproc.rectangle;
 
+import org.firstinspires.ftc.teamcode.Utilities.VisionUtils;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Rect;
@@ -37,15 +40,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.firstinspires.ftc.teamcode.Utilities.VisionUtils.sortRectsByMaxOption;
-import static org.opencv.imgproc.Imgproc.cvtColor;
-import static org.opencv.imgproc.Imgproc.drawContours;
-import static org.opencv.imgproc.Imgproc.findContours;
-import static org.opencv.imgproc.Imgproc.rectangle;
-
-import org.firstinspires.ftc.teamcode.Utilities.VisionUtils;
-
-public class SignalPipeline extends OpenCvPipeline {
+    public class SignalPipeline extends OpenCvPipeline {
 //this is for detecting the signal sleeve at the beginning of auto
 //to be used for auto only
 //loosely copied from WM23 ColorPicker and LupineBTI DuckPipelineDetect
@@ -71,23 +66,7 @@ public class SignalPipeline extends OpenCvPipeline {
 
         }
 
-
         public SignalSide signalSide;
-
-
-
-        public enum ParkingTarget {
-
-            ONE_LEFT,
-            TWO_MIDDLE,
-            THREE_RIGHT
-
-        }
-
-
-
-       public ParkingTarget parkingTarget;
-
 
 
         @Override
