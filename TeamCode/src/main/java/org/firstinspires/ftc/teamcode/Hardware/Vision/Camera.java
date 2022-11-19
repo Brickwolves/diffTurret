@@ -47,8 +47,7 @@ public class Camera {
         });
 
         // Set the pipeline depending on id
-        if (id.equals("signalCam")) {webcam.setPipeline(colorPicker);}
-        if (id.equals("junkCam")) {webcam.setPipeline(colorPicker);}
+
     }
 
     public Camera(String id){
@@ -76,8 +75,7 @@ public class Camera {
 
 
         // Set the pipeline depending on id
-        if (id.equals("signalCam")) {webcam.setPipeline(sigPipe);}
-        else {webcam.setPipeline(junkPipe);}
+
 
     }
 
