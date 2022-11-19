@@ -51,8 +51,8 @@ import org.firstinspires.ftc.teamcode.Utilities.PID;
 import org.opencv.core.Point;
 
 //@Disabled
-@TeleOp(name="Enhanced TeleOp", group="Iterative Opmode")
-public class EnhancedTeleOp extends OpMode {
+@TeleOp(name="Scrimmage TeleOp", group="Iterative Opmode")
+public class ScrimmageTeleOp extends OpMode {
 
     // Declare OpMode members.
     private final ElapsedTime runtime = new ElapsedTime();
@@ -62,18 +62,7 @@ public class EnhancedTeleOp extends OpMode {
     private boolean pid_on = false;
     private boolean pid_on_last_cycle = false;
     private boolean KETurns = false;
-    private boolean enhancedMode = false;
-    private Point targetPosOnField = new Point(0, 0);
 
-    private Point exampleOdoPoint = new Point(0, 0);
-    private String enhanced = "not enhanced :(";
-
-    Trajectory teleOp;
-
-    public enum SlidesState {HIGH, MIDDLE, LOW, GROUND, DOWN, DEPOSIT}
-
-
-    public SlidesState slidesState = SlidesState.DOWN;
 
     // Declare OpMode members.
     Robot robot;
@@ -107,7 +96,6 @@ public class EnhancedTeleOp extends OpMode {
 
         multTelemetry.addData("Status", "Initialized");
         multTelemetry.addData("imu datum", IMU_DATUM);
-        multTelemetry.addData("ENHANCED?", enhanced);
         multTelemetry.update();
     }
 
@@ -149,73 +137,15 @@ public class EnhancedTeleOp extends OpMode {
 
         double power;
 
-        //Scoring
-        if (controller2.get(DPAD_UP, TAP) && slidesState != SlidesState.HIGH) {
-            slidesState = SlidesState.HIGH;
-            robot.grabber.time.reset();
-        }
-
-        if (controller2.get(DPAD_L, TAP) && slidesState != SlidesState.MIDDLE) {
-            slidesState = SlidesState.MIDDLE;
-            robot.grabber.time.reset();
-        }
-
-        if (controller2.get(DPAD_R, TAP) && slidesState != SlidesState.LOW) {
-            slidesState = SlidesState.LOW;
-            robot.grabber.time.reset();
-        }
-
-        if (controller2.get(DPAD_DN, TAP) && slidesState != SlidesState.GROUND) {
-            slidesState = SlidesState.GROUND;
-            robot.grabber.time.reset();
-        }
-
-        if (controller2.get(CIRCLE, TAP) && slidesState != SlidesState.DEPOSIT) {
-            robot.grabber.wentDown = false;
-            slidesState = SlidesState.DEPOSIT;
-            robot.grabber.time.reset();
-        }
-
-        if (controller2.get(SQUARE, TAP) && slidesState != SlidesState.DOWN) {
-            slidesState = SlidesState.DOWN;
-            robot.grabber.time.reset();
-        }
 
         // if right trigger send slides down open intake
         if (controller.get(RB1, TAP)) {
-            slidesState = SlidesState.DOWN;
             robot.grabber.open();
             //if right button close intake
         } else if (controller.get(RB2, TAP)) {
             robot.grabber.close();
         }
 
-        switch (slidesState) {
-            case HIGH:
-                robot.grabber.high();
-                break;
-            case MIDDLE:
-                robot.grabber.middle();
-                break;
-            case LOW:
-                robot.grabber.low();
-                break;
-            case GROUND:
-                robot.grabber.ground();
-                break;
-            case DEPOSIT:
-                robot.grabber.deposit();
-                break;
-            case DOWN:
-                robot.grabber.down();
-        }
-
-        //Coneflipper
-//        if(controller2.get(CROSS, TOGGLE)){
-//            robot.coneFlipper.down();
-//        }else{
-//            robot.coneFlipper.up();
-//        }
 
         //PID and Kinetic Turning
         double rotation = controller.get(RIGHT, X);
@@ -267,70 +197,19 @@ public class EnhancedTeleOp extends OpMode {
         controller.setJoystickShift(LEFT, robot.gyro.getAngle());
 
 
-        //SWITCH ENHANCED MODE
-        if (controller.get(LB1, TAP) && controller.get(RB1, TAP)) {
-            enhancedMode = !enhancedMode;
-            robot.drivetrain.setAllPower(0);
-
-            //FIND POSITION VIA ODO
-            targetPosOnField.x = odoToTiles(exampleOdoPoint).x;
-            targetPosOnField.y = odoToTiles(exampleOdoPoint).y;
-            enhanced = "ENHANCED";
+        double drive = controller.get(LEFT, INVERT_SHIFTED_Y);
+        double strafe = controller.get(LEFT, SHIFTED_X);
+        double turn = controller.get(RIGHT, X);
 
 
+        if (controller.get(LB1, ButtonControls.ButtonState.DOWN) || controller.get(LB2, DOWN)) {
+            power = 0.3;
+        } else {
+            power = 0.8;
         }
 
 
-        //NON ENHANCED POWER DISTRIBUTION
-        if (!enhancedMode) {
-            double drive = controller.get(LEFT, INVERT_SHIFTED_Y);
-            double strafe = controller.get(LEFT, SHIFTED_X);
-            double turn = controller.get(RIGHT, X);
-
-
-            if (controller.get(LB1, ButtonControls.ButtonState.DOWN) || controller.get(LB2, DOWN)) {
-                power = 0.3;
-            } else {
-                power = 0.8;
-            }
-
-
-            robot.drivetrain.setDrivePower(drive, strafe, rotation, power);
-        }
-
-        //ENHANCED MODE
-        if (enhancedMode) {
-
-            //Change target position
-            if (controller.get(DPAD_L, TAP) && targetPosOnField.x != 1) {
-                targetPosOnField.x -= 1;
-            }
-            if (controller.get(DPAD_UP, TAP) && targetPosOnField.y != 6) {
-                targetPosOnField.y += 1;
-
-            }
-            if (controller.get(DPAD_R, TAP) && targetPosOnField.x != 6) {
-                targetPosOnField.x += 1;
-            }
-
-            if (controller.get(DPAD_DN, TAP) && targetPosOnField.y != 1) {
-                targetPosOnField.y -= 1;
-            }
-
-            //Go to target position
-            teleOp = robot.drivetrain.trajectoryBuilder(new Pose2d(exampleOdoPoint.x, exampleOdoPoint.y))
-                    .lineTo(new Vector2d(targetPosOnField.x, targetPosOnField.y),
-                            regulateSpeed1(speed1),
-                            regulateSpeed2())
-                    .build();
-        }
-
-
-        //Automatic switch out of enhanced
-        if (controller.get(LEFT, X) != 0 || controller.get(RIGHT, X) != 0 || controller.get(LEFT, Y) != 0 || controller.get(RIGHT, Y) != 0) {
-            enhancedMode = false;
-
-        }
+        robot.drivetrain.setDrivePower(drive, strafe, rotation, power);
 
 
 
@@ -341,8 +220,6 @@ public class EnhancedTeleOp extends OpMode {
     /*
          ----------- L O G G I N G -----------
                                             */
-        multTelemetry.addData("Target", robot.grabber.spool.getTargetPosition());
-        multTelemetry.addData("Current", robot.grabber.spool.getCurrentPosition());
         multTelemetry.update();
     }
 

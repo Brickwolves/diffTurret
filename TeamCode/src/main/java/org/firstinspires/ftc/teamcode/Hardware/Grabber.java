@@ -42,7 +42,7 @@ public class Grabber {
 //        grab2 = hardwareMap.get(CRServo.class, "grab2");
 
         squeezer = hardwareMap.get(Servo.class, "squeeze");
-        squeezer.setPosition(0);
+        squeezer.setPosition(.3);
 
 //        grabColor = new Color_Sensor();
 //        grabColor.init("grabColor");
