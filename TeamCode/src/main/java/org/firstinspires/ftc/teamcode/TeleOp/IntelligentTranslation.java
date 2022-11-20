@@ -14,16 +14,26 @@ import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.RB1;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.LEFT;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.RIGHT;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.INVERT_SHIFTED_Y;
+import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.INVERT_Y;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.SHIFTED_X;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.X;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.rateOfChange;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.IMU_DATUM;
+import static org.firstinspires.ftc.teamcode.Utilities.ITUtils.ITD;
+import static org.firstinspires.ftc.teamcode.Utilities.ITUtils.ITI;
+import static org.firstinspires.ftc.teamcode.Utilities.ITUtils.ITP;
+import static org.firstinspires.ftc.teamcode.Utilities.ITUtils.cachedPose;
+import static org.firstinspires.ftc.teamcode.Utilities.ITUtils.junctions;
+import static org.firstinspires.ftc.teamcode.Utilities.ITUtils.kDrive;
+import static org.firstinspires.ftc.teamcode.Utilities.ITUtils.kHDist;
+import static org.firstinspires.ftc.teamcode.Utilities.ITUtils.kStrafe;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.derivativeWeight;
 import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.integralWeight;
 import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.proportionalWeight;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -34,8 +44,9 @@ import org.firstinspires.ftc.teamcode.Hardware.Robot;
 import org.firstinspires.ftc.teamcode.Utilities.Loggers.Side;
 import org.firstinspires.ftc.teamcode.Utilities.MathUtils;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
+import org.opencv.core.Point;
 
-    //@Disabled
+//@Disabled
     @TeleOp(name="Intelligent Translation", group="Iterative Opmode")
     public class IntelligentTranslation extends OpMode {
 
@@ -48,6 +59,16 @@ import org.firstinspires.ftc.teamcode.Utilities.PID;
         private boolean KETurns = false;
 
         private PID ITPid;
+        private double strafeChange;
+        private double driveChange;
+        private double ITPower;
+
+        private double shiftedDrive;
+        private double shiftedStrafe;
+
+
+
+
 
 
 
@@ -69,9 +90,11 @@ import org.firstinspires.ftc.teamcode.Utilities.PID;
 
 
 
+            robot.drivetrain.setPoseEstimate(new Pose2d(-30,70,Math.toRadians(270)));
 
 
             pid = new PID(proportionalWeight, integralWeight, derivativeWeight);
+            ITPid = new PID(ITP,ITI,ITD);
 
 
             robot = new Robot();
@@ -143,12 +166,7 @@ import org.firstinspires.ftc.teamcode.Utilities.PID;
                 robot.gyro.reset();
             }
 
-            //Cone flipper
-//        if(controller2.get(CROSS, TOGGLE)){
-//            robot.coneFlipper.down();
-//        }else{
-//            robot.coneFlipper.up();
-//        }
+
 
             //TURN WRAPPING
             if (controller.get(DPAD_R, TAP)) {
@@ -180,21 +198,45 @@ import org.firstinspires.ftc.teamcode.Utilities.PID;
             pid_on_last_cycle = pid_on;
 
 
+
+            //Intelligent translation
+            cachedPose = robot.drivetrain.getPoseEstimate();
+
+            for (int i = 0; i < 25; i++) {
+                double yDist = Math.abs(junctions[i].getY() - cachedPose.getY());
+                double xDist = Math.abs(junctions[i].getX() - cachedPose.getX());
+                double hDist = Math.sqrt((yDist * yDist) + (xDist * xDist));
+                strafeChange = kStrafe / xDist / (hDist*kHDist);
+                driveChange = kDrive / yDist / (hDist*kHDist);
+
+                //I still have to find a way to make it so that the values are negative when the junction is to the left or front of you
+            }
+
+
+
             //DRIVING
             controller.setJoystickShift(LEFT, robot.gyro.getAngle());
 
-            double drive = controller.get(LEFT, INVERT_SHIFTED_Y);
-            double strafe = controller.get(LEFT, SHIFTED_X);
+            double drive = controller.get(LEFT, INVERT_Y) + driveChange;
+            double strafe = controller.get(LEFT, X) + strafeChange;
             double turn = controller.get(RIGHT, X);
 
+            Point changedAll = new Point(strafe,drive);
+
+
+            shiftedDrive = MathUtils.shift(changedAll, robot.gyro.getAngle()).y;
+            shiftedStrafe = MathUtils.shift(changedAll, robot.gyro.getAngle()).x;
+
             if(controller.get(LB1, ButtonControls.ButtonState.DOWN) || controller.get(LB2, DOWN)){
-                power = 0.3;}else{
+                power = 0.3;}
+            else{
                 power = 0.8;
             }
 
 
 
-            robot.drivetrain.setDrivePower(drive, strafe, rotation, power);
+
+            robot.drivetrain.setDrivePower(shiftedDrive, shiftedStrafe, rotation, power);
 
 
             //SIDE

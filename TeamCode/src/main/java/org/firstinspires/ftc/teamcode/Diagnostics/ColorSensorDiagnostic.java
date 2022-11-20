@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.TOUCHPAD;
 import static org.firstinspires.ftc.teamcode.DashConstants.ColorSensorDiagnostic.colorSensorID;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -11,7 +12,7 @@ import org.firstinspires.ftc.teamcode.Controls.Controller;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.Color_Sensor;
 import org.firstinspires.ftc.teamcode.Utilities.OpModeUtils;
 
-
+@Disabled
 @TeleOp(name = "ColorSensorDiagnostic TeleOp", group="Linear TeleOp")
 public class ColorSensorDiagnostic extends LinearOpMode {
 

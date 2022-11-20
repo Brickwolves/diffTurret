@@ -9,6 +9,7 @@ import static org.firstinspires.ftc.teamcode.DashConstants.ServoDiagnostic.SERVO
 import static org.firstinspires.ftc.teamcode.DashConstants.ServoDiagnostic.SERVO_MAX;
 import static org.firstinspires.ftc.teamcode.DashConstants.ServoDiagnostic.SERVO_MIN;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -16,7 +17,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.Controls.Controller;
 import org.firstinspires.ftc.teamcode.Utilities.OpModeUtils;
 
-
+@Disabled
 @TeleOp(name = "ServoDiagnostic TeleOp", group="Linear TeleOp")
 public class ServoDiagnostic extends LinearOpMode {
 

@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.DashConstants;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-@Config
 @Disabled
 public class DCMotorDiagnostic {
     public static String MOTOR_ID = "";
