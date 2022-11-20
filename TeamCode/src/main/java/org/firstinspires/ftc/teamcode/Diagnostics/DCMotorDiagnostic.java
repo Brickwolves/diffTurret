@@ -4,8 +4,8 @@ import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_DN;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_UP;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.TOUCHPAD;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_DCMotorDiagnostic.MOTOR_ID;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_DCMotorDiagnostic.POWER;
+import static org.firstinspires.ftc.teamcode.DashConstants.DCMotorDiagnostic.MOTOR_ID;
+import static org.firstinspires.ftc.teamcode.DashConstants.DCMotorDiagnostic.POWER;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;

@@ -102,31 +102,36 @@ public class BlueLeftAuto extends LinearOpMode {
 
 
 
-        robot.drivetrain.setPoseEstimate(new Pose2d(36,66,Math.toRadians(270)));
+        robot.drivetrain.setPoseEstimate(new Pose2d(36,70,Math.toRadians(270)));
 
 
 
         //To change speed, pass regulateSpeed1(*whateverspeedyouwant*) as an argument of Pose2D, followed by regulateSpeed2()
-        Trajectory traj1 = robot.drivetrain.trajectoryBuilder(new Pose2d(30,70,Math.toRadians(270)))
-                .lineTo(new Vector2d(34, 68),
+        Trajectory traj1 = robot.drivetrain.trajectoryBuilder(new Pose2d(40,70,Math.toRadians(270)))
+                .splineTo(new Vector2d(36, 50),Math.toRadians(270),
+                        regulateSpeed1(30),
+                        regulateSpeed2())
+                .splineTo(new Vector2d(20, 50),Math.toRadians(270),
                         regulateSpeed1(30),
                         regulateSpeed2())
                 .build();
 
-        Trajectory traj2 = robot.drivetrain.trajectoryBuilder(new Pose2d(30,70,Math.toRadians(270)))
-                .lineTo(new Vector2d(50, 68),
+        Trajectory traj2 = robot.drivetrain.trajectoryBuilder(new Pose2d(40,70,Math.toRadians(270)))
+                .splineTo(new Vector2d(36, 50),Math.toRadians(270),
                         regulateSpeed1(30),
                         regulateSpeed2())
                 .build();
 
-        Trajectory traj3 = robot.drivetrain.trajectoryBuilder(new Pose2d(30,70,Math.toRadians(270)))
-                .lineTo(new Vector2d(70, 68),
+        Trajectory traj3 = robot.drivetrain.trajectoryBuilder(new Pose2d(40,70,Math.toRadians(270)))
+                .splineTo(new Vector2d(36, 50),Math.toRadians(270),
+                        regulateSpeed1(30),
+                        regulateSpeed2())
+                .splineTo(new Vector2d(60, 50),Math.toRadians(270),
                         regulateSpeed1(30),
                         regulateSpeed2())
                 .build();
 
-        multTelemetry.addData("signal side", signalSide);
-        multTelemetry.update();
+
 
 
         while(opModeInInit()){
@@ -186,10 +191,14 @@ public class BlueLeftAuto extends LinearOpMode {
                 telemetry.update();
             }
 
+
             sleep(20);
         }
 
         if (opModeIsActive()) {
+
+            multTelemetry.addData("signal side", signalSide);
+            multTelemetry.update();
 
             if (signalSide == ONE_GREEN){
                 robot.drivetrain.followTrajectory(traj1);
@@ -200,6 +209,11 @@ public class BlueLeftAuto extends LinearOpMode {
             if (signalSide == THREE_PINK){
                 robot.drivetrain.followTrajectory(traj3);
             }
+
+            multTelemetry.addData("signal side", signalSide);
+            multTelemetry.addData("ending auto", "ok");
+            multTelemetry.update();
+
 
         }
     }

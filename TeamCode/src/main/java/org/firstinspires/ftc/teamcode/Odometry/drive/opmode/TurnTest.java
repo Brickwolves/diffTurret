@@ -11,7 +11,6 @@ import org.firstinspires.ftc.teamcode.Hardware.LupineMecanumDrive;
 /*
  * This is a simple routine to test turning capabilities.
  */
-@Config
 @Disabled
 @Autonomous(group = "drive")
 public class TurnTest extends LinearOpMode {

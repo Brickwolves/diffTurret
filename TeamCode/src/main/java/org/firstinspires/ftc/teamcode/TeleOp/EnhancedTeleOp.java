@@ -21,12 +21,11 @@ import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.SHI
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.X;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.Y;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.rateOfChange;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.speed1;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.enhancedSpeed;
 import static org.firstinspires.ftc.teamcode.Hardware.LupineMecanumDrive.regulateSpeed1;
 import static org.firstinspires.ftc.teamcode.Hardware.LupineMecanumDrive.regulateSpeed2;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.IMU_DATUM;
 import static org.firstinspires.ftc.teamcode.Utilities.MathUtils.odoToTiles;
-import static org.firstinspires.ftc.teamcode.Utilities.MathUtils.tilesToOdo;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.derivativeWeight;
@@ -40,11 +39,9 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Controls.ButtonControls;
 import org.firstinspires.ftc.teamcode.Controls.Controller;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
-import org.firstinspires.ftc.teamcode.Odometry.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.Utilities.Loggers.Side;
 import org.firstinspires.ftc.teamcode.Utilities.MathUtils;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
@@ -320,7 +317,7 @@ public class EnhancedTeleOp extends OpMode {
             //Go to target position
             teleOp = robot.drivetrain.trajectoryBuilder(new Pose2d(exampleOdoPoint.x, exampleOdoPoint.y))
                     .lineTo(new Vector2d(targetPosOnField.x, targetPosOnField.y),
-                            regulateSpeed1(speed1),
+                            regulateSpeed1(enhancedSpeed),
                             regulateSpeed2())
                     .build();
         }

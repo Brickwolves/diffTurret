@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.DashConstants;
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 @Config
-public class Dash_Vision {
+@Disabled
+public class VisionDiagnostic {
     //hardcoded from dashboard
 
     public static boolean DEBUG_MODE = true;

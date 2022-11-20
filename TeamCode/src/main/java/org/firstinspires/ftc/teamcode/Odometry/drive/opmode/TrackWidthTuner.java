@@ -23,7 +23,6 @@ import org.firstinspires.ftc.teamcode.Odometry.drive.DriveConstants;
  * this procedure a few times and averages the values for additional accuracy. Note: a relatively
  * accurate track width estimate is important or else the angular constraints will be thrown off.
  */
-@Config
 @Disabled
 @Autonomous(group = "drive")
 public class TrackWidthTuner extends LinearOpMode {

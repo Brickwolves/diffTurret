@@ -14,11 +14,9 @@ public class PositionsAndSpeeds {
 
     public static double rateOfChange = 120;
 
-    public static double coneBlue = 100;
-    public static double coneRed = 100;
+    public static double enhancedSpeed = 30;
 
-    public static double speed1 = 30;
-
-    public static double open = .3;
-    public static double close = .4;
+    public static double clawOpen = .3;
+    public static double clawClose = .4;
 }
+

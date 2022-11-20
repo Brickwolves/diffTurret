@@ -103,31 +103,35 @@ public class RedRightAuto extends LinearOpMode {
         robot = new Robot();
 
 
-        robot.drivetrain.setPoseEstimate(new Pose2d(36,-66,Math.toRadians(90)));
+        robot.drivetrain.setPoseEstimate(new Pose2d(30,-70,Math.toRadians(90)));
 
 
 
         //To change speed, pass regulateSpeed1(*whateverspeedyouwant*) as an argument of Pose2D, followed by regulateSpeed2()
         Trajectory traj1 = robot.drivetrain.trajectoryBuilder(new Pose2d(30,-70,Math.toRadians(90)))
-                .lineTo(new Vector2d(-34, 68),
+                .splineTo(new Vector2d(36, -50),Math.toRadians(90),
+                        regulateSpeed1(30),
+                        regulateSpeed2())
+                .splineTo(new Vector2d(20, -50),Math.toRadians(90),
                         regulateSpeed1(30),
                         regulateSpeed2())
                 .build();
 
         Trajectory traj2 = robot.drivetrain.trajectoryBuilder(new Pose2d(30,-70,Math.toRadians(90)))
-                .lineTo(new Vector2d(-50, 68),
+                .splineTo(new Vector2d(36, -50),Math.toRadians(90),
                         regulateSpeed1(30),
                         regulateSpeed2())
                 .build();
 
         Trajectory traj3 = robot.drivetrain.trajectoryBuilder(new Pose2d(30,-70,Math.toRadians(90)))
-                .lineTo(new Vector2d(-70, 68),
+                .splineTo(new Vector2d(36, -50),Math.toRadians(90),
+                        regulateSpeed1(30),
+                        regulateSpeed2())
+                .splineTo(new Vector2d(60, -50),Math.toRadians(90),
                         regulateSpeed1(30),
                         regulateSpeed2())
                 .build();
 
-        multTelemetry.addData("signal side", signalSide);
-        multTelemetry.update();
 
         while(opModeInInit()){
             ArrayList<AprilTagDetection> detections = aprilTagDetectionPipeline.getDetectionsUpdate();
@@ -194,6 +198,9 @@ public class RedRightAuto extends LinearOpMode {
 
         if (opModeIsActive()) {
 
+            multTelemetry.addData("signal side", signalSide);
+            multTelemetry.update();
+
             if (signalSide == ONE_GREEN){
                 robot.drivetrain.followTrajectory(traj1);
             }
@@ -203,6 +210,11 @@ public class RedRightAuto extends LinearOpMode {
             if (signalSide == THREE_PINK){
                 robot.drivetrain.followTrajectory(traj3);
             }
+
+            multTelemetry.addData("signal side", signalSide);
+            multTelemetry.addData("ending auto", "ok");
+            multTelemetry.update();
+
 
         }
     }

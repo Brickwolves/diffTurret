@@ -50,34 +50,12 @@ public class TestAuto extends LinearOpMode {
 
 
         //To change speed, pass regulateSpeed1(*whateverspeedyouwant*) as an argument of Pose2D, followed by regulateSpeed2()
-        Trajectory traj1 = robot.drivetrain.trajectoryBuilder(new Pose2d(-30,70,Math.toRadians(270)))
-                .lineTo(new Vector2d(-38, 65),
-                        regulateSpeed1(30),
-                        regulateSpeed2())
-                .splineTo(new Vector2d(-36, 20), Math.toRadians(270),
-                        regulateSpeed1(30),
-                        regulateSpeed2())
-                .splineTo(new Vector2d(-50, 20), Math.toRadians(180),
-                        regulateSpeed1(30),
-                        regulateSpeed2())
-                .splineTo(new Vector2d(-15, 20), Math.toRadians(90),
-                        regulateSpeed1(30),
-                        regulateSpeed2())
-                .splineTo(new Vector2d(-10, 30), Math.toRadians(0),
+        Trajectory traj1 = robot.drivetrain.trajectoryBuilder(new Pose2d(-30,-70,Math.toRadians(90)))
+                .lineTo(new Vector2d(-34, 68),
                         regulateSpeed1(30),
                         regulateSpeed2())
                 .build();
-//
-//        Trajectory traj2 = robot.drivetrain.trajectoryBuilder(new Pose2d(robot.drivetrain.getPoseEstimate().getX(),robot.drivetrain.getPoseEstimate().getY(),robot.drivetrain.getExternalHeading()))
-//                .strafeRight(20)
-//                .build();
-//        Trajectory traj3 = robot.drivetrain.trajectoryBuilder(new Pose2d())
-//                .back(28)
-//                .build();
-//
-//        Trajectory traj4 = robot.drivetrain.trajectoryBuilder(traj1.end())
-//                .strafeLeft(35)
-//                .build();
+
 
 
 
@@ -89,9 +67,7 @@ public class TestAuto extends LinearOpMode {
         if (opModeIsActive()) {
 
             robot.drivetrain.followTrajectory(traj1);
-           // robot.drivetrain.followTrajectory(traj2);
-//            robot.drivetrain.followTrajectory(traj3);
-//            robot.drivetrain.followTrajectory(traj4);
+
 
         }
     }

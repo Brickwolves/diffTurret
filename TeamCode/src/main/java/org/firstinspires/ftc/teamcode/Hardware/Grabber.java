@@ -1,23 +1,17 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.close;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.coneBlue;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.coneRed;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawClose;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.depositDrop;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.groundJunction;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.highJunction;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.lowJunction;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.midJunction;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.open;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawOpen;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
 
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.Hardware.Sensors.Color_Sensor;
-import org.firstinspires.ftc.teamcode.Utilities.Loggers.Side;
 
 public class Grabber {
 
@@ -94,10 +88,10 @@ public class Grabber {
 //    }
 
     public void open(){
-        squeezer.setPosition(open);
+        squeezer.setPosition(clawOpen);
     }
     public void close(){
-        squeezer.setPosition(close);
+        squeezer.setPosition(clawClose);
     }
 
     public void high(){

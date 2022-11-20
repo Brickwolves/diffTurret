@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.DashConstants;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 @Config
-public class Dash_ColorSensorDiagnostic {
+@Disabled
+public class ColorSensorDiagnostic {
     public static String colorSensorID = "color";
 }

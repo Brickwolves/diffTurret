@@ -1,13 +1,10 @@
 package org.firstinspires.ftc.teamcode.VisionPipelines;
 
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
-import static org.firstinspires.ftc.teamcode.Utilities.VisionUtils.IMG_HEIGHT;
-import static org.firstinspires.ftc.teamcode.Utilities.VisionUtils.IMG_WIDTH;
 import static org.opencv.imgproc.Imgproc.COLOR_RGB2YCrCb;
 import static org.opencv.imgproc.Imgproc.FONT_HERSHEY_COMPLEX;
 import static org.opencv.imgproc.Imgproc.circle;
 
-import org.firstinspires.ftc.teamcode.DashConstants.Dash_Vision;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;

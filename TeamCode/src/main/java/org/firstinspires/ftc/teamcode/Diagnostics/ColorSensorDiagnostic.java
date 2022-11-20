@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.Diagnostics;
 
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState.DOWN;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.TOUCHPAD;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_ColorSensorDiagnostic.colorSensorID;
+import static org.firstinspires.ftc.teamcode.DashConstants.ColorSensorDiagnostic.colorSensorID;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;

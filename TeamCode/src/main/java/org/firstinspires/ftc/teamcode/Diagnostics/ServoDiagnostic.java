@@ -4,10 +4,10 @@ import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_DN;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_UP;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.TOUCHPAD;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_ServoDiagnostic.SERVO_HOME;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_ServoDiagnostic.SERVO_ID;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_ServoDiagnostic.SERVO_MAX;
-import static org.firstinspires.ftc.teamcode.DashConstants.Dash_ServoDiagnostic.SERVO_MIN;
+import static org.firstinspires.ftc.teamcode.DashConstants.ServoDiagnostic.SERVO_HOME;
+import static org.firstinspires.ftc.teamcode.DashConstants.ServoDiagnostic.SERVO_ID;
+import static org.firstinspires.ftc.teamcode.DashConstants.ServoDiagnostic.SERVO_MAX;
+import static org.firstinspires.ftc.teamcode.DashConstants.ServoDiagnostic.SERVO_MIN;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
