@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState.DOWN;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState.TAP;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState.TOGGLE;
+import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.CIRCLE;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.CROSS;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_DN;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_L;
@@ -12,12 +13,14 @@ import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.LB1;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.LB2;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.RB1;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.RB2;
+import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.SQUARE;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.LEFT;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.RIGHT;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.INVERT_SHIFTED_Y;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.SHIFTED_X;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.X;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.rateOfChange;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.tipAngle;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.IMU_DATUM;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
@@ -38,7 +41,7 @@ import org.firstinspires.ftc.teamcode.Utilities.PID;
 
 //@Disabled
 @TeleOp(name="Scrimmage TeleOp", group="Iterative Opmode")
-public class ScrimmageTeleOp extends OpMode {
+public class BasicTeleOp extends OpMode {
 
     // Declare OpMode members.
     private final ElapsedTime runtime = new ElapsedTime();
@@ -48,6 +51,12 @@ public class ScrimmageTeleOp extends OpMode {
     private boolean pid_on = false;
     private boolean pid_on_last_cycle = false;
     private boolean KETurns = false;
+    public boolean isTipped = false;
+
+    public enum SlidesState {HIGH, MIDDLE, LOW, GROUND, DOWN, DEPOSIT}
+
+
+    public EnhancedTeleOp.SlidesState slidesState = EnhancedTeleOp.SlidesState.DOWN;
 
 
     // Declare OpMode members.
@@ -124,6 +133,14 @@ public class ScrimmageTeleOp extends OpMode {
         double power;
 
 
+        //ANTI TIP CODE
+
+        if(robot.gyro.getTipAngle() > tipAngle || robot.gyro.getTipAngle() < -tipAngle){
+            isTipped = true;
+        }else{
+            isTipped = false;
+        }
+
         // if right trigger send slides down open intake
         if (controller.get(RB1, TAP)) {
             robot.grabber.open();
@@ -143,6 +160,68 @@ public class ScrimmageTeleOp extends OpMode {
             pid_on = false;
         } else if (currentRateOfChange <= rateOfChange) pid_on = true;
 
+
+
+        //Scoring
+        if (controller2.get(DPAD_UP, TAP) && slidesState != EnhancedTeleOp.SlidesState.HIGH) {
+            slidesState = EnhancedTeleOp.SlidesState.HIGH;
+            robot.grabber.time.reset();
+        }
+
+        if (controller2.get(DPAD_L, TAP) && slidesState != EnhancedTeleOp.SlidesState.MIDDLE) {
+            slidesState = EnhancedTeleOp.SlidesState.MIDDLE;
+            robot.grabber.time.reset();
+        }
+
+        if (controller2.get(DPAD_R, TAP) && slidesState != EnhancedTeleOp.SlidesState.LOW) {
+            slidesState = EnhancedTeleOp.SlidesState.LOW;
+            robot.grabber.time.reset();
+        }
+
+        if (controller2.get(DPAD_DN, TAP) && slidesState != EnhancedTeleOp.SlidesState.GROUND) {
+            slidesState = EnhancedTeleOp.SlidesState.GROUND;
+            robot.grabber.time.reset();
+        }
+
+        if (controller2.get(CIRCLE, TAP) && slidesState != EnhancedTeleOp.SlidesState.DEPOSIT) {
+            robot.grabber.wentDown = false;
+            slidesState = EnhancedTeleOp.SlidesState.DEPOSIT;
+            robot.grabber.time.reset();
+        }
+
+        if (controller2.get(SQUARE, TAP) && slidesState != EnhancedTeleOp.SlidesState.DOWN) {
+            slidesState = EnhancedTeleOp.SlidesState.DOWN;
+            robot.grabber.time.reset();
+        }
+
+        // if right trigger send slides down open intake
+        if (controller.get(RB1, TAP)) {
+            slidesState = EnhancedTeleOp.SlidesState.DOWN;
+            robot.grabber.open();
+            //if right button close intake
+        } else if (controller.get(RB2, TAP)) {
+            robot.grabber.close();
+        }
+
+        switch (slidesState) {
+            case HIGH:
+                robot.grabber.high();
+                break;
+            case MIDDLE:
+                robot.grabber.middle();
+                break;
+            case LOW:
+                robot.grabber.low();
+                break;
+            case GROUND:
+                robot.grabber.ground();
+                break;
+            case DEPOSIT:
+                robot.grabber.deposit();
+                break;
+            case DOWN:
+                robot.grabber.down();
+        }
 
         //IMU RESET
         if (controller.get(CROSS, TAP)) {
@@ -206,6 +285,7 @@ public class ScrimmageTeleOp extends OpMode {
     /*
          ----------- L O G G I N G -----------
                                             */
+        multTelemetry.addData("Tipping?", isTipped);
         multTelemetry.update();
     }
 

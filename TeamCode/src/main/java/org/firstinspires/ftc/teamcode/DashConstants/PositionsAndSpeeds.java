@@ -18,5 +18,7 @@ public class PositionsAndSpeeds {
 
     public static double clawOpen = .3;
     public static double clawClose = .4;
+
+    public static double tipAngle = 50;
 }
 
