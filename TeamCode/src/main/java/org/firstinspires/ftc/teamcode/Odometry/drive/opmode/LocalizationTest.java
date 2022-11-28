@@ -16,7 +16,6 @@ import org.firstinspires.ftc.teamcode.Hardware.LupineMecanumDrive;
  * exercise is to ascertain whether the localizer has been configured properly (note: the pure
  * encoder localizer heading may be significantly off if the track width has not been tuned).
  */
-@Disabled
 @TeleOp(group = "drive")
 public class LocalizationTest extends LinearOpMode {
     @Override
@@ -24,7 +23,7 @@ public class LocalizationTest extends LinearOpMode {
         LupineMecanumDrive drive = new LupineMecanumDrive(hardwareMap);
 
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
+        drive.setPoseEstimate(new Pose2d(0,0,Math.toRadians(0)));
         waitForStart();
 
         while (!isStopRequested()) {

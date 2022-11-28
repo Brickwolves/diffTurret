@@ -23,21 +23,27 @@ import static org.firstinspires.ftc.teamcode.Utilities.ITUtils.ITD;
 import static org.firstinspires.ftc.teamcode.Utilities.ITUtils.ITI;
 import static org.firstinspires.ftc.teamcode.Utilities.ITUtils.ITP;
 import static org.firstinspires.ftc.teamcode.Utilities.ITUtils.cachedPose;
+import static org.firstinspires.ftc.teamcode.Utilities.ITUtils.distancePower;
+import static org.firstinspires.ftc.teamcode.Utilities.ITUtils.initializeIT;
 import static org.firstinspires.ftc.teamcode.Utilities.ITUtils.junctions;
 import static org.firstinspires.ftc.teamcode.Utilities.ITUtils.kDrive;
 import static org.firstinspires.ftc.teamcode.Utilities.ITUtils.kHDist;
 import static org.firstinspires.ftc.teamcode.Utilities.ITUtils.kStrafe;
+import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.dashboard;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.derivativeWeight;
 import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.integralWeight;
 import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.proportionalWeight;
 
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.google.ar.core.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Controls.ButtonControls;
 import org.firstinspires.ftc.teamcode.Controls.Controller;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
@@ -66,6 +72,16 @@ import org.opencv.core.Point;
         private double shiftedDrive;
         private double shiftedStrafe;
 
+        private double modPosX;
+        private double modPosY;
+
+        private Point newJunctions[] = new Point[4];
+        private Point newNewJunctions[] = new Point[4];
+
+
+
+
+
 
 
 
@@ -88,16 +104,19 @@ import org.opencv.core.Point;
         public void init() {
             setOpMode(this);
 
+            robot = new Robot();
 
 
-            robot.drivetrain.setPoseEstimate(new Pose2d(-30,70,Math.toRadians(270)));
+            robot.drivetrain.setPoseEstimate(new Pose2d(-32,67,Math.toRadians(270)));
+
+            initializeIT();
 
 
             pid = new PID(proportionalWeight, integralWeight, derivativeWeight);
             ITPid = new PID(ITP,ITI,ITD);
 
 
-            robot = new Robot();
+
             controller = new Controller(gamepad1);
             controller2 = new Controller(gamepad2);
         /*
@@ -148,6 +167,7 @@ import org.opencv.core.Point;
         @Override
         public void loop() {
             Controller.update();
+            robot.drivetrain.updatePoseEstimate();
 
             double power;
 
@@ -202,30 +222,82 @@ import org.opencv.core.Point;
             //Intelligent translation
             cachedPose = robot.drivetrain.getPoseEstimate();
 
-            for (int i = 0; i < 25; i++) {
-                double yDist = Math.abs(junctions[i].getY() - cachedPose.getY());
-                double xDist = Math.abs(junctions[i].getX() - cachedPose.getX());
-                double hDist = Math.sqrt((yDist * yDist) + (xDist * xDist));
-                strafeChange = kStrafe / xDist / (hDist*kHDist);
-                driveChange = kDrive / yDist / (hDist*kHDist);
 
-                //I still have to find a way to make it so that the values are negative when the junction is to the left or front of you
+            modPosX = cachedPose.getX();
+            modPosY = cachedPose.getY();
+
+            modPosY += 12;
+            modPosX += 12;
+
+            while (modPosX > 24){
+                modPosX -= 24;
             }
+
+            while (modPosX < 0){
+                modPosX += 24;
+            }
+
+            while (modPosY > 24){
+                modPosY -= 24;
+            }
+
+            while (modPosY < 0){
+                modPosY += 24;
+            }
+
+
+            for(int i = 1; i < 3; i++){
+
+                //sets new junctions to equal the junctions minus the current point
+                newJunctions[i] = new Point(junctions[i].getX()-modPosX, junctions[i].getY() - modPosY);
+
+
+//                //Mod new junctions by 24
+//                while (newJunctions[i].x > 24){
+//                    newJunctions[i].x -= 24;
+//                }
+//
+//                while (newJunctions[i].x <0){
+//                    newJunctions[i].x += 24;
+//                }
+//
+//                while (newJunctions[i].y > 24){
+//                    newJunctions[i].y -= 24;
+//                }
+//
+//                while (newJunctions[i].y < 0){
+//                    newJunctions[i].y += 24;
+//                }
+
+            }
+
+
+            //bottomRightX^2 - topLeftX^2
+            //bottomRightY^2 - topLeftY^2
+            strafeChange = kStrafe*(1 / Math.pow(newJunctions[2].x,distancePower) - 1 / Math.pow(newJunctions[1].x,distancePower));
+            driveChange =  kDrive*(1 / Math.pow(newJunctions[2].y,distancePower) - 1 / Math.pow(newJunctions[1].y,distancePower));
+
+
+
+
+
+
+
 
 
 
             //DRIVING
             controller.setJoystickShift(LEFT, robot.gyro.getAngle());
 
-            double drive = controller.get(LEFT, INVERT_Y) + driveChange;
-            double strafe = controller.get(LEFT, X) + strafeChange;
+            double drive = controller.get(LEFT, INVERT_Y) + (driveChange);
+            double strafe = controller.get(LEFT, X) + (strafeChange);
             double turn = controller.get(RIGHT, X);
 
             Point changedAll = new Point(strafe,drive);
 
 
-            shiftedDrive = MathUtils.shift(changedAll, robot.gyro.getAngle()).y;
-            shiftedStrafe = MathUtils.shift(changedAll, robot.gyro.getAngle()).x;
+            shiftedDrive = MathUtils.shift(changedAll, -robot.gyro.getAngle()).y;
+            shiftedStrafe = MathUtils.shift(changedAll, -robot.gyro.getAngle()).x;
 
             if(controller.get(LB1, ButtonControls.ButtonState.DOWN) || controller.get(LB2, DOWN)){
                 power = 0.3;}
@@ -243,7 +315,19 @@ import org.opencv.core.Point;
             Side.red = !controller2.get(RB1, TOGGLE);
     /*
          ----------- L O G G I N G -----------
+
                                             */
+            TelemetryPacket packet = new TelemetryPacket();
+            packet.fieldOverlay()
+                    .setStrokeWidth(1)
+                    .setFill("black").fillCircle(cachedPose.getX(),cachedPose.getY(),8);
+            dashboard.sendTelemetryPacket(packet);
+
+
+            multTelemetry.addData("Odo X", cachedPose.getX());
+            multTelemetry.addData("Odo Y", cachedPose.getY());
+            multTelemetry.addData("strafechange", strafeChange);
+            multTelemetry.addData("drivechange", driveChange);
             multTelemetry.update();
         }
 

@@ -40,7 +40,7 @@ import org.firstinspires.ftc.teamcode.Utilities.MathUtils;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
 
 //@Disabled
-@TeleOp(name="Scrimmage TeleOp", group="Iterative Opmode")
+@TeleOp(name="Basic TeleOp", group="Iterative Opmode")
 public class BasicTeleOp extends OpMode {
 
     // Declare OpMode members.
@@ -133,12 +133,18 @@ public class BasicTeleOp extends OpMode {
         double power;
 
 
+
+
         //ANTI TIP CODE
 
         if(robot.gyro.getTipAngle() > tipAngle || robot.gyro.getTipAngle() < -tipAngle){
             isTipped = true;
         }else{
             isTipped = false;
+        }
+
+        if(isTipped){
+            robot.grabber.down();
         }
 
         // if right trigger send slides down open intake
@@ -163,33 +169,33 @@ public class BasicTeleOp extends OpMode {
 
 
         //Scoring
-        if (controller2.get(DPAD_UP, TAP) && slidesState != EnhancedTeleOp.SlidesState.HIGH) {
+        if (controller2.get(DPAD_UP, TAP) && slidesState != EnhancedTeleOp.SlidesState.HIGH && !isTipped) {
             slidesState = EnhancedTeleOp.SlidesState.HIGH;
             robot.grabber.time.reset();
         }
 
-        if (controller2.get(DPAD_L, TAP) && slidesState != EnhancedTeleOp.SlidesState.MIDDLE) {
+        if (controller2.get(DPAD_L, TAP) && slidesState != EnhancedTeleOp.SlidesState.MIDDLE && !isTipped) {
             slidesState = EnhancedTeleOp.SlidesState.MIDDLE;
             robot.grabber.time.reset();
         }
 
-        if (controller2.get(DPAD_R, TAP) && slidesState != EnhancedTeleOp.SlidesState.LOW) {
+        if (controller2.get(DPAD_R, TAP) && slidesState != EnhancedTeleOp.SlidesState.LOW && !isTipped) {
             slidesState = EnhancedTeleOp.SlidesState.LOW;
             robot.grabber.time.reset();
         }
 
-        if (controller2.get(DPAD_DN, TAP) && slidesState != EnhancedTeleOp.SlidesState.GROUND) {
+        if (controller2.get(DPAD_DN, TAP) && slidesState != EnhancedTeleOp.SlidesState.GROUND && !isTipped) {
             slidesState = EnhancedTeleOp.SlidesState.GROUND;
             robot.grabber.time.reset();
         }
 
-        if (controller2.get(CIRCLE, TAP) && slidesState != EnhancedTeleOp.SlidesState.DEPOSIT) {
+        if (controller2.get(CIRCLE, TAP) && slidesState != EnhancedTeleOp.SlidesState.DEPOSIT && !isTipped) {
             robot.grabber.wentDown = false;
             slidesState = EnhancedTeleOp.SlidesState.DEPOSIT;
             robot.grabber.time.reset();
         }
 
-        if (controller2.get(SQUARE, TAP) && slidesState != EnhancedTeleOp.SlidesState.DOWN) {
+        if (controller2.get(SQUARE, TAP) && slidesState != EnhancedTeleOp.SlidesState.DOWN && !isTipped) {
             slidesState = EnhancedTeleOp.SlidesState.DOWN;
             robot.grabber.time.reset();
         }
