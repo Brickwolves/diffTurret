@@ -4,9 +4,9 @@ import static org.firstinspires.ftc.teamcode.Hardware.LupineMecanumDrive.regulat
 import static org.firstinspires.ftc.teamcode.Hardware.LupineMecanumDrive.regulateSpeed2;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
-import static org.firstinspires.ftc.teamcode.VisionPipelines.SignalPipeline.SignalSide.ONE_GREEN;
-import static org.firstinspires.ftc.teamcode.VisionPipelines.SignalPipeline.SignalSide.THREE_PINK;
-import static org.firstinspires.ftc.teamcode.VisionPipelines.SignalPipeline.SignalSide.TWO_ORANGE;
+import static org.firstinspires.ftc.teamcode.VisionPipelines.SignalPipeline.SignalSide.ONE;
+import static org.firstinspires.ftc.teamcode.VisionPipelines.SignalPipeline.SignalSide.THREE;
+import static org.firstinspires.ftc.teamcode.VisionPipelines.SignalPipeline.SignalSide.TWO;
 
 import android.os.Build;
 
@@ -165,13 +165,13 @@ public class BlueRightAuto extends LinearOpMode {
                     for(AprilTagDetection detection : detections)
                     {
                         if(detection.id == 4){
-                            signalSide = TWO_ORANGE;
+                            signalSide = TWO;
                         }
                         if(detection.id == 3){
-                            signalSide = THREE_PINK;
+                            signalSide = THREE;
                         }
                         if(detection.id == 18){
-                            signalSide = ONE_GREEN;
+                            signalSide = ONE;
                         }
                         telemetry.addLine(String.format("\nDetected tag ID=%d", detection.id));
                         telemetry.addLine(String.format("Translation X: %.2f feet", detection.pose.x*FEET_PER_METER));
@@ -195,11 +195,11 @@ public class BlueRightAuto extends LinearOpMode {
             multTelemetry.update();
 
 
-            if (signalSide == ONE_GREEN){
+            if (signalSide == ONE){
                 robot.drivetrain.followTrajectory(traj1);
-            }else if (signalSide == TWO_ORANGE){
+            }else if (signalSide == TWO){
                 robot.drivetrain.followTrajectory(traj2);
-            }else if (signalSide == THREE_PINK){
+            }else if (signalSide == THREE){
                 robot.drivetrain.followTrajectory(traj3);
             }
 

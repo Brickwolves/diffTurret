@@ -60,9 +60,9 @@ import java.util.List;
 
         public enum SignalSide {
 
-            ONE_GREEN,
-            TWO_ORANGE,
-            THREE_PINK
+            ONE,
+            TWO,
+            THREE
 
         }
 
@@ -113,15 +113,15 @@ import java.util.List;
             //analysis of position - which color is the signal sleeve and where should we park?
             if (greenRect != null && orangeRect == null && pinkRect == null){
                 //if green
-                signalSide = SignalSide.ONE_GREEN;
+                signalSide = SignalSide.ONE;
             }
             if (orangeRect != null && greenRect == null && pinkRect == null){
                 //if orange
-                signalSide = SignalSide.TWO_ORANGE;
+                signalSide = SignalSide.TWO;
             }
             if (pinkRect != null && greenRect == null && orangeRect == null){
                 //if pink
-                signalSide = SignalSide.THREE_PINK;
+                signalSide = SignalSide.THREE;
             }
 
 
