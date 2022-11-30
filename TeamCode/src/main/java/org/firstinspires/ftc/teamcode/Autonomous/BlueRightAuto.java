@@ -106,25 +106,28 @@ public class BlueRightAuto extends LinearOpMode {
 
         //To change speed, pass regulateSpeed1(*whateverspeedyouwant*) as an argument of Pose2D, followed by regulateSpeed2()
         Trajectory traj1 = robot.drivetrain.trajectoryBuilder(new Pose2d(-30,70,Math.toRadians(270)))
-                .splineTo(new Vector2d(-36, 50),Math.toRadians(270),
+                .splineTo(new Vector2d(-36, 25),Math.toRadians(270),
                         regulateSpeed1(30),
                         regulateSpeed2())
-                .splineTo(new Vector2d(-20, 50),Math.toRadians(270),
+                .splineTo(new Vector2d(-20, 25),Math.toRadians(270),
                         regulateSpeed1(30),
                         regulateSpeed2())
                 .build();
 
         Trajectory traj2 = robot.drivetrain.trajectoryBuilder(new Pose2d(-30,70,Math.toRadians(270)))
-                .splineTo(new Vector2d(-36, 50),Math.toRadians(270),
+                .splineTo(new Vector2d(-36, 25),Math.toRadians(270),
                         regulateSpeed1(30),
                         regulateSpeed2())
                 .build();
 
         Trajectory traj3 = robot.drivetrain.trajectoryBuilder(new Pose2d(-30,70,Math.toRadians(270)))
-                .splineTo(new Vector2d(-36, 50),Math.toRadians(270),
+                .splineTo(new Vector2d(-36, 25),Math.toRadians(270),
                         regulateSpeed1(30),
                         regulateSpeed2())
-                .splineTo(new Vector2d(-60, 50),Math.toRadians(270),
+                .splineTo(new Vector2d(-50, 25),Math.toRadians(270),
+                        regulateSpeed1(30),
+                        regulateSpeed2())
+                .splineTo(new Vector2d(-50, 40),Math.toRadians(270),
                         regulateSpeed1(30),
                         regulateSpeed2())
                 .build();
