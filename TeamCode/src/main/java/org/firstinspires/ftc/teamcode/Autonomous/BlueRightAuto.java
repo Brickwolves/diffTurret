@@ -114,13 +114,13 @@ public class BlueRightAuto extends LinearOpMode {
                         regulateSpeed2())
                 .build();
 
-        Trajectory traj2 = robot.drivetrain.trajectoryBuilder(new Pose2d(-30,-70,Math.toRadians(270)))
+        Trajectory traj2 = robot.drivetrain.trajectoryBuilder(new Pose2d(-30,70,Math.toRadians(270)))
                 .splineTo(new Vector2d(-36, 50),Math.toRadians(270),
                         regulateSpeed1(30),
                         regulateSpeed2())
                 .build();
 
-        Trajectory traj3 = robot.drivetrain.trajectoryBuilder(new Pose2d(-30,-70,Math.toRadians(270)))
+        Trajectory traj3 = robot.drivetrain.trajectoryBuilder(new Pose2d(-30,70,Math.toRadians(270)))
                 .splineTo(new Vector2d(-36, 50),Math.toRadians(270),
                         regulateSpeed1(30),
                         regulateSpeed2())
