@@ -46,16 +46,34 @@ public class TestAuto extends LinearOpMode {
         robot = new Robot();
 
 
-        robot.drivetrain.setPoseEstimate(new Pose2d(-36,66,Math.toRadians(270)));
+        robot.drivetrain.setPoseEstimate(new Pose2d(-60,60,Math.toRadians(270)));
 
 
         //To change speed, pass regulateSpeed1(*whateverspeedyouwant*) as an argument of Pose2D, followed by regulateSpeed2()
-        Trajectory traj1 = robot.drivetrain.trajectoryBuilder(new Pose2d(-30,-70,Math.toRadians(90)))
-                .lineTo(new Vector2d(-34, 68),
+        Trajectory traj1 = robot.drivetrain.trajectoryBuilder(new Pose2d(-60,60,Math.toRadians(270)))
+                .splineTo(new Vector2d(-60, -45),Math.toRadians(270),
+                        regulateSpeed1(30),
+                        regulateSpeed2())
+                .splineTo(new Vector2d(0, -45),Math.toRadians(270),
+                        regulateSpeed1(30),
+                        regulateSpeed2())
+                .splineTo(new Vector2d(45,-60),Math.toRadians(270),
+                        regulateSpeed1(30),
+                        regulateSpeed2())
+                .splineTo(new Vector2d(60, 0),Math.toRadians(270),
+                        regulateSpeed1(30),
+                        regulateSpeed2())
+                .splineTo(new Vector2d(60,45),Math.toRadians(270),
+                        regulateSpeed1(30),
+                        regulateSpeed2())
+                .splineTo(new Vector2d(-0, 60
+                        ),Math.toRadians(270),
+                        regulateSpeed1(30),
+                        regulateSpeed2())
+                .splineTo(new Vector2d(-45,60),Math.toRadians(270),
                         regulateSpeed1(30),
                         regulateSpeed2())
                 .build();
-
 
 
 
