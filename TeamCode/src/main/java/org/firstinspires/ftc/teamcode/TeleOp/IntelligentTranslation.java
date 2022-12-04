@@ -39,6 +39,7 @@ import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.proportionalWe
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.google.ar.core.Pose;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -52,7 +53,8 @@ import org.firstinspires.ftc.teamcode.Utilities.MathUtils;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
 import org.opencv.core.Point;
 
-//@Disabled
+
+@Disabled
     @TeleOp(name="Intelligent Translation", group="Iterative Opmode")
     public class IntelligentTranslation extends OpMode {
 

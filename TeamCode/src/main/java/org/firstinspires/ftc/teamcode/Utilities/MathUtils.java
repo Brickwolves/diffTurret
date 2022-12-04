@@ -46,6 +46,14 @@ public class MathUtils {
         return new Point(x,y);
     }
 
+    public static boolean inRange(double low, double input, double high){
+        return input > low && input < high;
+    }
+
+    public static boolean inRange(int low, int input, int high){
+        return input > low && input < high;
+    }
+
     /**
      * @param x
      * @param a_min

@@ -20,17 +20,11 @@ import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.RIG
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.INVERT_SHIFTED_Y;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.SHIFTED_X;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.X;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberScore;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberTip;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberScoreFunny;
+
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.rateOfChange;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.tipAngle;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bDown;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScore;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bTipped;
-import static org.firstinspires.ftc.teamcode.TeleOp.BasicTeleOp.V4B.SCORE;
-import static org.firstinspires.ftc.teamcode.TeleOp.BasicTeleOp.V4B.SCOREFUNNY;
-import static org.firstinspires.ftc.teamcode.TeleOp.BasicTeleOp.V4B.TIPPED;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreBack;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.IMU_DATUM;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
@@ -113,7 +107,7 @@ public class BasicTeleOp extends OpMode {
     public void init_loop() {
 
 
-        robot.grabber.rotateGrabber(grabberScore);
+        robot.grabber.rotateGrabber(0);
         robot.grabber.rotate(v4bDown);
         v4b = V4B.DOWN;
 
@@ -204,8 +198,8 @@ public class BasicTeleOp extends OpMode {
 //                    break;
                 //SCORE
                 case DOWN:
-                    robot.grabber.rotateGrabber(grabberScore);
-                    robot.grabber.rotate(v4bScore);
+                    robot.grabber.rotateGrabber(0);
+                    robot.grabber.rotate(v4bScoreBack);
                     v4b = V4B.SCORE;
                     break;
                 //SCORE FUNNY
@@ -216,7 +210,7 @@ public class BasicTeleOp extends OpMode {
 //                    break;
                 //DOWN
                 case SCORE:
-                    robot.grabber.rotateGrabber(grabberScore);
+                    robot.grabber.rotateGrabber(0);
                     robot.grabber.rotate(v4bDown);
                     v4b = V4B.DOWN;
                     break;

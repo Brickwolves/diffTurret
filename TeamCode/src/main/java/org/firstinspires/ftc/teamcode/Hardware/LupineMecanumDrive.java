@@ -49,7 +49,7 @@ import java.util.List;
 /*
  * Simple mecanum drive hardware implementation for REV hardware.
  */
-@Config
+//@Config
 public class LupineMecanumDrive extends MecanumDrive {
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(1.2, 0, 0.002);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(1.1, 0, 0);

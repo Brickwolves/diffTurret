@@ -13,19 +13,23 @@ public class Robot {
    public LupineMecanumDrive drivetrain;
    public IMU gyro;
    public Grabber grabber;
-   //public ConeFlipper coneFlipper;
+   public Scoring scorer;
+
 
 
    public Robot() {
       initRobot();
+      grabber = new Grabber();
+   }
+   public Robot(boolean advancedScoring){
+      initRobot();
+      scorer = new Scoring();
+
    }
 
    public void initRobot() {
 
       drivetrain = new LupineMecanumDrive(hardwareMap);
-      grabber = new Grabber();
-      //coneFlipper = new ConeFlipper();
-
       gyro = new IMU("imu");
 
 

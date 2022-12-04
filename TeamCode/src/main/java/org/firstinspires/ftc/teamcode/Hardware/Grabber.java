@@ -2,9 +2,7 @@ package org.firstinspires.ftc.teamcode.Hardware;
 
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawClose;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.depositDrop;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.groundJunction;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.highJunction;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.lowJunction;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.midJunction;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawOpen;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
@@ -94,16 +92,16 @@ public class Grabber {
 
     public void low(){
         spool.setPower(.6);
-        spool.setTargetPosition(-lowJunction);
+        spool.setTargetPosition(0);
         spool2.setPower(.6);
-        spool2.setTargetPosition(lowJunction);
+        spool2.setTargetPosition(0);
     }
 
     public void ground(){
         spool.setPower(.3);
-        spool.setTargetPosition(-groundJunction);
+        spool.setTargetPosition(0);
         spool2.setPower(.3);
-        spool2.setTargetPosition(groundJunction);
+        spool2.setTargetPosition(0);
     }
 
     public void deposit() {

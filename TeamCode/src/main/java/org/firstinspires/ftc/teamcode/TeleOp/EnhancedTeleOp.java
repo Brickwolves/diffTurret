@@ -21,7 +21,6 @@ import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.SHI
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.X;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.Y;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.rateOfChange;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.enhancedSpeed;
 import static org.firstinspires.ftc.teamcode.Hardware.LupineMecanumDrive.regulateSpeed1;
 import static org.firstinspires.ftc.teamcode.Hardware.LupineMecanumDrive.regulateSpeed2;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.IMU_DATUM;
@@ -35,6 +34,7 @@ import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.proportionalWe
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -47,7 +47,7 @@ import org.firstinspires.ftc.teamcode.Utilities.MathUtils;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
 import org.opencv.core.Point;
 
-//@Disabled
+@Disabled
 @TeleOp(name="Enhanced TeleOp", group="Iterative Opmode")
 public class EnhancedTeleOp extends OpMode {
 
@@ -317,7 +317,7 @@ public class EnhancedTeleOp extends OpMode {
             //Go to target position
             teleOp = robot.drivetrain.trajectoryBuilder(new Pose2d(exampleOdoPoint.x, exampleOdoPoint.y))
                     .lineTo(new Vector2d(targetPosOnField.x, targetPosOnField.y),
-                            regulateSpeed1(enhancedSpeed),
+                            regulateSpeed1(30),
                             regulateSpeed2())
                     .build();
         }

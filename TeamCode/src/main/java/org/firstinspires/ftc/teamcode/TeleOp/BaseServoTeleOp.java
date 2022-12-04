@@ -24,6 +24,7 @@ import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.derivativeWeig
 import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.integralWeight;
 import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.proportionalWeight;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -36,7 +37,7 @@ import org.firstinspires.ftc.teamcode.Utilities.Loggers.Side;
 import org.firstinspires.ftc.teamcode.Utilities.MathUtils;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
 
-
+@Disabled
 @TeleOp(name="Servo TeleOp", group="Iterative Opmode")
 public class BaseServoTeleOp extends OpMode {
     public Servo myServo;
