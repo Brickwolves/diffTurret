@@ -28,9 +28,9 @@ import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.ti
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bDown;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScore;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bTipped;
-import static org.firstinspires.ftc.teamcode.TeleOp.BasicTeleOp.V4B.SCORE;
-import static org.firstinspires.ftc.teamcode.TeleOp.BasicTeleOp.V4B.SCOREFUNNY;
-import static org.firstinspires.ftc.teamcode.TeleOp.BasicTeleOp.V4B.TIPPED;
+
+import static org.firstinspires.ftc.teamcode.TeleOp.NoSlidesTeleOp.V4B.SCORE;
+import static org.firstinspires.ftc.teamcode.TeleOp.NoSlidesTeleOp.V4B.SCOREFUNNY;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.IMU_DATUM;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
@@ -50,8 +50,8 @@ import org.firstinspires.ftc.teamcode.Utilities.MathUtils;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
 
 //@Disabled
-@TeleOp(name="Basic TeleOp", group="Iterative Opmode")
-public class BasicTeleOp extends OpMode {
+@TeleOp(name="No Slides TeleOp", group="Iterative Opmode")
+public class NoSlidesTeleOp extends OpMode {
 
     // Declare OpMode members.
     private final ElapsedTime runtime = new ElapsedTime();
@@ -63,7 +63,6 @@ public class BasicTeleOp extends OpMode {
     private boolean KETurns = false;
     public boolean isTipped = false;
 
-    public enum SlidesState {HIGH, MIDDLE, LOW, GROUND, DOWN, DEPOSIT}
     public enum V4B {DOWN,TIPPED,SCORE,SCOREFUNNY}
 
     public EnhancedTeleOp.SlidesState slidesState = EnhancedTeleOp.SlidesState.DOWN;
@@ -104,6 +103,8 @@ public class BasicTeleOp extends OpMode {
         multTelemetry.addData("Status", "Initialized");
         multTelemetry.addData("imu datum", IMU_DATUM);
         multTelemetry.update();
+
+
     }
 
     /*
@@ -111,6 +112,7 @@ public class BasicTeleOp extends OpMode {
      */
     @Override
     public void init_loop() {
+
 
 
         robot.grabber.rotateGrabber(grabberScore);
@@ -167,9 +169,6 @@ public class BasicTeleOp extends OpMode {
             isTipped = false;
         }
 
-        if(isTipped){
-            robot.grabber.down();
-        }
 
         // if right trigger send slides down open intake
         if (controller.get(CIRCLE, TOGGLE)) {
@@ -206,16 +205,16 @@ public class BasicTeleOp extends OpMode {
                 case DOWN:
                     robot.grabber.rotateGrabber(grabberScore);
                     robot.grabber.rotate(v4bScore);
-                    v4b = V4B.SCORE;
+                    v4b = SCORE;
                     break;
                 //SCORE FUNNY
-//                case SCORE:
-//                    robot.grabber.rotateGrabber(grabberScoreFunny);
-//                    robot.grabber.rotate(v4bScore);
-//                    v4b = V4B.SCOREFUNNY;
-//                    break;
-                //DOWN
                 case SCORE:
+                    robot.grabber.rotateGrabber(grabberScoreFunny);
+                    robot.grabber.rotate(v4bScore);
+                    v4b = SCOREFUNNY;
+                    break;
+                //DOWN
+                case SCOREFUNNY:
                     robot.grabber.rotateGrabber(grabberScore);
                     robot.grabber.rotate(v4bDown);
                     v4b = V4B.DOWN;
@@ -224,67 +223,6 @@ public class BasicTeleOp extends OpMode {
             }
         }
 
-
-
-        if (controller2.get(DPAD_UP, TAP) && slidesState != EnhancedTeleOp.SlidesState.HIGH && !isTipped) {
-            slidesState = EnhancedTeleOp.SlidesState.HIGH;
-            robot.grabber.time.reset();
-        }
-
-        if (controller2.get(DPAD_L, TAP) && slidesState != EnhancedTeleOp.SlidesState.MIDDLE && !isTipped) {
-            slidesState = EnhancedTeleOp.SlidesState.MIDDLE;
-            robot.grabber.time.reset();
-        }
-
-        if (controller2.get(DPAD_R, TAP) && slidesState != EnhancedTeleOp.SlidesState.LOW && !isTipped) {
-            slidesState = EnhancedTeleOp.SlidesState.LOW;
-            robot.grabber.time.reset();
-        }
-
-        if (controller2.get(DPAD_DN, TAP) && slidesState != EnhancedTeleOp.SlidesState.GROUND && !isTipped) {
-            slidesState = EnhancedTeleOp.SlidesState.GROUND;
-            robot.grabber.time.reset();
-        }
-
-        if (controller2.get(CIRCLE, TAP) && slidesState != EnhancedTeleOp.SlidesState.DEPOSIT && !isTipped) {
-            robot.grabber.wentDown = false;
-            slidesState = EnhancedTeleOp.SlidesState.DEPOSIT;
-            robot.grabber.time.reset();
-        }
-
-        if (controller2.get(SQUARE, TAP) && slidesState != EnhancedTeleOp.SlidesState.DOWN && !isTipped) {
-            slidesState = EnhancedTeleOp.SlidesState.DOWN;
-            robot.grabber.time.reset();
-        }
-
-        // if right trigger send slides down open intake
-        if (controller.get(RB1, TAP)) {
-            slidesState = EnhancedTeleOp.SlidesState.DOWN;
-            robot.grabber.open();
-            //if right button close intake
-        } else if (controller.get(RB2, TAP)) {
-            robot.grabber.close();
-        }
-
-        switch (slidesState) {
-            case HIGH:
-                robot.grabber.high();
-                break;
-            case MIDDLE:
-                robot.grabber.middle();
-                break;
-            case LOW:
-                robot.grabber.low();
-                break;
-            case GROUND:
-                robot.grabber.ground();
-                break;
-            case DEPOSIT:
-                robot.grabber.deposit();
-                break;
-            case DOWN:
-                robot.grabber.down();
-        }
 
         //IMU RESET
         if (controller.get(CROSS, TAP)) {
@@ -349,8 +287,11 @@ public class BasicTeleOp extends OpMode {
          ----------- L O G G I N G -----------
                                             */
         multTelemetry.addData("Tipping?", isTipped);
-        multTelemetry.addData("slide target", robot.grabber.spool.getTargetPosition());
-        multTelemetry.addData("slide current", robot.grabber.spool.getCurrentPosition());
+        multTelemetry.addData("Grabber State", v4b);
+        multTelemetry.addData("Grabber Pos", robot.grabber.grabberSpin.getPosition());
+        multTelemetry.addData("v4b1", robot.grabber.v4b1.getPosition());
+        multTelemetry.addData("v4b2", robot.grabber.v4b2.getPosition());
+        multTelemetry.addData("claw", robot.grabber.squeezer.getPosition());
         multTelemetry.update();
     }
 

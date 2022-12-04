@@ -21,71 +21,42 @@ public class Grabber {
     public DcMotor spool;
     public DcMotor spool2;
     public Servo squeezer;
+    public Servo v4b1;
+    public Servo v4b2;
+    public Servo grabberSpin;
 //    public Color_Sensor grabColor;
 
     public boolean wentDown = false;
 
     public ElapsedTime time = new ElapsedTime();
-//    public Color_Sensor grabColor1;
-//    public Color_Sensor grabColor2;
-//    public DistanceSensor grabDistance;
 
 
     public Grabber(){
-//        grab1 = hardwareMap.get(CRServo.class, "grab1");
-//        grab2 = hardwareMap.get(CRServo.class, "grab2");
 
         squeezer = hardwareMap.get(Servo.class, "squeeze");
         squeezer.setPosition(.3);
 
-//        grabColor = new Color_Sensor();
-//        grabColor.init("grabColor");
+        v4b1 = hardwareMap.get(Servo.class, "v4b1");
+        v4b2 = hardwareMap.get(Servo.class,"v4b2");
+
+        grabberSpin = hardwareMap.get(Servo.class, "spin");
+
 
         spool = hardwareMap.get(DcMotor.class, "spool");
         spool.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         spool.setTargetPosition(0);
         spool.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        spool.setPower(.2);
+        spool.setPower(.6);
 
         spool2 = hardwareMap.get(DcMotor.class, "spool2");
         spool2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         spool2.setTargetPosition(0);
         spool2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        spool2.setPower(.2);
-
-//        grabColor1 = new Color_Sensor();
-//        grabColor2 = new Color_Sensor();
+        spool2.setPower(.6);
 
     }
 
-//    public boolean isLoaded(){
-//        if(Side.red) {
-//            return grabColor.updateRed() > coneRed;
-//        }else{
-//            return grabColor.updateBlue() > coneBlue;
-//        }
-//    }
-//
-//    public void intake(){
-//        squeezer.setPosition(.1);
-//
-//        if(!isLoaded()) {
-//            grab1.setPower(-intakeSpeed);
-//            grab2.setPower(intakeSpeed);
-//        }else{
-//            stopIntake();
-//        }
-//    }
-//
-//    public void stopIntake(){
-//        grab1.setPower(0);
-//        grab2.setPower(0);
-//    }
-//
-//    public void runIntakeBackwards(){
-//        grab1.setPower(1);
-//        grab2.setPower(-1);
-//    }
+
 
     public void open(){
         squeezer.setPosition(clawOpen);
@@ -94,41 +65,53 @@ public class Grabber {
         squeezer.setPosition(clawClose);
     }
 
+
+    //2 is set to highest at 0
+    //1 is set to highest at 1
+    public void rotate(double target){
+        v4b1.setPosition(target);
+        v4b2.setPosition(1-target);
+    }
+
+    public void rotateGrabber(double target){
+        grabberSpin.setPosition(target);
+    }
+
     public void high(){
-        spool.setPower(.3);
-        spool2.setPower(.3);
-        spool.setTargetPosition(highJunction);
-        spool2.setTargetPosition(-highJunction);
+        spool.setPower(1);
+        spool2.setPower(1);
+        spool.setTargetPosition(-highJunction);
+        spool2.setTargetPosition(highJunction);
     }
 
     public void middle(){
-        spool.setPower(.3);
-        spool.setTargetPosition(midJunction);
-        spool2.setPower(.3);
-        spool2.setTargetPosition(-midJunction);
+        spool.setPower(.8);
+        spool.setTargetPosition(-midJunction);
+        spool2.setPower(.8);
+        spool2.setTargetPosition(midJunction);
 
     }
 
     public void low(){
-        spool.setPower(.3);
-        spool.setTargetPosition(lowJunction);
-        spool2.setPower(.3);
-        spool2.setTargetPosition(-lowJunction);
+        spool.setPower(.6);
+        spool.setTargetPosition(-lowJunction);
+        spool2.setPower(.6);
+        spool2.setTargetPosition(lowJunction);
     }
 
     public void ground(){
         spool.setPower(.3);
-        spool.setTargetPosition(groundJunction);
+        spool.setTargetPosition(-groundJunction);
         spool2.setPower(.3);
-        spool2.setTargetPosition(-groundJunction);
+        spool2.setTargetPosition(groundJunction);
     }
 
     public void deposit() {
         spool.setPower(.3);
         spool2.setPower(.3);
         if(!wentDown) {
-            spool.setTargetPosition((spool.getCurrentPosition() - depositDrop));
-            spool2.setTargetPosition(-(spool.getCurrentPosition() - depositDrop));
+            spool.setTargetPosition(-(spool.getCurrentPosition() - depositDrop));
+            spool2.setTargetPosition((spool.getCurrentPosition() - depositDrop));
             wentDown = true;
         }
         if(time.seconds() > .6) {
@@ -137,9 +120,9 @@ public class Grabber {
     }
 
     public void down(){
-        spool.setPower(.4);
+        spool.setPower(1);
         spool.setTargetPosition(0);
-        spool2.setPower(.4);
+        spool2.setPower(1);
         spool2.setTargetPosition(0);
     }
 
