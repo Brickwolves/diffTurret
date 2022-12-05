@@ -98,6 +98,20 @@ public class IMU {
         return currentAngle;
     }
 
+    public double getOtherTipAngle(){
+
+        // Get the current angle
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        double currentAngle = angles.thirdAngle;
+
+        // Update how many times we have wrapped
+        deltaAngle = updateWraps(previousAngle, currentAngle, deltaAngle);
+
+        // Update the previous angle
+        previousAngle = currentAngle;
+        return currentAngle;
+    }
+
     public double getModAngle(){
         return getAngle() % 360;
     }

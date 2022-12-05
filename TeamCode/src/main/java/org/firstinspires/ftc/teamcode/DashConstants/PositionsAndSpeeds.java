@@ -9,7 +9,7 @@ public class PositionsAndSpeeds {
     public static int depositDrop = 20;  //1000
 
 
-    public static double v4bDown = 0.88;
+    public static double v4bDown = 0.875;
     public static double v4bTipped = .89;
     public static double v4bScoreBack = 0.999;
     public static double v4bScoreFront = 0.94;
@@ -26,6 +26,8 @@ public class PositionsAndSpeeds {
     public static double clawClose = .7;
 
     public static double tipAngle = 3;
+
+    public static double driveSpeed = 0.5;
 
 }
 

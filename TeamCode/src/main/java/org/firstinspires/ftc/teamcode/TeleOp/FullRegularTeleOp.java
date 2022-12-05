@@ -21,6 +21,7 @@ import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.INV
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.SHIFTED_X;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.X;
 
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.driveSpeed;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.rateOfChange;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.tipAngle;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bDown;
@@ -221,26 +222,26 @@ public class FullRegularTeleOp extends OpMode {
             robot.scorer.time.reset();
         }
 
-        if(controller2.get(TRIANGLE, TAP)){
-            if(score == ScoreState.SCORE_LOW){
-                score = ScoreState.SCORE_FRONT_LOW;
-                robot.scorer.time.reset();
-            }
-            if(score == ScoreState.SCORE_MID){
-                score = ScoreState.SCORE_FRONT_MID;
-                robot.scorer.time.reset();
-            }
-            if(score == ScoreState.SCORE_HIGH){
-                score = ScoreState.SCORE_FRONT_HIGH;
-                robot.scorer.time.reset();
-            }
-        }
+//        if(controller2.get(TRIANGLE, TAP)){
+//            if(score == ScoreState.SCORE_LOW){
+//                score = ScoreState.SCORE_FRONT_LOW;
+//                robot.scorer.time.reset();
+//            }
+//            if(score == ScoreState.SCORE_MID){
+//                score = ScoreState.SCORE_FRONT_MID;
+//                robot.scorer.time.reset();
+//            }
+//            if(score == ScoreState.SCORE_HIGH){
+//                score = ScoreState.SCORE_FRONT_HIGH;
+//                robot.scorer.time.reset();
+//            }
+//        }
 
 
         //IMU RESET
-        if (controller.get(CROSS, TAP)) {
-            robot.gyro.reset();
-        }
+//        if (controller.get(CROSS, TAP)) {
+//            robot.gyro.reset();
+//        }
 
         //TURN WRAPPING
         boolean KETurns;
@@ -285,7 +286,11 @@ public class FullRegularTeleOp extends OpMode {
         if (controller.get(LB1, ButtonControls.ButtonState.DOWN) || controller.get(LB2, DOWN)) {
             power = 0.3;
         } else {
-            power = 0.8;
+            power = driveSpeed;
+        }
+
+        if(score != ScoreState.DOWN){
+            power = .3;
         }
 
 
