@@ -14,6 +14,8 @@ public class PositionsAndSpeeds {
     public static double v4bScoreBack = 0.999;
     public static double v4bScoreFront = 0.94;
 
+
+    public static double grabberScore = 0.3;
     public static double grabberTip = 0.3;
 
 

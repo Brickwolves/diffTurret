@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Hardware;
 
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawClose;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawOpen;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberScore;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.highJunction;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.midJunction;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bDown;
@@ -87,7 +88,7 @@ public class Scoring {
             if(funny) {
                 grabber(1);
             }else{
-                grabber(0);
+                grabber(grabberScore);
             }
         }
     }
@@ -100,7 +101,7 @@ public class Scoring {
             if(funny) {
                 grabber(1);
             }else{
-                grabber(0);
+                grabber(grabberScore);
             }
         }
     }
@@ -113,7 +114,7 @@ public class Scoring {
             if(funny) {
                 grabber(1);
             }else{
-                grabber(0);
+                grabber(grabberScore);
             }
         }
     }
@@ -127,7 +128,7 @@ public class Scoring {
             if(funny) {
                 grabber(1);
             }else{
-                grabber(0);
+                grabber(grabberScore);
             }
         }
     }
@@ -140,7 +141,7 @@ public class Scoring {
             if(funny) {
                 grabber(1);
             }else{
-                grabber(0);
+                grabber(grabberScore);
             }
         }
     }
@@ -153,7 +154,7 @@ public class Scoring {
             if(funny) {
                 grabber(1);
             }else{
-                grabber(0);
+                grabber(grabberScore);
             }
         }
     }
@@ -170,7 +171,7 @@ public class Scoring {
             v4b(v4bDown);
         }
         if(inRange(.8,time.seconds(),2)) {
-            grabber(0);
+            grabber(grabberScore);
             slides(1, 0);
         }
     }
