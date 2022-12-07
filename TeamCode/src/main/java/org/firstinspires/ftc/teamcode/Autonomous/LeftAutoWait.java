@@ -32,8 +32,8 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import java.util.ArrayList;
 
 
-@Autonomous(name="Red Right Auto", group="Autonomous Linear Opmode")
-public class RedRightAuto extends LinearOpMode {
+@Autonomous(name="Left Auto Wait", group="Autonomous Linear Opmode")
+public class LeftAutoWait extends LinearOpMode {
     Robot robot;
     OpenCvCamera camera;
 
@@ -98,39 +98,34 @@ public class RedRightAuto extends LinearOpMode {
             }
         });
 
-
-        robot = new Robot();
-
-
-        robot.drivetrain.setPoseEstimate(new Pose2d(30,-70,Math.toRadians(90)));
+        robot.drivetrain.setPoseEstimate(new Pose2d(-40,-70,Math.toRadians(90)));
 
 
 
         //To change speed, pass regulateSpeed1(*whateverspeedyouwant*) as an argument of Pose2D, followed by regulateSpeed2()
-        Trajectory traj1 = robot.drivetrain.trajectoryBuilder(new Pose2d(30,-70,Math.toRadians(90)))
-                .splineTo(new Vector2d(36, -50),Math.toRadians(90),
+        Trajectory traj1 = robot.drivetrain.trajectoryBuilder(new Pose2d(-40,-70,Math.toRadians(90)))
+                .splineTo(new Vector2d(-36, -50),Math.toRadians(90),
                         regulateSpeed1(30),
                         regulateSpeed2())
-                .splineTo(new Vector2d(20, -50),Math.toRadians(90),
-                        regulateSpeed1(30),
-                        regulateSpeed2())
-                .build();
-
-        Trajectory traj2 = robot.drivetrain.trajectoryBuilder(new Pose2d(30,-70,Math.toRadians(90)))
-                .splineTo(new Vector2d(36, -50),Math.toRadians(90),
+                .splineTo(new Vector2d(-20, -50),Math.toRadians(90),
                         regulateSpeed1(30),
                         regulateSpeed2())
                 .build();
 
-        Trajectory traj3 = robot.drivetrain.trajectoryBuilder(new Pose2d(30,-70,Math.toRadians(90)))
-                .splineTo(new Vector2d(36, -50),Math.toRadians(90),
-                        regulateSpeed1(30),
-                        regulateSpeed2())
-                .splineTo(new Vector2d(60, -50),Math.toRadians(90),
+        Trajectory traj2 = robot.drivetrain.trajectoryBuilder(new Pose2d(-40,-70,Math.toRadians(90)))
+                .splineTo(new Vector2d(-36, -50),Math.toRadians(90),
                         regulateSpeed1(30),
                         regulateSpeed2())
                 .build();
 
+        Trajectory traj3 = robot.drivetrain.trajectoryBuilder(new Pose2d(-40,-70,Math.toRadians(90)))
+                .splineTo(new Vector2d(-36, -50),Math.toRadians(90),
+                        regulateSpeed1(30),
+                        regulateSpeed2())
+                .splineTo(new Vector2d(-60, -50),Math.toRadians(90),
+                        regulateSpeed1(30),
+                        regulateSpeed2())
+                .build();
 
         while(opModeInInit()){
             ArrayList<AprilTagDetection> detections = aprilTagDetectionPipeline.getDetectionsUpdate();
@@ -193,9 +188,8 @@ public class RedRightAuto extends LinearOpMode {
         }
 
 
-        waitForStart();
-
         if (opModeIsActive()) {
+
 
             multTelemetry.addData("signal side", signalSide);
             multTelemetry.update();

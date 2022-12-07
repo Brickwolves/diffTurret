@@ -32,11 +32,10 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import java.util.ArrayList;
 
 
-@Autonomous(name="Red Left Auto", group="Autonomous Linear Opmode")
-public class RedLeftAuto extends LinearOpMode {
+@Autonomous(name="Left Auto", group="Autonomous Linear Opmode")
+public class LeftAuto extends LinearOpMode {
     Robot robot;
     OpenCvCamera camera;
-
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
 
     static final double FEET_PER_METER = 3.28084;
@@ -57,6 +56,7 @@ public class RedLeftAuto extends LinearOpMode {
     final int THRESHOLD_NUM_FRAMES_NO_DETECTION_BEFORE_LOW_DECIMATION = 4;
 
 
+
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     public SignalPipeline.SignalSide signalSide;
@@ -65,7 +65,7 @@ public class RedLeftAuto extends LinearOpMode {
 
     public void initialize() {
         setOpMode(this);
-        Side.setRed();
+        Side.setBlue();
 
     }
 
@@ -77,7 +77,6 @@ public class RedLeftAuto extends LinearOpMode {
         initialize();
 
         robot = new Robot();
-
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
@@ -98,34 +97,40 @@ public class RedLeftAuto extends LinearOpMode {
             }
         });
 
-        robot.drivetrain.setPoseEstimate(new Pose2d(-40,-70,Math.toRadians(90)));
+
+
+
+        robot.drivetrain.setPoseEstimate(new Pose2d(36,70,Math.toRadians(90)));
 
 
 
         //To change speed, pass regulateSpeed1(*whateverspeedyouwant*) as an argument of Pose2D, followed by regulateSpeed2()
-        Trajectory traj1 = robot.drivetrain.trajectoryBuilder(new Pose2d(-40,-70,Math.toRadians(90)))
-                .splineTo(new Vector2d(-36, -50),Math.toRadians(90),
+        Trajectory traj1 = robot.drivetrain.trajectoryBuilder(new Pose2d(40,70,Math.toRadians(270)))
+                .splineTo(new Vector2d(36, 50),Math.toRadians(270),
                         regulateSpeed1(30),
                         regulateSpeed2())
-                .splineTo(new Vector2d(-20, -50),Math.toRadians(90),
-                        regulateSpeed1(30),
-                        regulateSpeed2())
-                .build();
-
-        Trajectory traj2 = robot.drivetrain.trajectoryBuilder(new Pose2d(-40,-70,Math.toRadians(90)))
-                .splineTo(new Vector2d(-36, -50),Math.toRadians(90),
+                .splineTo(new Vector2d(20, 50),Math.toRadians(270),
                         regulateSpeed1(30),
                         regulateSpeed2())
                 .build();
 
-        Trajectory traj3 = robot.drivetrain.trajectoryBuilder(new Pose2d(-40,-70,Math.toRadians(90)))
-                .splineTo(new Vector2d(-36, -50),Math.toRadians(90),
-                        regulateSpeed1(30),
-                        regulateSpeed2())
-                .splineTo(new Vector2d(-60, -50),Math.toRadians(90),
+        Trajectory traj2 = robot.drivetrain.trajectoryBuilder(new Pose2d(40,70,Math.toRadians(270)))
+                .splineTo(new Vector2d(36, 50),Math.toRadians(270),
                         regulateSpeed1(30),
                         regulateSpeed2())
                 .build();
+
+        Trajectory traj3 = robot.drivetrain.trajectoryBuilder(new Pose2d(40,70,Math.toRadians(270)))
+                .splineTo(new Vector2d(36, 50),Math.toRadians(270),
+                        regulateSpeed1(30),
+                        regulateSpeed2())
+                .splineTo(new Vector2d(60, 50),Math.toRadians(270),
+                        regulateSpeed1(30),
+                        regulateSpeed2())
+                .build();
+
+
+
 
         while(opModeInInit()){
             ArrayList<AprilTagDetection> detections = aprilTagDetectionPipeline.getDetectionsUpdate();
@@ -184,12 +189,11 @@ public class RedLeftAuto extends LinearOpMode {
                 telemetry.update();
             }
 
+
             sleep(20);
         }
 
-
         if (opModeIsActive()) {
-
 
             multTelemetry.addData("signal side", signalSide);
             multTelemetry.update();
