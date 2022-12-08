@@ -32,8 +32,8 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import java.util.ArrayList;
 
 
-@Autonomous(name="Blue Right Auto", group="Autonomous Linear Opmode")
-public class BlueRightAuto extends LinearOpMode {
+@Autonomous(name="Right Auto", group="Autonomous Linear Opmode")
+public class RightAuto extends LinearOpMode {
     Robot robot;
 
     // Declare OpMode members.
