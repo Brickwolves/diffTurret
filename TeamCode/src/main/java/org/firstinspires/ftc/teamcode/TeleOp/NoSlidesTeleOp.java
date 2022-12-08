@@ -12,6 +12,8 @@ import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.LB1;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.LB2;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.RB1;
+import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.RB2;
+import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.SQUARE;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.TRIANGLE;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.LEFT;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.RIGHT;
@@ -19,14 +21,11 @@ import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.INV
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.SHIFTED_X;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.X;
 
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.driveSpeed;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.rateOfChange;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.tipAngle;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bDown;
-
-
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreBack;
-import static org.firstinspires.ftc.teamcode.TeleOp.NoSlidesTeleOp.V4B.SCORE;
-import static org.firstinspires.ftc.teamcode.TeleOp.NoSlidesTeleOp.V4B.SCOREFUNNY;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.IMU_DATUM;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
@@ -34,7 +33,6 @@ import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.derivativeWeig
 import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.integralWeight;
 import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.proportionalWeight;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -46,7 +44,7 @@ import org.firstinspires.ftc.teamcode.Utilities.Loggers.Side;
 import org.firstinspires.ftc.teamcode.Utilities.MathUtils;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
 
-@Disabled
+//@Disabled
 @TeleOp(name="No Slides TeleOp", group="Iterative Opmode")
 public class NoSlidesTeleOp extends OpMode {
 
@@ -54,17 +52,18 @@ public class NoSlidesTeleOp extends OpMode {
     private final ElapsedTime runtime = new ElapsedTime();
     private PID pid;
     private double setPoint = 0;
-    private boolean wasTurning;
     private boolean pid_on = false;
     private boolean pid_on_last_cycle = false;
-    private boolean KETurns = false;
     public boolean isTipped = false;
 
-    public enum V4B {DOWN,TIPPED,SCORE,SCOREFUNNY}
+    public enum ScoreState {
+        DOWN,
+        TIPPED_FORWARDS, TIPPED_BACKWARDS,
+        SCORE_HIGH, SCORE_MID, SCORE_LOW,
+        SCORE_FRONT_HIGH, SCORE_FRONT_MID, SCORE_FRONT_LOW,
+    }
 
-    public EnhancedTeleOp.SlidesState slidesState = EnhancedTeleOp.SlidesState.DOWN;
-
-    public V4B v4b = V4B.DOWN;
+    public ScoreState score = ScoreState.DOWN;
 
 
     // Declare OpMode members.
@@ -86,7 +85,7 @@ public class NoSlidesTeleOp extends OpMode {
         pid = new PID(proportionalWeight, integralWeight, derivativeWeight);
 
 
-        robot = new Robot();
+        robot = new Robot(true);
         controller = new Controller(gamepad1);
         controller2 = new Controller(gamepad2);
         /*
@@ -100,8 +99,6 @@ public class NoSlidesTeleOp extends OpMode {
         multTelemetry.addData("Status", "Initialized");
         multTelemetry.addData("imu datum", IMU_DATUM);
         multTelemetry.update();
-
-
     }
 
     /*
@@ -111,21 +108,8 @@ public class NoSlidesTeleOp extends OpMode {
     public void init_loop() {
 
 
-
-        robot.grabber.rotateGrabber(0);
-        robot.grabber.rotate(v4bDown);
-        v4b = V4B.DOWN;
-
-        robot.grabber.open();
-
-        multTelemetry.addData("Status", "InitLoop");
-        multTelemetry.addData("imu datum", IMU_DATUM);
+        robot.scorer.deposit();
         multTelemetry.addData("Tipping?", isTipped);
-        multTelemetry.addData("Grabber State", v4b);
-        multTelemetry.addData("Grabber Pos", robot.grabber.grabberSpin.getPosition());
-        multTelemetry.addData("v4b1", robot.grabber.v4b1.getPosition());
-        multTelemetry.addData("v4b2", robot.grabber.v4b2.getPosition());
-        multTelemetry.addData("claw", robot.grabber.squeezer.getPosition());
         multTelemetry.update();
     }
 
@@ -160,19 +144,19 @@ public class NoSlidesTeleOp extends OpMode {
 
         //ANTI TIP CODE
 
-        if(robot.gyro.getTipAngle() > tipAngle || robot.gyro.getTipAngle() < -tipAngle){
-            isTipped = true;
-        }else{
-            isTipped = false;
+        isTipped = robot.gyro.getTipAngle() > tipAngle || robot.gyro.getTipAngle() < -tipAngle;
+
+        if(isTipped){
+            score = ScoreState.DOWN;
+            robot.scorer.time.reset();
         }
 
-
-        // if right trigger send slides down open intake
-        if (controller.get(CIRCLE, TOGGLE)) {
-            robot.grabber.open();
-            //if right button close intake
-        } else {
-            robot.grabber.close();
+        if(score == ScoreState.DOWN) {
+            if (controller.get(CIRCLE, TOGGLE)) {
+                robot.scorer.open();
+            } else {
+                robot.scorer.close();
+            }
         }
 
 
@@ -189,62 +173,96 @@ public class NoSlidesTeleOp extends OpMode {
 
 
         //Scoring
-
-        if(controller2.get(TRIANGLE, TAP)){
-            switch(v4b){
-                //TIPPED
-//                case DOWN:
-//                    robot.grabber.rotateGrabber(grabberTip);
-//                    robot.grabber.rotate(v4bTipped);
-//                    v4b = TIPPED;
-//                    break;
-                //SCORE
-                case DOWN:
-                    robot.grabber.rotateGrabber(0);
-                    robot.grabber.rotate(v4bScoreBack);
-                    v4b = SCORE;
-                    break;
-                //SCORE FUNNY
-                case SCORE:
-                    robot.grabber.rotateGrabber(1);
-                    robot.grabber.rotate(v4bScoreBack);
-                    v4b = SCOREFUNNY;
-                    break;
-                //DOWN
-                case SCOREFUNNY:
-                    robot.grabber.rotateGrabber(0);
-                    robot.grabber.rotate(v4bDown);
-                    v4b = V4B.DOWN;
-                    break;
-
-            }
+        switch(score){
+            case DOWN:
+                if(!isTipped) {
+                    robot.scorer.deposit();
+                }else{
+                    robot.scorer.crashSlides();
+                }
+                break;
+            case SCORE_LOW:
+                robot.scorer.lowBack(false);
+                break;
+            case SCORE_MID:
+                robot.scorer.midBack(false);
+                break;
+            case SCORE_HIGH:
+                robot.scorer.highBack(false);
+                break;
+            case SCORE_FRONT_LOW:
+                robot.scorer.lowFront(false);
+                break;
+            case SCORE_FRONT_MID:
+                robot.scorer.midFront(false);
+                break;
+            case SCORE_FRONT_HIGH:
+                robot.scorer.highFront(false);
+                break;
         }
+
+
+        if (controller.get(LB1, TAP) && score != ScoreState.DOWN && !isTipped) {
+            score = ScoreState.DOWN;
+            robot.scorer.time.reset();
+        }
+
+        if (controller.get(RB1, TAP) && score != ScoreState.SCORE_LOW && !isTipped) {
+            score = ScoreState.SCORE_LOW;
+            robot.scorer.time.reset();
+        }
+
+//        if (controller2.get(DPAD_L, TAP) && score != ScoreState.SCORE_MID && !isTipped) {
+//            score = ScoreState.SCORE_MID;
+//            robot.scorer.time.reset();
+//        }
+//
+//        if (controller2.get(DPAD_UP, TAP) && score != ScoreState.SCORE_HIGH && !isTipped) {
+//            score = ScoreState.SCORE_HIGH;
+//            robot.scorer.time.reset();
+//        }
+
+//        if(controller2.get(TRIANGLE, TAP)){
+//            if(score == ScoreState.SCORE_LOW){
+//                score = ScoreState.SCORE_FRONT_LOW;
+//                robot.scorer.time.reset();
+//            }
+//            if(score == ScoreState.SCORE_MID){
+//                score = ScoreState.SCORE_FRONT_MID;
+//                robot.scorer.time.reset();
+//            }
+//            if(score == ScoreState.SCORE_HIGH){
+//                score = ScoreState.SCORE_FRONT_HIGH;
+//                robot.scorer.time.reset();
+//            }
+//        }
 
 
         //IMU RESET
-        if (controller.get(CROSS, TAP)) {
-            robot.gyro.reset();
-        }
+//        if (controller.get(CROSS, TAP)) {
+//            robot.gyro.reset();
+//        }
 
         //TURN WRAPPING
-        if (controller.get(DPAD_R, TAP)) {
-            setPoint = MathUtils.closestAngle(270, robot.gyro.getAngle());
-            pid_on = true;
-            KETurns = false;
-        } else if (controller.get(DPAD_L, TAP)) {
-            setPoint = MathUtils.closestAngle(90, robot.gyro.getAngle());
-            pid_on = true;
-            KETurns = false;
-        } else if (controller.get(DPAD_UP, TAP)) {
-            setPoint = MathUtils.closestAngle(0, robot.gyro.getAngle());
-            pid_on = true;
-            KETurns = false;
-        } else if (controller.get(DPAD_DN, TAP)) {
-            setPoint = MathUtils.closestAngle(180, robot.gyro.getAngle());
-            pid_on = true;
-            KETurns = false;
-
-        }
+//        boolean KETurns;
+//        if (controller.get(DPAD_R, TAP)) {
+//            setPoint = MathUtils.closestAngle(270, robot.gyro.getAngle());
+//            pid_on = true;
+//            KETurns = false;
+//        } else if (controller.get(DPAD_L, TAP)) {
+//            setPoint = MathUtils.closestAngle(90, robot.gyro.getAngle());
+//            pid_on = true;
+//            KETurns = false;
+//        } else if (controller.get(DPAD_UP, TAP)) {
+//            setPoint = MathUtils.closestAngle(0, robot.gyro.getAngle());
+//            pid_on = true;
+//            KETurns = false;
+//        } else if (controller.get(DPAD_DN, TAP)) {
+//            setPoint = MathUtils.closestAngle(180, robot.gyro.getAngle());
+//            pid_on = true;
+//            KETurns = false;
+//
+//        }
 
 
         // Lock the heading if we JUST turned PID on
@@ -268,7 +286,11 @@ public class NoSlidesTeleOp extends OpMode {
         if (controller.get(LB1, ButtonControls.ButtonState.DOWN) || controller.get(LB2, DOWN)) {
             power = 0.3;
         } else {
-            power = 0.8;
+            power = driveSpeed;
+        }
+
+        if(score != ScoreState.DOWN){
+            power = .5;
         }
 
 
@@ -284,11 +306,7 @@ public class NoSlidesTeleOp extends OpMode {
          ----------- L O G G I N G -----------
                                             */
         multTelemetry.addData("Tipping?", isTipped);
-        multTelemetry.addData("Grabber State", v4b);
-        multTelemetry.addData("Grabber Pos", robot.grabber.grabberSpin.getPosition());
-        multTelemetry.addData("v4b1", robot.grabber.v4b1.getPosition());
-        multTelemetry.addData("v4b2", robot.grabber.v4b2.getPosition());
-        multTelemetry.addData("claw", robot.grabber.squeezer.getPosition());
+        multTelemetry.addData("Score State", score);
         multTelemetry.update();
     }
 

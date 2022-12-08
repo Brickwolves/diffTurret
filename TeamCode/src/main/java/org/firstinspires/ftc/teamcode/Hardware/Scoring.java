@@ -73,8 +73,8 @@ public class Scoring {
     public void slides(double power, int target){
         spool.setPower(power);
         spool2.setPower(power);
-        spool.setTargetPosition(-target);
-        spool2.setTargetPosition(target);
+        spool.setTargetPosition(target);
+        spool2.setTargetPosition(-target);
     }
 
     //Score Methods
