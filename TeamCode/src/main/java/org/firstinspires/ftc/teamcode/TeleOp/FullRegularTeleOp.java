@@ -222,20 +222,20 @@ public class FullRegularTeleOp extends OpMode {
             robot.scorer.time.reset();
         }
 
-//        if(controller2.get(TRIANGLE, TAP)){
-//            if(score == ScoreState.SCORE_LOW){
-//                score = ScoreState.SCORE_FRONT_LOW;
-//                robot.scorer.time.reset();
-//            }
-//            if(score == ScoreState.SCORE_MID){
-//                score = ScoreState.SCORE_FRONT_MID;
-//                robot.scorer.time.reset();
-//            }
-//            if(score == ScoreState.SCORE_HIGH){
-//                score = ScoreState.SCORE_FRONT_HIGH;
-//                robot.scorer.time.reset();
-//            }
-//        }
+        if(controller2.get(TRIANGLE, TAP)){
+            if(score == ScoreState.SCORE_LOW){
+                score = ScoreState.SCORE_FRONT_LOW;
+                robot.scorer.time.reset();
+            }
+            if(score == ScoreState.SCORE_MID){
+                score = ScoreState.SCORE_FRONT_MID;
+                robot.scorer.time.reset();
+            }
+            if(score == ScoreState.SCORE_HIGH){
+                score = ScoreState.SCORE_FRONT_HIGH;
+                robot.scorer.time.reset();
+            }
+        }
 
 
         //IMU RESET
