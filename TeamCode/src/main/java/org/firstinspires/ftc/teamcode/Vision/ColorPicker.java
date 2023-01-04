@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.VisionPipelines;
+package org.firstinspires.ftc.teamcode.Vision;
 
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.opencv.imgproc.Imgproc.COLOR_RGB2YCrCb;

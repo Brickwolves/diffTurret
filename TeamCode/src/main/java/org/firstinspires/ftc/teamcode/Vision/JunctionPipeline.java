@@ -1,8 +1,4 @@
-package org.firstinspires.ftc.teamcode.VisionPipelines;
-
-import org.opencv.core.Mat;
-import org.openftc.easyopencv.OpenCvPipeline;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+package org.firstinspires.ftc.teamcode.Vision;
 
 import org.opencv.core.Mat;
 import org.openftc.easyopencv.OpenCvPipeline;

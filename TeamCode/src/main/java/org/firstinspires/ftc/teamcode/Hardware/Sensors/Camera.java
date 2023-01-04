@@ -1,12 +1,10 @@
-package org.firstinspires.ftc.teamcode.Hardware.Vision;
+package org.firstinspires.ftc.teamcode.Hardware.Sensors;
 
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
 
-import android.graphics.Color;
-
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.VisionPipelines.ColorPicker;
-import org.firstinspires.ftc.teamcode.VisionPipelines.SignalPipeline;
+import org.firstinspires.ftc.teamcode.Vision.ColorPicker;
+import org.firstinspires.ftc.teamcode.Vision.SignalPipeline;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;

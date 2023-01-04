@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
-import static org.firstinspires.ftc.teamcode.Utilities.VisionUtils.IMG_HEIGHT;
-import static org.firstinspires.ftc.teamcode.Utilities.VisionUtils.IMG_WIDTH;
 
 import android.os.Build;
 
@@ -14,10 +12,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
-import org.firstinspires.ftc.teamcode.Hardware.Vision.Camera;
+import org.firstinspires.ftc.teamcode.Hardware.Sensors.Camera;
 import org.firstinspires.ftc.teamcode.Utilities.Loggers.Side;
-import org.firstinspires.ftc.teamcode.VisionPipelines.ColorPicker;
-import org.firstinspires.ftc.teamcode.VisionPipelines.SignalPipeline;
 
 @Autonomous(name="TestVisionAuto", group="Autonomous Linear Opmode")
 public class TestVisionAuto extends LinearOpMode {
