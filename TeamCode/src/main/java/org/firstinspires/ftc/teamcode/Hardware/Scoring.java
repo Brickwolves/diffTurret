@@ -2,9 +2,15 @@ package org.firstinspires.ftc.teamcode.Hardware;
 
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawClose;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawOpen;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberFunny;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberDown;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberScore;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberScoreFront;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberTip;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.highJunction;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.midJunction;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.tipAngle;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.tippedHeight;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bDown;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreBack;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreFront;
@@ -73,8 +79,8 @@ public class Scoring {
     public void slides(double power, int target){
         spool.setPower(power);
         spool2.setPower(power);
-        spool.setTargetPosition(target);
-        spool2.setTargetPosition(-target);
+        spool.setTargetPosition(-target);
+        spool2.setTargetPosition(target);
     }
 
     //Score Methods
@@ -86,9 +92,9 @@ public class Scoring {
         v4b(v4bScoreFront);
         if(inRange(.2, time.seconds(), 1)){
             if(funny) {
-                grabber(1);
+                grabber(grabberFunny);
             }else{
-                grabber(grabberScore);
+                grabber(grabberScoreFront);
             }
         }
     }
@@ -99,9 +105,9 @@ public class Scoring {
         v4b(v4bScoreFront);
         if(inRange(.2, time.seconds(), 1)){
             if(funny) {
-                grabber(1);
+                grabber(grabberFunny);
             }else{
-                grabber(grabberScore);
+                grabber(grabberScoreFront);
             }
         }
     }
@@ -112,9 +118,9 @@ public class Scoring {
         v4b(v4bScoreFront);
         if(inRange(.2, time.seconds(), 1)){
             if(funny) {
-                grabber(1);
+                grabber(grabberFunny);
             }else{
-                grabber(grabberScore);
+                grabber(grabberScoreFront);
             }
         }
     }
@@ -126,7 +132,7 @@ public class Scoring {
         v4b(v4bScoreBack);
         if(inRange(.2, time.seconds(), 1)){
             if(funny) {
-                grabber(1);
+                grabber(grabberFunny);
             }else{
                 grabber(grabberScore);
             }
@@ -139,7 +145,7 @@ public class Scoring {
         v4b(v4bScoreBack);
         if(inRange(.2, time.seconds(), 1)){
             if(funny) {
-                grabber(1);
+                grabber(grabberFunny);
             }else{
                 grabber(grabberScore);
             }
@@ -152,7 +158,7 @@ public class Scoring {
         v4b(v4bScoreBack);
         if(inRange(.2, time.seconds(), 1)){
             if(funny) {
-                grabber(1);
+                grabber(grabberFunny)   ;
             }else{
                 grabber(grabberScore);
             }
@@ -160,7 +166,7 @@ public class Scoring {
     }
 
     //Deposit
-    public void deposit(){
+    public void deposit(String coneAngle){
         if(inRange(0,time.seconds(), .3)){
             open();
         }
@@ -170,12 +176,16 @@ public class Scoring {
         if(inRange(.5,time.seconds(),2)){
             v4b(v4bDown);
         }
-        if(inRange(.8,time.seconds(),2)) {
-            grabber(grabberScore);
-            slides(1, 0);
+        if(time.seconds()>.8) {
+            if(coneAngle.equals("Straight")) {
+                grabber(grabberDown);
+                slides(1,0);
+            } else if(coneAngle.equals("Forwards")) {
+                grabber(grabberTip);
+                slides(.5,tippedHeight);
+            }
         }
     }
-
 
 
 
