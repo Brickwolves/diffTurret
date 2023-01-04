@@ -10,7 +10,7 @@ public class PositionsAndSpeeds {
     public static int tippedHeight = 75;
 
 //WHY
-    public static double v4bDown = 0.865;
+    public static double v4bDown = 0.875;
     public static double v4bTipped = .89;
     public static double v4bScoreBack = 0.999;
     public static double v4bScoreFront = 0.91;

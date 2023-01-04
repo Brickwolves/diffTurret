@@ -218,8 +218,8 @@ public class FullRegularTeleOp extends OpMode {
 
 
         if (controller.get(SQUARE, TAP) && score != ScoreState.DOWN && !isTipped) {
-            coneTipped = "Forwards";
-            funny = true;
+            coneTipped = "Straight";
+            funny = false;
             score = ScoreState.DOWN;
             robot.scorer.time.reset();
         }
