@@ -4,9 +4,9 @@ import static org.firstinspires.ftc.teamcode.Hardware.LupineMecanumDrive.regulat
 import static org.firstinspires.ftc.teamcode.Hardware.LupineMecanumDrive.regulateSpeed2;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
-import static org.firstinspires.ftc.teamcode.VisionPipelines.SignalPipeline.SignalSide.ONE;
-import static org.firstinspires.ftc.teamcode.VisionPipelines.SignalPipeline.SignalSide.THREE;
-import static org.firstinspires.ftc.teamcode.VisionPipelines.SignalPipeline.SignalSide.TWO;
+import static org.firstinspires.ftc.teamcode.Vision.SignalPipeline.SignalSide.ONE;
+import static org.firstinspires.ftc.teamcode.Vision.SignalPipeline.SignalSide.THREE;
+import static org.firstinspires.ftc.teamcode.Vision.SignalPipeline.SignalSide.TWO;
 
 import android.os.Build;
 
@@ -21,9 +21,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
-import org.firstinspires.ftc.teamcode.Hardware.Vision.AprilTags.AprilTagDetectionPipeline;
 import org.firstinspires.ftc.teamcode.Utilities.Loggers.Side;
-import org.firstinspires.ftc.teamcode.VisionPipelines.SignalPipeline;
+import org.firstinspires.ftc.teamcode.Vision.AprilTags.AprilTagDetectionPipeline;
+import org.firstinspires.ftc.teamcode.Vision.SignalPipeline;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;

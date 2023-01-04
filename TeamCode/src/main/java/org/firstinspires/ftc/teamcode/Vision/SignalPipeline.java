@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.VisionPipelines;
+package org.firstinspires.ftc.teamcode.Vision;
 
 import static org.firstinspires.ftc.teamcode.DashConstants.VisionDiagnostic.DEBUG_MODE;
 import static org.firstinspires.ftc.teamcode.DashConstants.VisionDiagnostic.GREEN_MAX_CB;
