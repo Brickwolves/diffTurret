@@ -55,10 +55,10 @@ import org.opencv.core.Point;
 
 
 @Disabled
-    @TeleOp(name="Intelligent Translation", group="Iterative Opmode")
-    public class IntelligentTranslation extends OpMode {
+@TeleOp(name="Intelligent Translation", group="Iterative Opmode")
+public class IntelligentTranslation extends OpMode {
 
-        // Declare OpMode members.
+    // Declare OpMode members.
         private final ElapsedTime runtime = new ElapsedTime();
         private PID pid;
         private double setPoint = 0;

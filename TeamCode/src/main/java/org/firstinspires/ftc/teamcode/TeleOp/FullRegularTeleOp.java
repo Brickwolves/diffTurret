@@ -55,6 +55,8 @@ public class FullRegularTeleOp extends OpMode {
     private boolean pid_on = false;
     private boolean pid_on_last_cycle = false;
     public boolean isTipped = false;
+    public String coneTipped = "Straight";
+    public boolean funny = false;
 
     public enum ScoreState {
         DOWN,
@@ -108,7 +110,7 @@ public class FullRegularTeleOp extends OpMode {
     public void init_loop() {
 
 
-        robot.scorer.deposit();
+        robot.scorer.deposit(coneTipped);
         multTelemetry.addData("Tipping?", isTipped);
         multTelemetry.update();
     }
@@ -173,36 +175,51 @@ public class FullRegularTeleOp extends OpMode {
 
 
         //Scoring
+
+        if(controller.get(DPAD_UP,TAP)){
+            coneTipped = "Straight";
+            funny = false;
+        }
+        if(controller.get(DPAD_DN, TAP)){
+            coneTipped = "Forwards";
+            funny = true;
+
+        }
+
+
+
         switch(score){
             case DOWN:
                 if(!isTipped) {
-                    robot.scorer.deposit();
+                    robot.scorer.deposit(coneTipped);
                 }else{
                     robot.scorer.crashSlides();
                 }
                 break;
             case SCORE_LOW:
-                robot.scorer.lowBack(false);
+                robot.scorer.lowBack(funny);
                 break;
             case SCORE_MID:
-                robot.scorer.midBack(false);
+                robot.scorer.midBack(funny);
                 break;
             case SCORE_HIGH:
-                robot.scorer.highBack(false);
+                robot.scorer.highBack(funny);
                 break;
             case SCORE_FRONT_LOW:
-                robot.scorer.lowFront(false);
+                robot.scorer.lowFront(funny);
                 break;
             case SCORE_FRONT_MID:
-                robot.scorer.midFront(false);
+                robot.scorer.midFront(funny);
                 break;
             case SCORE_FRONT_HIGH:
-                robot.scorer.highFront(false);
+                robot.scorer.highFront(funny);
                 break;
         }
 
 
         if (controller.get(SQUARE, TAP) && score != ScoreState.DOWN && !isTipped) {
+            coneTipped = "Forwards";
+            funny = true;
             score = ScoreState.DOWN;
             robot.scorer.time.reset();
         }
@@ -223,19 +240,32 @@ public class FullRegularTeleOp extends OpMode {
         }
 
         if(controller2.get(TRIANGLE, TAP)){
-            if(score == ScoreState.SCORE_LOW){
+            if(score == ScoreState.SCORE_LOW) {
                 score = ScoreState.SCORE_FRONT_LOW;
                 robot.scorer.time.reset();
             }
-            if(score == ScoreState.SCORE_MID){
+            else if(score == ScoreState.SCORE_MID){
                 score = ScoreState.SCORE_FRONT_MID;
                 robot.scorer.time.reset();
             }
-            if(score == ScoreState.SCORE_HIGH){
+            else if(score == ScoreState.SCORE_HIGH){
                 score = ScoreState.SCORE_FRONT_HIGH;
                 robot.scorer.time.reset();
             }
+            else if(score == ScoreState.SCORE_FRONT_LOW) {
+                score = ScoreState.SCORE_LOW;
+                robot.scorer.time.reset();
+            }
+            else if(score == ScoreState.SCORE_FRONT_MID){
+                score = ScoreState.SCORE_MID;
+                robot.scorer.time.reset();
+            }
+            else if(score == ScoreState.SCORE_FRONT_HIGH){
+                score = ScoreState.SCORE_HIGH;
+                robot.scorer.time.reset();
+            }
         }
+
 
 
         //IMU RESET
@@ -244,25 +274,6 @@ public class FullRegularTeleOp extends OpMode {
 //        }
 
         //TURN WRAPPING
-        boolean KETurns;
-        if (controller.get(DPAD_R, TAP)) {
-            setPoint = MathUtils.closestAngle(270, robot.gyro.getAngle());
-            pid_on = true;
-            KETurns = false;
-        } else if (controller.get(DPAD_L, TAP)) {
-            setPoint = MathUtils.closestAngle(90, robot.gyro.getAngle());
-            pid_on = true;
-            KETurns = false;
-        } else if (controller.get(DPAD_UP, TAP)) {
-            setPoint = MathUtils.closestAngle(0, robot.gyro.getAngle());
-            pid_on = true;
-            KETurns = false;
-        } else if (controller.get(DPAD_DN, TAP)) {
-            setPoint = MathUtils.closestAngle(180, robot.gyro.getAngle());
-            pid_on = true;
-            KETurns = false;
-
-        }
 
 
         // Lock the heading if we JUST turned PID on

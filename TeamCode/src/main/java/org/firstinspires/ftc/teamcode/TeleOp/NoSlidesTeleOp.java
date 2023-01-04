@@ -33,6 +33,7 @@ import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.derivativeWeig
 import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.integralWeight;
 import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.proportionalWeight;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -44,7 +45,8 @@ import org.firstinspires.ftc.teamcode.Utilities.Loggers.Side;
 import org.firstinspires.ftc.teamcode.Utilities.MathUtils;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
 
-//@Disabled
+
+@Disabled
 @TeleOp(name="No Slides TeleOp", group="Iterative Opmode")
 public class NoSlidesTeleOp extends OpMode {
 
@@ -108,7 +110,7 @@ public class NoSlidesTeleOp extends OpMode {
     public void init_loop() {
 
 
-        robot.scorer.deposit();
+        robot.scorer.deposit("Straight");
         multTelemetry.addData("Tipping?", isTipped);
         multTelemetry.update();
     }
@@ -176,7 +178,7 @@ public class NoSlidesTeleOp extends OpMode {
         switch(score){
             case DOWN:
                 if(!isTipped) {
-                    robot.scorer.deposit();
+                    robot.scorer.deposit("Straight");
                 }else{
                     robot.scorer.crashSlides();
                 }
