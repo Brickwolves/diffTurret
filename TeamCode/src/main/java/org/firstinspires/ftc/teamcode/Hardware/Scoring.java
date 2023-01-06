@@ -7,13 +7,16 @@ import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.gr
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberScore;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberScoreFront;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberTip;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.highFunny;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.highJunction;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.midFunny;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.midJunction;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.tipAngle;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.tippedHeight;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bDown;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreBack;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreFront;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreFrontLow;
 import static org.firstinspires.ftc.teamcode.Utilities.MathUtils.inRange;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
 
@@ -86,42 +89,42 @@ public class Scoring {
     //Score Methods
 
     //Front Score
-    public void highFront(boolean funny){
-        close();
-        slides(1,highJunction);
-        v4b(v4bScoreFront);
-        if(inRange(.2, time.seconds(), 1)){
-            if(funny) {
-                grabber(grabberFunny);
-            }else{
+    public void highFront(boolean funny) {
+        if (!funny) {
+            close();
+            slides(1, highJunction);
+            v4b(v4bScoreFront);
+            if (inRange(.2, time.seconds(), 1)) {
                 grabber(grabberScoreFront);
             }
+        }else{
+            highBack(true);
         }
     }
 
     public void midFront(boolean funny){
+        if (!funny) {
         close();
         slides(1,midJunction);
         v4b(v4bScoreFront);
         if(inRange(.2, time.seconds(), 1)){
-            if(funny) {
-                grabber(grabberFunny);
-            }else{
-                grabber(grabberScoreFront);
-            }
+            grabber(grabberScoreFront);
+        }
+        }else{
+            highBack(true);
         }
     }
 
     public void lowFront(boolean funny){
+        if (!funny) {
         close();
         slides(1,0);
-        v4b(v4bScoreFront);
+        v4b(v4bScoreFrontLow);
         if(inRange(.2, time.seconds(), 1)){
-            if(funny) {
-                grabber(grabberFunny);
-            }else{
-                grabber(grabberScoreFront);
-            }
+            grabber(grabberScoreFront);
+        }
+        }else{
+            highBack(true);
         }
     }
 
@@ -132,9 +135,11 @@ public class Scoring {
         v4b(v4bScoreBack);
         if(inRange(.2, time.seconds(), 1)){
             if(funny) {
+                slides(1,highFunny);
                 grabber(grabberFunny);
             }else{
                 grabber(grabberScore);
+                slides(1,highJunction);
             }
         }
     }
@@ -145,9 +150,11 @@ public class Scoring {
         v4b(v4bScoreBack);
         if(inRange(.2, time.seconds(), 1)){
             if(funny) {
+                slides(1,midFunny);
                 grabber(grabberFunny);
             }else{
                 grabber(grabberScore);
+                slides(1,midJunction);
             }
         }
     }

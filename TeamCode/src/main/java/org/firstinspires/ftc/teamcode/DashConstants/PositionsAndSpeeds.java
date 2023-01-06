@@ -4,16 +4,20 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public class PositionsAndSpeeds {
-    public static int highJunction = 680; //9000
-    public static int midJunction = 400;  //6500
+    public static int highJunction = 650;//9000
+    public static int highFunny = 510;
+    public static int midJunction = 300;  //6500
+    public static int midFunny = 300;
+    public static int midFront = 400;
     public static int depositDrop = 20;  //1000
     public static int tippedHeight = 75;
 
 //WHY
     public static double v4bDown = 0.875;
     public static double v4bTipped = .89;
-    public static double v4bScoreBack = 0.999;
-    public static double v4bScoreFront = 0.91;
+    public static double v4bScoreBack = 1;
+    public static double v4bScoreFront = 0.925;
+    public static double v4bScoreFrontLow = 0.915;
 
 
     public static double grabberDown = 0.49;

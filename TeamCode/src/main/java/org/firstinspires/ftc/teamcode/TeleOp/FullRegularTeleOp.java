@@ -4,15 +4,12 @@ import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState.TAP;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState.TOGGLE;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.CIRCLE;
-import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.CROSS;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_DN;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_L;
-import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_R;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_UP;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.LB1;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.LB2;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.RB1;
-import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.RB2;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.SQUARE;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.TRIANGLE;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.LEFT;
@@ -24,8 +21,6 @@ import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.X;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.driveSpeed;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.rateOfChange;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.tipAngle;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bDown;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreBack;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.IMU_DATUM;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
@@ -41,7 +36,6 @@ import org.firstinspires.ftc.teamcode.Controls.ButtonControls;
 import org.firstinspires.ftc.teamcode.Controls.Controller;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 import org.firstinspires.ftc.teamcode.Utilities.Loggers.Side;
-import org.firstinspires.ftc.teamcode.Utilities.MathUtils;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
 
 //@Disabled
@@ -56,7 +50,7 @@ public class FullRegularTeleOp extends OpMode {
     private boolean pid_on_last_cycle = false;
     public boolean isTipped = false;
     public String coneTipped = "Straight";
-    public boolean funny = false;
+    public boolean isFunny = false;
 
     public enum ScoreState {
         DOWN,
@@ -178,11 +172,11 @@ public class FullRegularTeleOp extends OpMode {
 
         if(controller.get(DPAD_UP,TAP)){
             coneTipped = "Straight";
-            funny = false;
+            isFunny = false;
         }
         if(controller.get(DPAD_DN, TAP)){
             coneTipped = "Forwards";
-            funny = true;
+            isFunny = true;
 
         }
 
@@ -197,35 +191,35 @@ public class FullRegularTeleOp extends OpMode {
                 }
                 break;
             case SCORE_LOW:
-                robot.scorer.lowBack(funny);
+                robot.scorer.lowBack(isFunny);
                 break;
             case SCORE_MID:
-                robot.scorer.midBack(funny);
+                robot.scorer.midBack(isFunny);
                 break;
             case SCORE_HIGH:
-                robot.scorer.highBack(funny);
+                robot.scorer.highBack(isFunny);
                 break;
             case SCORE_FRONT_LOW:
-                robot.scorer.lowFront(funny);
+                robot.scorer.lowFront(isFunny);
                 break;
             case SCORE_FRONT_MID:
-                robot.scorer.midFront(funny);
+                robot.scorer.midFront(isFunny);
                 break;
             case SCORE_FRONT_HIGH:
-                robot.scorer.highFront(funny);
+                robot.scorer.highFront(isFunny);
                 break;
         }
 
 
         if (controller.get(SQUARE, TAP) && score != ScoreState.DOWN && !isTipped) {
             coneTipped = "Straight";
-            funny = false;
+            isFunny = false;
             score = ScoreState.DOWN;
             robot.scorer.time.reset();
         }
 
-        if (controller2.get(DPAD_DN, TAP) && score != ScoreState.SCORE_LOW && !isTipped) {
-            score = ScoreState.SCORE_LOW;
+        if (controller2.get(DPAD_DN, TAP) && score != ScoreState.SCORE_FRONT_LOW && !isTipped) {
+            score = ScoreState.SCORE_FRONT_LOW;
             robot.scorer.time.reset();
         }
 
@@ -316,8 +310,10 @@ public class FullRegularTeleOp extends OpMode {
     /*
          ----------- L O G G I N G -----------
                                             */
-        multTelemetry.addData("Tipping?", isTipped);
+
         multTelemetry.addData("Score State", score);
+        multTelemetry.addData("Funny", isFunny);
+        multTelemetry.addData("Slides Height", robot.scorer.spool.getCurrentPosition());
         multTelemetry.update();
     }
 
