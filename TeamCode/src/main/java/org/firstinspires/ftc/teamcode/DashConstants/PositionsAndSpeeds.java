@@ -20,12 +20,12 @@ public class PositionsAndSpeeds {
     public static double v4bScoreFrontLow = 0.915;
 
 
-    public static double grabberDown = 0.49;
-    public static double grabberScore = 0.52;
-    public static double grabberScoreFront = 0.46;
+    public static double grabberDown = 0.3;
+    public static double grabberScore = 0.31;
+    public static double grabberScoreFront = 0.29;
     public static double grabberFunny = 0.4;
     public static double grabberFunnyFront = 0.4;
-    public static double grabberTip = 0.52;
+    public static double grabberTip = 0.33;
 
 
 
