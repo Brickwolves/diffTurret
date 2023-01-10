@@ -49,6 +49,7 @@ public class BlackBoxLogger {
         mainLogger.addHeader("GyroReading");
         mainLogger.addHeader("ThumbstickRot");
         mainLogger.addHeader("RotInput");
+        mainLogger.addHeader("RawIMU");
         for (ExpansionHubEx hub: hubs) {
             String deviceName = hub.getStandardModule().getSerialNumber().getString();
             mainLogger.addHeader("ServoDraw" + deviceName);

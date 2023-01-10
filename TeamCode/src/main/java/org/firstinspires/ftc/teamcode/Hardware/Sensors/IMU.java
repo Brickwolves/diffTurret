@@ -84,6 +84,11 @@ public class IMU {
         return currentAngle + deltaAngle + offsetAngle - datum;
     }
 
+    public double rawAngle(){
+        return imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+    }
+
+
     public double getTipAngle(){
 
         // Get the current angle
