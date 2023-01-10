@@ -118,7 +118,7 @@ public class BlackBoxLogger {
         log("Battery", batteryVoltage.getVoltage(), 3);
 
         for (ExpansionHubEx hub: hubs) {
-            String deviceName = hub.getStandardModule().getSerialNumber().getString();
+            String deviceName = hub.getStandardModule().getModuleSerialNumber().getString();
             log("ServoDraw" + deviceName, hub.getServoBusCurrentDraw(ExpansionHubEx.CurrentDrawUnits.MILLIAMPS), 2);
             log("SensorDraw" + deviceName, hub.getI2cBusCurrentDraw(ExpansionHubEx.CurrentDrawUnits.MILLIAMPS), 2);
             log("Motor0Hub" + deviceName, hub.getMotorCurrentDraw(ExpansionHubEx.CurrentDrawUnits.MILLIAMPS, 0), 1);
