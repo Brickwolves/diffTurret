@@ -5,7 +5,7 @@ import com.acmerobotics.dashboard.config.Config;
 @Config
 public class PositionsAndSpeeds {
     public static int highJunction = 650;//9000
-    public static int highFunny = 510;
+    public static int highFunny = 460;
     public static int midJunction = 300;  //6500
     public static int midFunny = 300;
     public static int midFront = 400;
