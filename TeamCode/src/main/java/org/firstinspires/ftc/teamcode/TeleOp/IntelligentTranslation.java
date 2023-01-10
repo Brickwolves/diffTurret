@@ -13,9 +13,7 @@ import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.LB2;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.RB1;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.LEFT;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.RIGHT;
-import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.INVERT_SHIFTED_Y;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.INVERT_Y;
-import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.SHIFTED_X;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.X;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.rateOfChange;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.IMU_DATUM;
@@ -27,7 +25,6 @@ import static org.firstinspires.ftc.teamcode.Utilities.ITUtils.distancePower;
 import static org.firstinspires.ftc.teamcode.Utilities.ITUtils.initializeIT;
 import static org.firstinspires.ftc.teamcode.Utilities.ITUtils.junctions;
 import static org.firstinspires.ftc.teamcode.Utilities.ITUtils.kDrive;
-import static org.firstinspires.ftc.teamcode.Utilities.ITUtils.kHDist;
 import static org.firstinspires.ftc.teamcode.Utilities.ITUtils.kStrafe;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.dashboard;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
@@ -38,17 +35,15 @@ import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.proportionalWe
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.google.ar.core.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Controls.ButtonControls;
 import org.firstinspires.ftc.teamcode.Controls.Controller;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
-import org.firstinspires.ftc.teamcode.Utilities.Loggers.Side;
+import org.firstinspires.ftc.teamcode.Utilities.Side;
 import org.firstinspires.ftc.teamcode.Utilities.MathUtils;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
 import org.opencv.core.Point;

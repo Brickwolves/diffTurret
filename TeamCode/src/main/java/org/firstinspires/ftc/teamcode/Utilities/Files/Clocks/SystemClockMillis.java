@@ -1,8 +1,8 @@
-package org.firstinspires.ftc.teamcode.Utilities.Loggers;
+package org.firstinspires.ftc.teamcode.Utilities.Files.Clocks;
 
-public class SystemClock implements Clock {
+public class SystemClockMillis implements Clock {
     private long startTime;
-    public SystemClock(){
+    public SystemClockMillis(){
         startTime = System.currentTimeMillis();
     }
 

@@ -1,4 +1,7 @@
-package org.firstinspires.ftc.teamcode.Utilities.Loggers;
+package org.firstinspires.ftc.teamcode.Utilities.Files.Testing;
+
+
+import org.firstinspires.ftc.teamcode.Utilities.Files.FileUtils.LogWriter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,4 +31,8 @@ public class TestWriter implements LogWriter {
         return stopCalled;
     }
 
+    @Override
+    public boolean isWriting() {
+        return false;
+    }
 }

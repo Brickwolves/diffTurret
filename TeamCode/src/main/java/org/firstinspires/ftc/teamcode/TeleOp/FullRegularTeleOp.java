@@ -35,7 +35,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Controls.ButtonControls;
 import org.firstinspires.ftc.teamcode.Controls.Controller;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
-import org.firstinspires.ftc.teamcode.Utilities.Loggers.Side;
+import org.firstinspires.ftc.teamcode.Utilities.Files.BlackBox.BlackBoxLogger;
+import org.firstinspires.ftc.teamcode.Utilities.Side;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
 
 //@Disabled
@@ -51,6 +52,8 @@ public class FullRegularTeleOp extends OpMode {
     public boolean isTipped = false;
     public String coneTipped = "Straight";
     public boolean isFunny = false;
+
+    public BlackBoxLogger logger;
 
     public enum ScoreState {
         DOWN,
@@ -90,6 +93,8 @@ public class FullRegularTeleOp extends OpMode {
 
 
         robot.gyro.setDatum(IMU_DATUM);
+
+        logger = new BlackBoxLogger();
 
 
         multTelemetry.addData("Status", "Initialized");
@@ -310,6 +315,11 @@ public class FullRegularTeleOp extends OpMode {
     /*
          ----------- L O G G I N G -----------
                                             */
+
+        logger.log("RotInput", rotation, 3);
+        logger.log("ThumbstickRot", controller.get(RIGHT, X), 3);
+        logger.log("GyroReading", robot.gyro.getAngle(), 2);
+        logger.writeData();
 
         multTelemetry.addData("Score State", score);
         multTelemetry.addData("Funny", isFunny);

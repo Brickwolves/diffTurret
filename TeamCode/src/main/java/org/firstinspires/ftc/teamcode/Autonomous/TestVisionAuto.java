@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.Camera;
-import org.firstinspires.ftc.teamcode.Utilities.Loggers.Side;
+import org.firstinspires.ftc.teamcode.Utilities.Side;
 
 @Autonomous(name="TestVisionAuto", group="Autonomous Linear Opmode")
 public class TestVisionAuto extends LinearOpMode {

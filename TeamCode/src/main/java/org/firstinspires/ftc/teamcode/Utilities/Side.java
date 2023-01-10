@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Utilities.Loggers;
+package org.firstinspires.ftc.teamcode.Utilities;
 
 public class Side {
     public static boolean red = false;

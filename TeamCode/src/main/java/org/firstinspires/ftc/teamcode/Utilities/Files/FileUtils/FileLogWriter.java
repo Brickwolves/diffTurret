@@ -1,10 +1,13 @@
-package org.firstinspires.ftc.teamcode.Utilities.Loggers;
+package org.firstinspires.ftc.teamcode.Utilities.Files.FileUtils;
 
-import java.io.File;
+import android.os.Environment;
+
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class FileLogWriter implements LogWriter {
+
+    private static final String BASE_FOLDER_NAME = "FIRST";
 
     private String fileName;
     private boolean writing = false;
@@ -33,13 +36,33 @@ public class FileLogWriter implements LogWriter {
 
     private void openFile() {
         try {
+
+            /*
             String logDir = System.getProperty("user.home");
             File file = new File(logDir, fileName);
-            if (file.exists()) {
-                file.delete();
+            if (!file.exists()) {
+                file.createNewFile();
             }
-            file.createNewFile();
             fileWriter = new FileWriter(file);
+             */
+
+            String directoryPath = Environment.getExternalStorageDirectory().getPath()+"/"+BASE_FOLDER_NAME;
+
+            fileWriter = new FileWriter(directoryPath+"/"+fileName+".csv", true);
+            fileWriter.flush();
+
+        } catch (IOException e) {
+            throw new Error(e);
+        }
+    }
+
+    public void deleteFile(){
+        try {
+            String directoryPath = Environment.getExternalStorageDirectory().getPath()+"/"+BASE_FOLDER_NAME;
+
+            fileWriter = new FileWriter(directoryPath+"/"+fileName+".csv", false);
+            fileWriter.flush();
+            fileWriter.append("");
             fileWriter.flush();
 
         } catch (IOException e) {
@@ -61,6 +84,11 @@ public class FileLogWriter implements LogWriter {
         if (writing) {
             closeFile();
         }
+    }
+
+    @Override
+    public boolean isWriting() {
+        return writing;
     }
 }
 

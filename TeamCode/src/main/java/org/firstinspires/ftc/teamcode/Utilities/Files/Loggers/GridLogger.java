@@ -1,4 +1,7 @@
-package org.firstinspires.ftc.teamcode.Utilities.Loggers;
+package org.firstinspires.ftc.teamcode.Utilities.Files.Loggers;
+
+import org.firstinspires.ftc.teamcode.Utilities.Files.Clocks.Clock;
+import org.firstinspires.ftc.teamcode.Utilities.Files.FileUtils.LogWriter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,24 +23,34 @@ public class GridLogger {
         firstLine = true;
     }
 
-    public void add(String column, double value){
-        /**
-         * Add a value to the logger under the specified column
-         *
-         * @param column
-         * @param value
-         */
+    /**
+     * Add a value to the logger under the specified column
+     *
+     * @param column
+     * @param entry
+     */
+    public void add(String column, String entry){
         if (!columnHeaders.contains(column)) columnHeaders.add(column);
-        rowData.put(column, String.valueOf(value));
+        rowData.put(column, entry);
     }
 
+    /**
+     * Add a value to the logger under the specified column
+     *
+     * @param column
+     * @param value
+     */
+    public void add(String column, double value){
+        add(column, String.valueOf(value));
+    }
 
+    /**
+     * Write a line of data to the log.  If this is the first call to writeRow, categories are
+     * written first, followed by the line of data.  Once the data is written, the logger is reset
+     * and calls to add() will add values to the next line of data.
+     */
     public void writeRow(){
-        /**
-         * Write a line of data to the log.  If this is the first call to writeRow, categories are
-         * written first, followed by the line of data.  Once the data is written, the logger is reset
-         * and calls to add() will add values to the next line of data.
-         */
+
 
         // Check there's data to write
         if (rowData.size() != 0){
@@ -70,5 +83,9 @@ public class GridLogger {
 
     public void stop(){
         writer.stop();
+    }
+
+    public boolean isWriting(){
+        return writer.isWriting();
     }
 }
