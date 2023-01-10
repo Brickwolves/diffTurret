@@ -116,7 +116,7 @@ public class Scoring {
             grabber(grabberScoreFront);
         }
         }else{
-            highBack(true);
+            midBack(true);
         }
     }
 
@@ -129,7 +129,7 @@ public class Scoring {
             grabber(grabberScoreFront);
         }
         }else{
-            highBack(true);
+            lowBack(true);
         }
     }
 
