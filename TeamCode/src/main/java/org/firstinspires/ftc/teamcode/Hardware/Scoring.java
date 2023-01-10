@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Hardware;
 
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawClose;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawOpen;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawTipped;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberFunny;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberDown;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberScore;
@@ -66,8 +67,12 @@ public class Scoring {
     }
 
     //Base Movement Methods
-    public void open(){
-        squeezer.setPosition(clawOpen);
+    public void open(boolean tipped){
+        if(tipped){
+            squeezer.setPosition(clawTipped);
+        }else {
+            squeezer.setPosition(clawOpen);
+        }
     }
     public void close(){
         squeezer.setPosition(clawClose);
@@ -131,7 +136,6 @@ public class Scoring {
     //Back Score
     public void highBack(boolean funny){
         close();
-        slides(1,highJunction);
         v4b(v4bScoreBack);
         if(inRange(.2, time.seconds(), 1)){
             if(funny) {
@@ -146,7 +150,6 @@ public class Scoring {
 
     public void midBack(boolean funny){
         close();
-        slides(1,midJunction);
         v4b(v4bScoreBack);
         if(inRange(.2, time.seconds(), 1)){
             if(funny) {
@@ -165,7 +168,7 @@ public class Scoring {
         v4b(v4bScoreBack);
         if(inRange(.2, time.seconds(), 1)){
             if(funny) {
-                grabber(grabberFunny)   ;
+                grabber(grabberFunny);
             }else{
                 grabber(grabberScore);
             }
@@ -175,7 +178,7 @@ public class Scoring {
     //Deposit
     public void deposit(String coneAngle){
         if(inRange(0,time.seconds(), .3)){
-            open();
+            open(false);
         }
         if(inRange(.3,time.seconds(), 2)){
             close();

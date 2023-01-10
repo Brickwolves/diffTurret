@@ -149,7 +149,7 @@ public class FullRegularTeleOp extends OpMode {
 
         if(score == ScoreState.DOWN) {
             if (controller.get(CIRCLE, TOGGLE)) {
-                robot.scorer.open();
+                robot.scorer.open(isFunny);
             } else {
                 robot.scorer.close();
             }

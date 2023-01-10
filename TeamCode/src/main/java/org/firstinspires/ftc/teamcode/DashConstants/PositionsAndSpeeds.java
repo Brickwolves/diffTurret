@@ -10,22 +10,22 @@ public class PositionsAndSpeeds {
     public static int midFunny = 300;
     public static int midFront = 400;
     public static int depositDrop = 20;  //1000
-    public static int tippedHeight = 75;
+    public static int tippedHeight = 140;
 
 //WHY
     public static double v4bDown = 0.875;
     public static double v4bTipped = .89;
     public static double v4bScoreBack = 1;
-    public static double v4bScoreFront = 0.925;
-    public static double v4bScoreFrontLow = 0.915;
+    public static double v4bScoreFront = 0.915;
+    public static double v4bScoreFrontLow = 0.91;
 
 
-    public static double grabberDown = 0.3;
-    public static double grabberScore = 0.31;
-    public static double grabberScoreFront = 0.29;
-    public static double grabberFunny = 0.4;
+    public static double grabberDown = 0.355;
+    public static double grabberScore = 0.38;
+    public static double grabberScoreFront = 0.32;
+    public static double grabberFunny = 0.275;
     public static double grabberFunnyFront = 0.4;
-    public static double grabberTip = 0.33;
+    public static double grabberTip = 0.4;
 
 
 
@@ -33,7 +33,8 @@ public class PositionsAndSpeeds {
     public static double rateOfChange = 100;
 
 
-    public static double clawOpen = 0.5;
+    public static double clawOpen = 0.4;
+    public static double clawTipped = 0.3;
     public static double clawClose = 0;
 
     public static double tipAngle = 3;

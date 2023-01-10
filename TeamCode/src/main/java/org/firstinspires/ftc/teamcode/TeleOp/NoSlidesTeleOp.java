@@ -155,7 +155,7 @@ public class NoSlidesTeleOp extends OpMode {
 
         if(score == ScoreState.DOWN) {
             if (controller.get(CIRCLE, TOGGLE)) {
-                robot.scorer.open();
+                robot.scorer.open(false);
             } else {
                 robot.scorer.close();
             }
