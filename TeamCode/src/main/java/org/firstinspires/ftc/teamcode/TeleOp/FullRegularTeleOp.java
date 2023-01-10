@@ -161,15 +161,6 @@ public class FullRegularTeleOp extends OpMode {
         }
 
 
-        //PID and Kinetic Turning
-        double rotation = controller.get(RIGHT, X);
-
-        // Turn off PID if we manually turn
-        // Turn on PID if we're not manually turning and the robot's stops rotating
-        double currentRateOfChange = robot.gyro.rateOfChange();
-        if (rotation != 0) {
-            pid_on = false;
-        } else if (currentRateOfChange <= rateOfChange) pid_on = true;
 
 
 
@@ -273,6 +264,15 @@ public class FullRegularTeleOp extends OpMode {
 //        }
 
         //TURN WRAPPING
+        //PID and Kinetic Turning
+        double rotation = controller.get(RIGHT, X);
+
+        // Turn off PID if we manually turn
+        // Turn on PID if we're not manually turning and the robot's stops rotating
+        double currentRateOfChange = robot.gyro.rateOfChange();
+        if (rotation != 0) {
+            pid_on = false;
+        } else if (currentRateOfChange <= rateOfChange) pid_on = true;
 
 
         // Lock the heading if we JUST turned PID on
@@ -290,7 +290,6 @@ public class FullRegularTeleOp extends OpMode {
 
         double drive = controller.get(LEFT, INVERT_SHIFTED_Y);
         double strafe = controller.get(LEFT, SHIFTED_X);
-        double turn = controller.get(RIGHT, X);
 
 
         if (controller.get(LB1, ButtonControls.ButtonState.DOWN) || controller.get(LB2, DOWN)) {
