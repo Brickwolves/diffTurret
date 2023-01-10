@@ -74,9 +74,17 @@ public class Scoring {
             squeezer.setPosition(clawOpen);
         }
     }
+    public void close(boolean down){
+        if(down){
+            slides(1,100);
+        }
+        squeezer.setPosition(clawClose);
+    }
+
     public void close(){
         squeezer.setPosition(clawClose);
     }
+
     public void v4b(double target){
         v4b1.setPosition(target);
         v4b2.setPosition(1-target);
@@ -181,7 +189,7 @@ public class Scoring {
             open(false);
         }
         if(inRange(.3,time.seconds(), 2)){
-            close();
+            close(true);
         }
         if(inRange(.5,time.seconds(),2)){
             v4b(v4bDown);
@@ -202,7 +210,7 @@ public class Scoring {
 
     //Immediately Drop Slides
     public void crashSlides(){
-        close();
+        close(true);
         slides(1,0);
         v4b(v4bDown);
     }
