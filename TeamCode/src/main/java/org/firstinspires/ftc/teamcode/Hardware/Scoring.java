@@ -200,11 +200,12 @@ public class Scoring {
         if(inRange(.3,time.seconds(), .5)){
             close();
         }
-        if(inRange(.5,time.seconds(),2)){
+        if(inRange(.7,time.seconds(),.8)){
             v4b(v4bDown);
             slides(1,0);
+            grabber(grabberDown);
         }
-        if(inRange(1.2,time.seconds(),1.5)) {
+        if(inRange(1.5,time.seconds(),1.7)) {
             if(coneAngle.equals("Straight")) {
                 grabber(grabberDown);
                 open(false);
@@ -229,13 +230,7 @@ public class Scoring {
             v4b(v4bDown);
         }
         if(time.seconds()>.8) {
-            if(coneAngle.equals("Straight")) {
-                grabber(grabberDown);
-                slides(1,0);
-            } else if(coneAngle.equals("Forwards")) {
-                grabber(grabberTip);
-                slides(.5,tippedHeight);
-            }
+            slides(1,0);
         }
     }
 

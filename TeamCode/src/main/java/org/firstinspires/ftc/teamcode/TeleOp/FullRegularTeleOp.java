@@ -159,16 +159,16 @@ public class FullRegularTeleOp extends OpMode {
         manualClaw = controller.get(CROSS, TOGGLE);
 
         if(score == ScoreState.DOWN) {
-            if(manualClaw) {
+            if(manualClaw && fullyDown) {
                 if (controller.get(CIRCLE, TOGGLE)) {
                     robot.scorer.open(isFunny);
                 } else {
                     robot.scorer.close();
                 }
-            }else {
-                if (robot.scorer.beamBroken() && fullyDown) {
+            }else if(fullyDown){
+                if (robot.scorer.beamBroken()) {
                     robot.scorer.close();
-                } else {
+                } else{
                     robot.scorer.open(isFunny);
                 }
             }
@@ -327,15 +327,15 @@ public class FullRegularTeleOp extends OpMode {
          ----------- L O G G I N G -----------
                                             */
 
-        logger.log("RotInput", rotation, 3);
-        logger.log("ThumbstickRot", controller.get(RIGHT, X), 3);
-        logger.log("GyroReading", robot.gyro.getAngle(), 2);
-        logger.log("RawIMU", robot.gyro.rawAngle(), 3);
-        logger.writeData();
+//        logger.log("RotInput", rotation, 3);
+//        logger.log("ThumbstickRot", controller.get(RIGHT, X), 3);
+//        logger.log("GyroReading", robot.gyro.getAngle(), 2);
+//        logger.log("RawIMU", robot.gyro.rawAngle(), 3);
+//        logger.writeData();
 
         multTelemetry.addData("Score State", score);
-        multTelemetry.addData("V4B pos", robot.scorer.v4b1.getPosition());
-        multTelemetry.addData("V4B2 pos", robot.scorer.v4b2.getPosition());
+        multTelemetry.addData("Manual", manualClaw);
+        multTelemetry.addData("Fully Down", fullyDown);
 
         multTelemetry.addData("Funny", isFunny);
         multTelemetry.addData("Slides Height", -robot.scorer.spool.getCurrentPosition());
