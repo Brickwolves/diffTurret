@@ -55,6 +55,7 @@ public class FullRegularTeleOp extends OpMode {
     public String coneTipped = "Straight";
     public boolean isFunny = false;
     public boolean manualClaw = false;
+    public boolean clawOpen = false;
 
     public BlackBoxLogger logger;
 
@@ -156,20 +157,26 @@ public class FullRegularTeleOp extends OpMode {
             robot.scorer.time.reset();
         }
 
-        manualClaw = controller.get(CROSS, TOGGLE);
+        manualClaw = controller.get(TRIANGLE, TOGGLE);
+
+        clawOpen = (robot.scorer.updateBeam() || controller.get(CIRCLE, TAP)) != clawOpen;
+
+
 
         if(score == ScoreState.DOWN) {
-            if(manualClaw && fullyDown) {
-                if (controller.get(CIRCLE, TOGGLE)) {
-                    robot.scorer.open(isFunny);
-                } else {
-                    robot.scorer.close();
+            if(!manualClaw || !isFunny) {
+                if (fullyDown) {
+                    if (clawOpen) {
+                        robot.scorer.open(isFunny);
+                    } else {
+                        robot.scorer.close();
+                    }
                 }
-            }else if(fullyDown){
-                if (robot.scorer.beamBroken()) {
-                    robot.scorer.close();
-                } else{
+            } else{
+                if(controller.get(CIRCLE,TOGGLE)){
                     robot.scorer.open(isFunny);
+                }else{
+                    robot.scorer.close();
                 }
             }
         }
@@ -269,6 +276,9 @@ public class FullRegularTeleOp extends OpMode {
         }
 
 
+        if(score != ScoreState.DOWN){
+            clawOpen = true;
+        }
 
         //IMU RESET
 //        if (controller.get(CROSS, TAP)) {
@@ -335,7 +345,7 @@ public class FullRegularTeleOp extends OpMode {
 
         multTelemetry.addData("Score State", score);
         multTelemetry.addData("Manual", manualClaw);
-        multTelemetry.addData("Fully Down", fullyDown);
+        multTelemetry.addData("claw open", clawOpen);
 
         multTelemetry.addData("Funny", isFunny);
         multTelemetry.addData("Slides Height", -robot.scorer.spool.getCurrentPosition());

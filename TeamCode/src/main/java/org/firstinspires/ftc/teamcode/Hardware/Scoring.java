@@ -36,6 +36,8 @@ public class Scoring {
     public Servo v4b2;
     public Servo grabberSpin;
     public TouchSensor beam1;
+    public boolean previousPress = false;
+    public boolean clawToggleOpen = false;
 
 
     public boolean wentDown = false;
@@ -73,6 +75,13 @@ public class Scoring {
     public boolean beamBroken(){
         return beam1.isPressed();
     }
+
+    public boolean updateBeam(){
+        boolean retVal = beam1.isPressed() && !previousPress;
+        previousPress = beam1.isPressed();
+        return retVal;
+    }
+
 
     //Base Movement Methods
     public void open(boolean tipped){
@@ -205,18 +214,23 @@ public class Scoring {
             slides(1,0);
             grabber(grabberDown);
         }
-        if(inRange(1.5,time.seconds(),1.7)) {
+        if(inRange(1.5,time.seconds(),1.7)){
+            if(coneAngle.equals("Straight")) {
+                open(false);
+            } else if(coneAngle.equals("Forwards")) {
+                open(true);
+            }
+        }
+        if(1.5<time.seconds()) {
             if(coneAngle.equals("Straight")) {
                 grabber(grabberDown);
-                open(false);
                 slides(1,0);
             } else if(coneAngle.equals("Forwards")) {
                 grabber(grabberTip);
-                open(true);
                 slides(.5,tippedHeight);
             }
         }
-        if(time.seconds()>1.2){
+        if(time.seconds()>1.8){
             fullyDown = true;
         }
     }
