@@ -7,13 +7,13 @@ public class PositionsAndSpeeds {
     public static int highJunction = 650;//9000
     public static int highFunny = 460;
     public static int midJunction = 290;  //6500
-    public static int midFunny = 100;
+    public static int midFunny = 110;
     public static int midFront = 400;
     public static int depositDrop = 20;  //1000
     public static int tippedHeight = 120;
 
 //WHY
-    public static double v4bDown = 0.87;
+    public static double v4bDown = 0.86;
     public static double v4bTipped = .89;
     public static double v4bScoreBack = 0.99;
     public static double v4bScoreFront = 0.91;
@@ -24,7 +24,6 @@ public class PositionsAndSpeeds {
     public static double grabberScore = 0.38;
     public static double grabberScoreFront = 0.32;
     public static double grabberFunny = 0.275;
-    public static double grabberFunnyFront = 0.4;
     public static double grabberTip = 0.4;
 
 

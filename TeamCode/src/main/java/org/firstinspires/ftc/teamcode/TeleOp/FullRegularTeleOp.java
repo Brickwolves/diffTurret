@@ -11,6 +11,7 @@ import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.LB1;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.LB2;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.RB1;
+import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.RB2;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.SQUARE;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.TRIANGLE;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.LEFT;
@@ -19,9 +20,20 @@ import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.INV
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.SHIFTED_X;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.X;
 
+import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.Y;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.driveSpeed;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberDown;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberFunny;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberScore;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberScoreFront;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberTip;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.rateOfChange;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.tipAngle;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.tippedHeight;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bDown;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreBack;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreFront;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreFrontLow;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.IMU_DATUM;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
@@ -195,7 +207,113 @@ public class FullRegularTeleOp extends OpMode {
 
         }
 
+    //LEFT - Grabber Orientation
+        //Increase
+        if(controller2.get(LB1, TAP)){
+            //Not funny
+            if(!isFunny) {
+                //Down
+                if (score == ScoreState.DOWN) {
+                    grabberDown += 0.005;
+                //Score Back
+                } else if (score == ScoreState.SCORE_HIGH || score == ScoreState.SCORE_MID || score == ScoreState.SCORE_LOW) {
+                    grabberScore += 0.005;
+                //Score Front
+                } else if (score == ScoreState.SCORE_FRONT_LOW || score == ScoreState.SCORE_FRONT_MID || score == ScoreState.SCORE_FRONT_HIGH) {
+                    grabberScoreFront += 0.005;
+                }
+            //Funny
+            }else {
+                //Down Funny
+                if (score == ScoreState.DOWN) {
+                    grabberTip += 0.005;
+                    //Score Back Funny
+                } else if (score == ScoreState.SCORE_HIGH || score == ScoreState.SCORE_MID || score == ScoreState.SCORE_LOW) {
+                    grabberFunny += 0.005;
+                }
+            }
+        //Decrease
+        } else if(controller2.get(LB2, TAP)){
+            //Not funny
+            if(!isFunny) {
+                //Down
+                if (score == ScoreState.DOWN) {
+                    grabberDown -= 0.005;
+                    //Score Back
+                } else if (score == ScoreState.SCORE_HIGH || score == ScoreState.SCORE_MID || score == ScoreState.SCORE_LOW) {
+                    grabberScore -= 0.005;
+                    //Score Front
+                } else if (score == ScoreState.SCORE_FRONT_LOW || score == ScoreState.SCORE_FRONT_MID || score == ScoreState.SCORE_FRONT_HIGH) {
+                    grabberScoreFront -= 0.005;
+                }
+                //Funny
+            }else {
+                //Down Funny
+                if (score == ScoreState.DOWN) {
+                    grabberTip -= 0.005;
+                    //Score Back Funny
+                } else if (score == ScoreState.SCORE_HIGH || score == ScoreState.SCORE_MID || score == ScoreState.SCORE_LOW) {
+                    grabberFunny -= 0.005;
+                }
+            }
+        }
 
+    //Right - Height
+        //Increase
+        if(controller2.get(RB1, TAP)){
+            //Not funny
+            if(!isFunny) {
+                //Down
+                if (score == ScoreState.DOWN) {
+                    v4bDown += 0.005;
+                    //Score Back
+                } else if (score == ScoreState.SCORE_HIGH || score == ScoreState.SCORE_MID || score == ScoreState.SCORE_LOW) {
+                    v4bScoreBack += 0.005;
+                    //Score Front Not Low
+                } else if (score == ScoreState.SCORE_FRONT_MID || score == ScoreState.SCORE_FRONT_HIGH) {
+                    v4bScoreFront += 0.005;
+                    //Score Front Low
+                }else if(score == ScoreState.SCORE_FRONT_LOW){
+                    v4bScoreFrontLow += 0.005;
+                }
+                //Funny
+            }else {
+                //Down Funny
+                if (score == ScoreState.DOWN) {
+                    tippedHeight += 5;
+                    //Score Back Funny
+                } else if (score == ScoreState.SCORE_HIGH || score == ScoreState.SCORE_MID || score == ScoreState.SCORE_LOW) {
+                    v4bScoreBack += 0.005;
+                }
+            }
+            //Decrease
+        } else if(controller2.get(RB2, TAP)){
+            //Not funny
+            if(!isFunny) {
+                //Down
+                if (score == ScoreState.DOWN) {
+                    v4bDown -= 0.005;
+                    //Score Back
+                } else if (score == ScoreState.SCORE_HIGH || score == ScoreState.SCORE_MID || score == ScoreState.SCORE_LOW) {
+                    v4bScoreBack -= 0.005;
+                    //Score Front Not Low
+                } else if (score == ScoreState.SCORE_FRONT_MID || score == ScoreState.SCORE_FRONT_HIGH) {
+                    v4bScoreFront -= 0.005;
+                    //Score Front Low
+                }else if(score == ScoreState.SCORE_FRONT_LOW){
+                    v4bScoreFrontLow -= 0.005;
+                }
+                //Funny
+            }else {
+                //Down Funny
+                if (score == ScoreState.DOWN) {
+                    tippedHeight -= 5;
+                    //Score Back Funny
+                } else if (score == ScoreState.SCORE_HIGH || score == ScoreState.SCORE_MID || score == ScoreState.SCORE_LOW) {
+                    v4bScoreBack -= 0.005;
+                }
+            }
+        }
 
         switch(score){
             case DOWN:

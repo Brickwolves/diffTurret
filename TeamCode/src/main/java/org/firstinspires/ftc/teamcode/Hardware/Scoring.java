@@ -124,7 +124,8 @@ public class Scoring {
             close();
             slides(1, highJunction);
             v4b(v4bScoreFront);
-            if (inRange(.2, time.seconds(), 1)) {
+            if (time.seconds() > .2) {
+                v4b(v4bScoreFront);
                 grabber(grabberScoreFront);
             }
         }else{
@@ -137,7 +138,8 @@ public class Scoring {
             close();
             slides(1,midJunction);
             v4b(v4bScoreFront);
-            if(inRange(.2, time.seconds(), 1)){
+            if(time.seconds() > .2){
+                v4b(v4bScoreFront);
                 grabber(grabberScoreFront);
             }
         }else{
@@ -150,7 +152,8 @@ public class Scoring {
             close();
             slides(1,0);
             v4b(v4bScoreFrontLow);
-            if(inRange(.2, time.seconds(), 1)){
+            if(time.seconds() > .2){
+                v4b(v4bScoreFrontLow);
                 grabber(grabberScoreFront);
             }
         }else{
@@ -162,7 +165,8 @@ public class Scoring {
     public void highBack(boolean funny){
         close();
         v4b(v4bScoreBack);
-        if(inRange(.2, time.seconds(), 1)){
+        if(time.seconds() > .2){
+            v4b(v4bScoreBack);
             if(funny) {
                 slides(1,highFunny);
                 grabber(grabberFunny);
@@ -176,7 +180,8 @@ public class Scoring {
     public void midBack(boolean funny){
         close();
         v4b(v4bScoreBack);
-        if(inRange(.2, time.seconds(), 1)){
+        if(time.seconds() > .2){
+            v4b(v4bScoreBack);
             if(funny) {
                 slides(1,midFunny);
                 grabber(grabberFunny);
@@ -191,7 +196,8 @@ public class Scoring {
         close();
         slides(1,0);
         v4b(v4bScoreBack);
-        if(inRange(.2, time.seconds(), 1)){
+        if(time.seconds() > .2){
+            v4b(v4bScoreBack);
             if(funny) {
                 grabber(grabberFunny);
             }else{
@@ -232,6 +238,7 @@ public class Scoring {
         }
         if(time.seconds()>1.8){
             fullyDown = true;
+            v4b(v4bDown);
         }
     }
 
