@@ -20,9 +20,11 @@ import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreFrontLow;
 import static org.firstinspires.ftc.teamcode.Utilities.MathUtils.inRange;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
+import static org.firstinspires.ftc.teamcode.Utilities.NonConstants.fullyDown;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class Scoring {
@@ -33,6 +35,7 @@ public class Scoring {
     public Servo v4b1;
     public Servo v4b2;
     public Servo grabberSpin;
+    public TouchSensor beam1;
 
 
     public boolean wentDown = false;
@@ -64,6 +67,11 @@ public class Scoring {
         spool2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         spool2.setPower(.6);
 
+        beam1 = hardwareMap.get(TouchSensor.class, "beam1");
+    }
+
+    public boolean beamBroken(){
+        return beam1.isPressed();
     }
 
     //Base Movement Methods
@@ -117,12 +125,12 @@ public class Scoring {
 
     public void midFront(boolean funny){
         if (!funny) {
-        close();
-        slides(1,midJunction);
-        v4b(v4bScoreFront);
-        if(inRange(.2, time.seconds(), 1)){
-            grabber(grabberScoreFront);
-        }
+            close();
+            slides(1,midJunction);
+            v4b(v4bScoreFront);
+            if(inRange(.2, time.seconds(), 1)){
+                grabber(grabberScoreFront);
+            }
         }else{
             midBack(true);
         }
@@ -130,12 +138,12 @@ public class Scoring {
 
     public void lowFront(boolean funny){
         if (!funny) {
-        close();
-        slides(1,0);
-        v4b(v4bScoreFrontLow);
-        if(inRange(.2, time.seconds(), 1)){
-            grabber(grabberScoreFront);
-        }
+            close();
+            slides(1,0);
+            v4b(v4bScoreFrontLow);
+            if(inRange(.2, time.seconds(), 1)){
+                grabber(grabberScoreFront);
+            }
         }else{
             lowBack(true);
         }
@@ -187,9 +195,35 @@ public class Scoring {
     public void deposit(String coneAngle){
         if(inRange(0,time.seconds(), .3)){
             open(false);
+            fullyDown = false;
         }
-        if(inRange(.3,time.seconds(), 2)){
-            close(true);
+        if(inRange(.3,time.seconds(), .5)){
+            close();
+        }
+        if(inRange(.5,time.seconds(),2)){
+            v4b(v4bDown);
+            slides(1,0);
+        }
+        if(inRange(1.2,time.seconds(),1.5)) {
+            if(coneAngle.equals("Straight")) {
+                grabber(grabberDown);
+                open(false);
+                slides(1,0);
+            } else if(coneAngle.equals("Forwards")) {
+                grabber(grabberTip);
+                open(true);
+                slides(.5,tippedHeight);
+            }
+        }
+        if(time.seconds()>1.2){
+            fullyDown = true;
+        }
+    }
+
+    public void deposit(String coneAngle, boolean start){
+        if(inRange(0,time.seconds(), .3)){
+            open(false);
+            fullyDown = true;
         }
         if(inRange(.5,time.seconds(),2)){
             v4b(v4bDown);
@@ -207,10 +241,9 @@ public class Scoring {
 
 
 
-
     //Immediately Drop Slides
     public void crashSlides(){
-        close(true);
+        close();
         slides(1,0);
         v4b(v4bDown);
     }

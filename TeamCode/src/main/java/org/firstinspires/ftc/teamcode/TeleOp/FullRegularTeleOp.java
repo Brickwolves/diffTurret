@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState.TAP;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState.TOGGLE;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.CIRCLE;
+import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.CROSS;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_DN;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_L;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_UP;
@@ -27,6 +28,7 @@ import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.derivativeWeight;
 import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.integralWeight;
 import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.proportionalWeight;
+import static org.firstinspires.ftc.teamcode.Utilities.NonConstants.fullyDown;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -52,6 +54,7 @@ public class FullRegularTeleOp extends OpMode {
     public boolean isTipped = false;
     public String coneTipped = "Straight";
     public boolean isFunny = false;
+    public boolean manualClaw = false;
 
     public BlackBoxLogger logger;
 
@@ -109,7 +112,7 @@ public class FullRegularTeleOp extends OpMode {
     public void init_loop() {
 
 
-        robot.scorer.deposit(coneTipped);
+        robot.scorer.deposit(coneTipped, true);
         multTelemetry.addData("Tipping?", isTipped);
         multTelemetry.update();
     }
@@ -138,6 +141,7 @@ public class FullRegularTeleOp extends OpMode {
     public void loop() {
         Controller.update();
 
+
         double power;
 
 
@@ -152,15 +156,23 @@ public class FullRegularTeleOp extends OpMode {
             robot.scorer.time.reset();
         }
 
+        manualClaw = controller.get(CROSS, TOGGLE);
+
         if(score == ScoreState.DOWN) {
-            if (controller.get(CIRCLE, TOGGLE)) {
-                robot.scorer.open(isFunny);
-            } else {
-                robot.scorer.close(true);
+            if(manualClaw) {
+                if (controller.get(CIRCLE, TOGGLE)) {
+                    robot.scorer.open(isFunny);
+                } else {
+                    robot.scorer.close();
+                }
+            }else {
+                if (robot.scorer.beamBroken() && fullyDown) {
+                    robot.scorer.close();
+                } else {
+                    robot.scorer.open(isFunny);
+                }
             }
         }
-
-
 
 
 
@@ -318,12 +330,18 @@ public class FullRegularTeleOp extends OpMode {
         logger.log("RotInput", rotation, 3);
         logger.log("ThumbstickRot", controller.get(RIGHT, X), 3);
         logger.log("GyroReading", robot.gyro.getAngle(), 2);
+        logger.log("RawIMU", robot.gyro.rawAngle(), 3);
         logger.writeData();
 
         multTelemetry.addData("Score State", score);
+        multTelemetry.addData("V4B pos", robot.scorer.v4b1.getPosition());
+        multTelemetry.addData("V4B2 pos", robot.scorer.v4b2.getPosition());
+
         multTelemetry.addData("Funny", isFunny);
-        multTelemetry.addData("Slides Height", robot.scorer.spool.getCurrentPosition());
+        multTelemetry.addData("Slides Height", -robot.scorer.spool.getCurrentPosition());
+        multTelemetry.addData("is beam broken", robot.scorer.beamBroken());
         multTelemetry.update();
+
     }
 
 
