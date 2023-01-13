@@ -10,7 +10,7 @@ public class PositionsAndSpeeds {
     public static int midFunny = 110;
     public static int midFront = 400;
     public static int depositDrop = 20;  //1000
-    public static int tippedHeight = 120;
+    public static int tippedHeight = 130;
 
 //WHY
     public static double v4bDown = 0.86;
