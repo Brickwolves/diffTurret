@@ -69,6 +69,7 @@ public class FullRegularTeleOp extends OpMode {
     public boolean isFunny = false;
     public boolean manualClaw = false;
     public boolean clawOpen = false;
+    public boolean cacheBeam;
 
     public BlackBoxLogger logger;
 
@@ -475,6 +476,14 @@ public class FullRegularTeleOp extends OpMode {
 
         //SIDE
         Side.red = !controller2.get(RB1, TOGGLE);
+
+        //RUMBLE
+        if(robot.scorer.updateBeam() != cacheBeam){
+            controller.rumble(1);
+            controller2.rumble(1);
+        }
+        cacheBeam = robot.scorer.updateBeam();
+
     /*
          ----------- L O G G I N G -----------
                                             */

@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.cl
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawTipped;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberFunny;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberDown;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberHide;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberScore;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberScoreFront;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberTip;
@@ -218,7 +219,7 @@ public class Scoring {
         if(inRange(.7,time.seconds(),.8)){
             v4b(v4bDown);
             slides(1,0);
-            grabber(grabberDown);
+            grabber(grabberHide);
         }
         if(inRange(1.5,time.seconds(),1.7)){
             if(coneAngle.equals("Straight")) {
