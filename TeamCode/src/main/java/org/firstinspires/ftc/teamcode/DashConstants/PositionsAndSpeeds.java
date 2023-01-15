@@ -14,7 +14,7 @@ public class PositionsAndSpeeds {
 
 //WHY
     public static double v4bDown = 0.37;
-    public static double v4bTipped = .89;
+    public static double Tipped = .89;
     public static double v4bScoreBack = 0.52;
     public static double v4bScoreFront = 0.42;
     public static double v4bScoreFrontLow = 0.4;
