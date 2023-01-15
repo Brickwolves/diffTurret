@@ -502,6 +502,8 @@ public class FullRegularTeleOp extends OpMode {
         multTelemetry.addData("Funny", isFunny);
         multTelemetry.addData("Slides Height", -robot.scorer.spool.getCurrentPosition());
         multTelemetry.addData("is beam broken", robot.scorer.beamBroken());
+        multTelemetry.addData("v4b1", robot.scorer.v4b1.getPosition());
+        multTelemetry.addData("v4b2", robot.scorer.v4b2.getPosition());
         multTelemetry.update();
 
     }

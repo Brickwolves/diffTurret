@@ -83,6 +83,7 @@ public class LeftAuto extends LinearOpMode {
 
         camera.setPipeline(aprilTagDetectionPipeline);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+
         {
             @Override
             public void onOpened()
