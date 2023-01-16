@@ -47,31 +47,12 @@ public class TestAuto extends LinearOpMode {
         robot = new Robot();
 
 
-        robot.drivetrain.setPoseEstimate(new Pose2d(-60,60,Math.toRadians(270)));
+        robot.drivetrain.setPoseEstimate(new Pose2d(0,0,Math.toRadians(0)));
 
 
         //To change speed, pass regulateSpeed1(*whateverspeedyouwant*) as an argument of Pose2D, followed by regulateSpeed2()
-        Trajectory traj1 = robot.drivetrain.trajectoryBuilder(new Pose2d(-60,60,Math.toRadians(270)))
-                .splineTo(new Vector2d(-60, -45),Math.toRadians(270),
-                        regulateSpeed1(30),
-                        regulateSpeed2())
-                .splineTo(new Vector2d(0, -45),Math.toRadians(270),
-                        regulateSpeed1(30),
-                        regulateSpeed2())
-                .splineTo(new Vector2d(45,-60),Math.toRadians(270),
-                        regulateSpeed1(30),
-                        regulateSpeed2())
-                .splineTo(new Vector2d(60, 0),Math.toRadians(270),
-                        regulateSpeed1(30),
-                        regulateSpeed2())
-                .splineTo(new Vector2d(60,45),Math.toRadians(270),
-                        regulateSpeed1(30),
-                        regulateSpeed2())
-                .splineTo(new Vector2d(-0, 60
-                        ),Math.toRadians(270),
-                        regulateSpeed1(30),
-                        regulateSpeed2())
-                .splineTo(new Vector2d(-45,60),Math.toRadians(270),
+        Trajectory traj1 = robot.drivetrain.trajectoryBuilder(new Pose2d(0,0,Math.toRadians(0)))
+                .lineTo(new Vector2d(0, 30),
                         regulateSpeed1(30),
                         regulateSpeed2())
                 .build();
@@ -86,6 +67,9 @@ public class TestAuto extends LinearOpMode {
         if (opModeIsActive()) {
 
             robot.drivetrain.followTrajectory(traj1);
+            telemetry.addData("finalX", robot.drivetrain.getPoseEstimate().getX());
+            telemetry.addData("finalY", robot.drivetrain.getPoseEstimate().getY());
+            telemetry.update();
 
 
         }

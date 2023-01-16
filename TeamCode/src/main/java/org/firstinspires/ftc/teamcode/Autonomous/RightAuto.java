@@ -103,33 +103,21 @@ public class RightAuto extends LinearOpMode {
             }
         });
 
-        robot.drivetrain.setPoseEstimate(new Pose2d(-40,55,Math.toRadians(90)));
+        robot.drivetrain.setPoseEstimate(new Pose2d(-40,60,Math.toRadians(90)));
 
 
 
         //To change speed, pass regulateSpeed1(*whateverspeedyouwant*) as an argument of Pose2D, followed by regulateSpeed2()
-        Trajectory traj1 = robot.drivetrain.trajectoryBuilder(new Pose2d(-40,55,Math.toRadians(90)))
-                .splineTo(new Vector2d(-40, 35),Math.toRadians(90),
-                        regulateSpeed1(30),
-                        regulateSpeed2())
-                .splineTo(new Vector2d(-10, 35),Math.toRadians(270),
-                        regulateSpeed1(30),
-                        regulateSpeed2())
+        Trajectory setUp = robot.drivetrain.trajectoryBuilder(new Pose2d())
+                .lineTo(new Vector2d(-32, 36))
                 .build();
 
-        Trajectory traj2 = robot.drivetrain.trajectoryBuilder(new Pose2d(-40,55,Math.toRadians(90)))
-                .splineTo(new Vector2d(-40, 35),Math.toRadians(270),
-                        regulateSpeed1(30),
-                        regulateSpeed2())
+        Trajectory park1 = robot.drivetrain.trajectoryBuilder(setUp.end())
+                .lineTo(new Vector2d(-10, 36))
                 .build();
 
-        Trajectory traj3 = robot.drivetrain.trajectoryBuilder(new Pose2d(-40,55,Math.toRadians(90)))
-                .splineTo(new Vector2d(-40, 35),Math.toRadians(90),
-                        regulateSpeed1(30),
-                        regulateSpeed2())
-                .splineTo(new Vector2d(-60, 35),Math.toRadians(270),
-                        regulateSpeed1(30),
-                        regulateSpeed2())
+        Trajectory park3 = robot.drivetrain.trajectoryBuilder(setUp.end())
+                .lineTo(new Vector2d(-60, 36))
                 .build();
 
         while(opModeInInit()){
@@ -201,11 +189,16 @@ public class RightAuto extends LinearOpMode {
 
 
             if (signalSide == ONE){
-                robot.drivetrain.followTrajectory(traj1);
+                robot.drivetrain.followTrajectory(setUp);
+                robot.drivetrain.followTrajectory(park1);
+                robot.drivetrain.turn(Math.toRadians(270));
             }else if (signalSide == TWO){
-                robot.drivetrain.followTrajectory(traj2);
+                robot.drivetrain.followTrajectory(setUp);
+                robot.drivetrain.turn(Math.toRadians(270));
             }else if (signalSide == THREE){
-                robot.drivetrain.followTrajectory(traj3);
+                robot.drivetrain.followTrajectory(setUp);
+                robot.drivetrain.followTrajectory(park3);
+                robot.drivetrain.turn(Math.toRadians(270));
             }
 
             multTelemetry.addData("signal side", signalSide);
