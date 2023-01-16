@@ -18,6 +18,7 @@ public class PositionsAndSpeeds {
     public static double v4bScoreBack = 0.9;
     public static double v4bScoreFront = 0.5;
     public static double v4bScoreFrontLow = 0.3;
+    public static double v4bStartAuto = 0.01;
 
 
     public static double grabberDown = 0.355;
@@ -26,6 +27,7 @@ public class PositionsAndSpeeds {
     public static double grabberFunny = 0.275;
     public static double grabberTip = 0.4;
     public static double grabberHide = 0.3;
+    public static double grabberStartAuto = 0.31;
 
 
 
@@ -40,6 +42,8 @@ public class PositionsAndSpeeds {
     public static double tipAngle = 3;
 
     public static double driveSpeed = 0.7;
+
+
 
 }
 

@@ -27,6 +27,7 @@ public class Robot {
 
    }
 
+
    public void initRobot() {
 
       drivetrain = new LupineMecanumDrive(hardwareMap);

@@ -68,8 +68,9 @@ public class RightAuto extends LinearOpMode {
 
     public void initialize() {
         setOpMode(this);
+        robot = new Robot(true);
         Side.setBlue();
-
+        robot.scorer.autoStart();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -79,7 +80,9 @@ public class RightAuto extends LinearOpMode {
 
         initialize();
 
-        robot = new Robot();
+
+
+
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
@@ -100,34 +103,31 @@ public class RightAuto extends LinearOpMode {
             }
         });
 
-        robot.drivetrain.setPoseEstimate(new Pose2d(-30,70,Math.toRadians(270)));
+        robot.drivetrain.setPoseEstimate(new Pose2d(-40,55,Math.toRadians(90)));
 
 
 
         //To change speed, pass regulateSpeed1(*whateverspeedyouwant*) as an argument of Pose2D, followed by regulateSpeed2()
-        Trajectory traj1 = robot.drivetrain.trajectoryBuilder(new Pose2d(-30,70,Math.toRadians(270)))
-                .splineTo(new Vector2d(-36, 25),Math.toRadians(270),
+        Trajectory traj1 = robot.drivetrain.trajectoryBuilder(new Pose2d(-40,55,Math.toRadians(90)))
+                .splineTo(new Vector2d(-40, 35),Math.toRadians(90),
                         regulateSpeed1(30),
                         regulateSpeed2())
-                .splineTo(new Vector2d(-20, 25),Math.toRadians(270),
-                        regulateSpeed1(30),
-                        regulateSpeed2())
-                .build();
-
-        Trajectory traj2 = robot.drivetrain.trajectoryBuilder(new Pose2d(-30,70,Math.toRadians(270)))
-                .splineTo(new Vector2d(-36, 25),Math.toRadians(270),
+                .splineTo(new Vector2d(-10, 35),Math.toRadians(270),
                         regulateSpeed1(30),
                         regulateSpeed2())
                 .build();
 
-        Trajectory traj3 = robot.drivetrain.trajectoryBuilder(new Pose2d(-30,70,Math.toRadians(270)))
-                .splineTo(new Vector2d(-36, 25),Math.toRadians(270),
+        Trajectory traj2 = robot.drivetrain.trajectoryBuilder(new Pose2d(-40,55,Math.toRadians(90)))
+                .splineTo(new Vector2d(-40, 35),Math.toRadians(270),
                         regulateSpeed1(30),
                         regulateSpeed2())
-                .splineTo(new Vector2d(-50, 25),Math.toRadians(270),
+                .build();
+
+        Trajectory traj3 = robot.drivetrain.trajectoryBuilder(new Pose2d(-40,55,Math.toRadians(90)))
+                .splineTo(new Vector2d(-40, 35),Math.toRadians(90),
                         regulateSpeed1(30),
                         regulateSpeed2())
-                .splineTo(new Vector2d(-50, 40),Math.toRadians(270),
+                .splineTo(new Vector2d(-60, 35),Math.toRadians(270),
                         regulateSpeed1(30),
                         regulateSpeed2())
                 .build();
@@ -137,9 +137,9 @@ public class RightAuto extends LinearOpMode {
 
             if(detections != null)
             {
-                telemetry.addData("FPS", camera.getFps());
-                telemetry.addData("Overhead ms", camera.getOverheadTimeMs());
-                telemetry.addData("Pipeline ms", camera.getPipelineTimeMs());
+//                telemetry.addData("FPS", camera.getFps());
+//                telemetry.addData("Overhead ms", camera.getOverheadTimeMs());
+//                telemetry.addData("Pipeline ms", camera.getPipelineTimeMs());
 
                 // If we don't see any tags
                 if(detections.size() == 0)
@@ -176,17 +176,19 @@ public class RightAuto extends LinearOpMode {
                         if(detection.id == 18){
                             signalSide = ONE;
                         }
-                        telemetry.addLine(String.format("\nDetected tag ID=%d", detection.id));
-                        telemetry.addLine(String.format("Translation X: %.2f feet", detection.pose.x*FEET_PER_METER));
-                        telemetry.addLine(String.format("Translation Y: %.2f feet", detection.pose.y*FEET_PER_METER));
-                        telemetry.addLine(String.format("Translation Z: %.2f feet", detection.pose.z*FEET_PER_METER));
-                        telemetry.addLine(String.format("Rotation Yaw: %.2f degrees", Math.toDegrees(detection.pose.yaw)));
-                        telemetry.addLine(String.format("Rotation Pitch: %.2f degrees", Math.toDegrees(detection.pose.pitch)));
-                        telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
+                        multTelemetry.addData("Signal", signalSide);
+                        multTelemetry.update();
+//                        telemetry.addLine(String.format("\nDetected tag ID=%d", detection.id));
+//                        telemetry.addLine(String.format("Translation X: %.2f feet", detection.pose.x*FEET_PER_METER));
+//                        telemetry.addLine(String.format("Translation Y: %.2f feet", detection.pose.y*FEET_PER_METER));
+//                        telemetry.addLine(String.format("Translation Z: %.2f feet", detection.pose.z*FEET_PER_METER));
+//                        telemetry.addLine(String.format("Rotation Yaw: %.2f degrees", Math.toDegrees(detection.pose.yaw)));
+//                        telemetry.addLine(String.format("Rotation Pitch: %.2f degrees", Math.toDegrees(detection.pose.pitch)));
+//                        telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
                     }
                 }
 
-                telemetry.update();
+//                telemetry.update();
             }
 
             sleep(20);

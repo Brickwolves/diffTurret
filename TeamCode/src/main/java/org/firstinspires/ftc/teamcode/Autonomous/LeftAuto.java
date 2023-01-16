@@ -65,7 +65,9 @@ public class LeftAuto extends LinearOpMode {
 
     public void initialize() {
         setOpMode(this);
+        robot = new Robot(true);
         Side.setBlue();
+        robot.scorer.autoStart();
 
     }
 
@@ -101,31 +103,31 @@ public class LeftAuto extends LinearOpMode {
 
 
 
-        robot.drivetrain.setPoseEstimate(new Pose2d(36,70,Math.toRadians(90)));
+        robot.drivetrain.setPoseEstimate(new Pose2d(-40,60,Math.toRadians(270)));
 
 
 
         //To change speed, pass regulateSpeed1(*whateverspeedyouwant*) as an argument of Pose2D, followed by regulateSpeed2()
-        Trajectory traj1 = robot.drivetrain.trajectoryBuilder(new Pose2d(40,70,Math.toRadians(270)))
-                .splineTo(new Vector2d(36, 50),Math.toRadians(270),
+        Trajectory traj1 = robot.drivetrain.trajectoryBuilder(new Pose2d(-40,60,Math.toRadians(270)))
+                .splineTo(new Vector2d(-30, 35),Math.toRadians(270),
                         regulateSpeed1(30),
                         regulateSpeed2())
-                .splineTo(new Vector2d(20, 50),Math.toRadians(270),
+                .splineTo(new Vector2d(-10, 35),Math.toRadians(90),
                         regulateSpeed1(30),
                         regulateSpeed2())
                 .build();
 
         Trajectory traj2 = robot.drivetrain.trajectoryBuilder(new Pose2d(40,70,Math.toRadians(270)))
-                .splineTo(new Vector2d(36, 50),Math.toRadians(270),
+                .splineTo(new Vector2d(-30, 35),Math.toRadians(270),
                         regulateSpeed1(30),
                         regulateSpeed2())
                 .build();
 
         Trajectory traj3 = robot.drivetrain.trajectoryBuilder(new Pose2d(40,70,Math.toRadians(270)))
-                .splineTo(new Vector2d(36, 50),Math.toRadians(270),
+                .splineTo(new Vector2d(-30, 35),Math.toRadians(270),
                         regulateSpeed1(30),
                         regulateSpeed2())
-                .splineTo(new Vector2d(60, 50),Math.toRadians(270),
+                .splineTo(new Vector2d(-60, 35),Math.toRadians(270),
                         regulateSpeed1(30),
                         regulateSpeed2())
                 .build();

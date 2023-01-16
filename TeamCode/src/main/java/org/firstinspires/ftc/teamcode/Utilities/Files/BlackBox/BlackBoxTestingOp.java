@@ -2,10 +2,12 @@ package org.firstinspires.ftc.teamcode.Utilities.Files.BlackBox;
 
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
+
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-
+@Disabled
 @TeleOp(name="BlackBox TeleOp", group="Iterative Opmode")
 public class BlackBoxTestingOp extends OpMode {
 
