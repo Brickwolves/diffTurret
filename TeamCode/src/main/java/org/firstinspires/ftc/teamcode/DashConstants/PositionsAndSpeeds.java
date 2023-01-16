@@ -4,7 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public class PositionsAndSpeeds {
-    public static int highJunction = 650;//9000
+    public static int highJunction = 750;//9000
     public static int highFunny = 460;
     public static int midJunction = 290;  //6500
     public static int midFunny = 110;
@@ -13,11 +13,11 @@ public class PositionsAndSpeeds {
     public static int tippedHeight = 130;
 
 //WHY
-    public static double v4bDown = 0.37;
+    public static double v4bDown = 0.03;
     public static double Tipped = .89;
-    public static double v4bScoreBack = 0.52;
-    public static double v4bScoreFront = 0.42;
-    public static double v4bScoreFrontLow = 0.4;
+    public static double v4bScoreBack = 0.9;
+    public static double v4bScoreFront = 0.5;
+    public static double v4bScoreFrontLow = 0.3;
 
 
     public static double grabberDown = 0.355;
