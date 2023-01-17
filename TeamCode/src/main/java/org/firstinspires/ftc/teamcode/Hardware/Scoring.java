@@ -83,10 +83,10 @@ public class Scoring {
     }
 
     public void autoMid(){
-        sleep(0.6);
-        slides(1,midJunction+50);
-        sleep(0.6);
-        v4b(v4bScoreBack+0.05);
+        sleep(0.4);
+        slides(1,midJunction+100);
+        sleep(0.4);
+        v4b(v4bScoreBack+0.08);
         grabber(grabberScore);
 
     }
@@ -97,7 +97,7 @@ public class Scoring {
 
     public void autoDeposit(){
         open(false);
-        sleep(0.6);
+        sleep(0.4);
         close();
         v4b(v4bDown);
         sleep(0.6);

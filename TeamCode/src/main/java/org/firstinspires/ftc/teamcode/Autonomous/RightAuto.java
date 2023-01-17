@@ -114,18 +114,25 @@ public class RightAuto extends LinearOpMode {
         //To change speed, pass regulateSpeed1(*whateverspeedyouwant*) as an argument of Pose2D, followed by regulateSpeed2()
         Trajectory setUp = robot.drivetrain.trajectoryBuilder(startPos)
                 .splineToConstantHeading(new Vector2d(-35,50),Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(-28, 28),Math.toRadians(90))
                 .build();
 
-        Trajectory park1 = robot.drivetrain.trajectoryBuilder(setUp.end())
+        Trajectory setUp2 = robot.drivetrain.trajectoryBuilder(setUp.end())
+                .lineToConstantHeading(new Vector2d(-24, 32),
+                        regulateSpeed1(20),
+                        regulateSpeed2())
+                .build();
+        Trajectory park1 = robot.drivetrain.trajectoryBuilder(setUp2.end())
                 .splineToConstantHeading(new Vector2d(-10, 34),Math.toRadians(90))
                 .splineToConstantHeading(new Vector2d(-10, 30),Math.toRadians(90))
                 .build();
 
+        Trajectory park2 = robot.drivetrain.trajectoryBuilder(setUp2.end())
+                .lineToConstantHeading(new Vector2d(-40,28))
+                .build();
 
-        Trajectory park3 = robot.drivetrain.trajectoryBuilder(setUp.end())
+        Trajectory park3 = robot.drivetrain.trajectoryBuilder(setUp2.end())
                 .splineToConstantHeading(new Vector2d(-60, 34),Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(-60, 25),Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(-60, 35),Math.toRadians(90))
                 .build();
 
         while(opModeInInit()){
@@ -196,26 +203,24 @@ public class RightAuto extends LinearOpMode {
             multTelemetry.update();
 
 
-            if (signalSide == ONE){
-                robot.drivetrain.followTrajectory(setUp);
-                robot.drivetrain.turn(Math.toRadians(100));
-                robot.scorer.autoMid();
-                robot.scorer.sleep(2);
-                robot.scorer.autoDeposit();
-                robot.scorer.sleep(1);
+            robot.drivetrain.followTrajectory(setUp);
+            robot.drivetrain.turn(Math.toRadians(95));
+            robot.drivetrain.followTrajectory((setUp2));
+            robot.scorer.autoMid();
+            robot.scorer.sleep(2);
+            robot.scorer.autoDeposit();
+            robot.scorer.sleep(1);
+
+            if (signalSide == ONE) {
                 robot.drivetrain.followTrajectory(park1);
-                robot.drivetrain.turn(Math.toRadians(270));
 //                robot.drivetrain.turn(Math.toRadians(270));
-            }else if (signalSide == TWO){
-                robot.drivetrain.followTrajectory(setUp);
-                robot.drivetrain.turn(Math.toRadians(270));
-//                robot.drivetrain.turn(Math.toRadians(270));
+            }else if(signalSide == TWO){
+                robot.drivetrain.followTrajectory(park2);
             }else if (signalSide == THREE){
-                robot.drivetrain.followTrajectory(setUp);
                 robot.drivetrain.followTrajectory(park3);
-                robot.drivetrain.turn(Math.toRadians(270));
 //                robot.drivetrain.turn(Math.toRadians(270));
             }
+            robot.drivetrain.turn(Math.toRadians(220));
 
             multTelemetry.addData("signal side", signalSide);
             multTelemetry.addData("ending auto", "ok");
