@@ -161,6 +161,7 @@ public class FullRegularTeleOp extends OpMode {
 
 
 
+
         //ANTI TIP CODE
 
         isTipped = robot.gyro.getTipAngle() > tipAngle || robot.gyro.getTipAngle() < -tipAngle;
@@ -177,7 +178,7 @@ public class FullRegularTeleOp extends OpMode {
 
 
         if(score == ScoreState.DOWN) {
-            if(!manualClaw || !isFunny) {
+            if(!manualClaw && !isFunny) {
                 if (fullyDown) {
                     if (clawOpen) {
                         robot.scorer.open(isFunny);
@@ -207,137 +208,137 @@ public class FullRegularTeleOp extends OpMode {
             isFunny = true;
 
         }
-
-    //IVAN CODE
-    //LEFT - Grabber Orientation
-        //Increase
-        if(controller2.get(LB2, TAP)){
-            //Not funny
-            if(!isFunny) {
-                //Down
-                if (score == ScoreState.DOWN) {
-                    grabberDown += 0.005;
-                    grabberDown = Range.clip(grabberDown,0.3,0.4);
-                //Score Back
-                } else if (score == ScoreState.SCORE_HIGH || score == ScoreState.SCORE_MID || score == ScoreState.SCORE_LOW) {
-                    grabberScore += 0.005;
-                    grabberScore = Range.clip(grabberScore,0.3,0.4);
-                //Score Front
-                } else if (score == ScoreState.SCORE_FRONT_LOW || score == ScoreState.SCORE_FRONT_MID || score == ScoreState.SCORE_FRONT_HIGH) {
-                    grabberScoreFront += 0.005;
-                    grabberScoreFront = Range.clip(grabberScoreFront,0.28,0.35);
-                }
-            //Funny
-            }else {
-                //Down Funny
-                if (score == ScoreState.DOWN) {
-                    grabberTip += 0.005;
-                    grabberTip = Range.clip(grabberTip,0.3,0.5);
-                    //Score Back Funny
-                } else if (score == ScoreState.SCORE_HIGH || score == ScoreState.SCORE_MID || score == ScoreState.SCORE_LOW) {
-                    grabberFunny += 0.005;
-                    grabberFunny = Range.clip(grabberFunny,0.25,0.35);
-                }
-            }
-        //Decrease
-        } else if(controller2.get(RB2, TAP)){
-            //Not funny
-            if(!isFunny) {
-                //Down
-                if (score == ScoreState.DOWN) {
-                    grabberDown -= 0.005;
-                    grabberDown = Range.clip(grabberDown,0.3,0.4);
-                    //Score Back
-                } else if (score == ScoreState.SCORE_HIGH || score == ScoreState.SCORE_MID || score == ScoreState.SCORE_LOW) {
-                    grabberScore -= 0.005;
-                    grabberScore = Range.clip(grabberScore,0.3,0.4);
-                    //Score Front
-                } else if (score == ScoreState.SCORE_FRONT_LOW || score == ScoreState.SCORE_FRONT_MID || score == ScoreState.SCORE_FRONT_HIGH) {
-                    grabberScoreFront -= 0.005;
-                    grabberScoreFront = Range.clip(grabberScoreFront,0.28,0.35);
-                }
-                //Funny
-            }else {
-                //Down Funny
-                if (score == ScoreState.DOWN) {
-                    grabberTip -= 0.005;
-                    grabberTip = Range.clip(grabberTip,0.3,0.5);
-                    //Score Back Funny
-                } else if (score == ScoreState.SCORE_HIGH || score == ScoreState.SCORE_MID || score == ScoreState.SCORE_LOW) {
-                    grabberFunny -= 0.005;
-                    grabberFunny = Range.clip(grabberFunny,0.25,0.35);
-                }
-            }
-        }
-
-    //Right - Height
-        //Increase
-        if(controller2.get(LB1, TAP)){
-            //Not funny
-            if(!isFunny) {
-                //Down
-                if (score == ScoreState.DOWN) {
-                    v4bDown += 0.005;
-                    v4bDown = Range.clip(v4bDown,0.8,0.9);
-                    //Score Back
-                } else if (score == ScoreState.SCORE_HIGH || score == ScoreState.SCORE_MID || score == ScoreState.SCORE_LOW) {
-                    v4bScoreBack += 0.005;
-                    v4bScoreBack = Range.clip(v4bScoreBack,0.9,1);
-                    //Score Front Not Low
-                } else if (score == ScoreState.SCORE_FRONT_MID || score == ScoreState.SCORE_FRONT_HIGH) {
-                    v4bScoreFront += 0.005;
-                    v4bScoreFront = Range.clip(v4bScoreFront,0.85,0.95);
-                    //Score Front Low
-                }else if(score == ScoreState.SCORE_FRONT_LOW){
-                    v4bScoreFrontLow += 0.005;
-                    v4bScoreFrontLow = Range.clip(v4bScoreFrontLow,0.85,0.95);
-                }
-                //Funny
-            }else {
-                //Down Funny
-                if (score == ScoreState.DOWN) {
-                    tippedHeight += 5;
-                    tippedHeight = Range.clip(tippedHeight,90,150);
-                    //Score Back Funny
-                } else if (score == ScoreState.SCORE_HIGH || score == ScoreState.SCORE_MID || score == ScoreState.SCORE_LOW) {
-                    v4bScoreBack += 0.005;
-                    v4bScoreBack = Range.clip(v4bScoreBack,0.9,1);
-                }
-            }
-            //Decrease
-        } else if(controller2.get(RB1, TAP)){
-            //Not funny
-            if(!isFunny) {
-                //Down
-                if (score == ScoreState.DOWN) {
-                    v4bDown -= 0.005;
-                    v4bDown = Range.clip(v4bDown,0.8,0.9);
-                    //Score Back
-                } else if (score == ScoreState.SCORE_HIGH || score == ScoreState.SCORE_MID || score == ScoreState.SCORE_LOW) {
-                    v4bScoreBack -= 0.005;
-                    v4bScoreBack = Range.clip(v4bScoreBack,0.9,1);
-                    //Score Front Not Low
-                } else if (score == ScoreState.SCORE_FRONT_MID || score == ScoreState.SCORE_FRONT_HIGH) {
-                    v4bScoreFront -= 0.005;
-                    v4bScoreFront = Range.clip(v4bScoreFront,0.85,0.95);
-                    //Score Front Low
-                }else if(score == ScoreState.SCORE_FRONT_LOW){
-                    v4bScoreFrontLow -= 0.005;
-                    v4bScoreFrontLow = Range.clip(v4bScoreFrontLow,0.85,0.95);
-                }
-                //Funny
-            }else {
-                //Down Funny
-                if (score == ScoreState.DOWN) {
-                    tippedHeight -= 5;
-                    tippedHeight = Range.clip(tippedHeight,90,150);
-                    //Score Back Funny
-                } else if (score == ScoreState.SCORE_HIGH || score == ScoreState.SCORE_MID || score == ScoreState.SCORE_LOW) {
-                    v4bScoreBack -= 0.005;
-                    v4bScoreBack = Range.clip(v4bScoreBack,0.9,1);
-                }
-            }
-        }
+//
+//    //IVAN CODE
+//    //LEFT - Grabber Orientation
+//        //Increase
+//        if(controller2.get(LB2, TAP)){
+//            //Not funny
+//            if(!isFunny) {
+//                //Down
+//                if (score == ScoreState.DOWN) {
+//                    grabberDown += 0.005;
+//                    grabberDown = Range.clip(grabberDown,0.3,0.4);
+//                //Score Back
+//                } else if (score == ScoreState.SCORE_HIGH || score == ScoreState.SCORE_MID || score == ScoreState.SCORE_LOW) {
+//                    grabberScore += 0.005;
+//                    grabberScore = Range.clip(grabberScore,0.3,0.4);
+//                //Score Front
+//                } else if (score == ScoreState.SCORE_FRONT_LOW || score == ScoreState.SCORE_FRONT_MID || score == ScoreState.SCORE_FRONT_HIGH) {
+//                    grabberScoreFront += 0.005;
+//                    grabberScoreFront = Range.clip(grabberScoreFront,0.28,0.35);
+//                }
+//            //Funny
+//            }else {
+//                //Down Funny
+//                if (score == ScoreState.DOWN) {
+//                    grabberTip += 0.005;
+//                    grabberTip = Range.clip(grabberTip,0.3,0.5);
+//                    //Score Back Funny
+//                } else if (score == ScoreState.SCORE_HIGH || score == ScoreState.SCORE_MID || score == ScoreState.SCORE_LOW) {
+//                    grabberFunny += 0.005;
+//                    grabberFunny = Range.clip(grabberFunny,0.25,0.35);
+//                }
+//            }
+//        //Decrease
+//        } else if(controller2.get(RB2, TAP)){
+//            //Not funny
+//            if(!isFunny) {
+//                //Down
+//                if (score == ScoreState.DOWN) {
+//                    grabberDown -= 0.005;
+//                    grabberDown = Range.clip(grabberDown,0.3,0.4);
+//                    //Score Back
+//                } else if (score == ScoreState.SCORE_HIGH || score == ScoreState.SCORE_MID || score == ScoreState.SCORE_LOW) {
+//                    grabberScore -= 0.005;
+//                    grabberScore = Range.clip(grabberScore,0.3,0.4);
+//                    //Score Front
+//                } else if (score == ScoreState.SCORE_FRONT_LOW || score == ScoreState.SCORE_FRONT_MID || score == ScoreState.SCORE_FRONT_HIGH) {
+//                    grabberScoreFront -= 0.005;
+//                    grabberScoreFront = Range.clip(grabberScoreFront,0.28,0.35);
+//                }
+//                //Funny
+//            }else {
+//                //Down Funny
+//                if (score == ScoreState.DOWN) {
+//                    grabberTip -= 0.005;
+//                    grabberTip = Range.clip(grabberTip,0.3,0.5);
+//                    //Score Back Funny
+//                } else if (score == ScoreState.SCORE_HIGH || score == ScoreState.SCORE_MID || score == ScoreState.SCORE_LOW) {
+//                    grabberFunny -= 0.005;
+//                    grabberFunny = Range.clip(grabberFunny,0.25,0.35);
+//                }
+//            }
+//        }
+//
+//    //Right - Height
+//        //Increase
+//        if(controller2.get(LB1, TAP)){
+//            //Not funny
+//            if(!isFunny) {
+//                //Down
+//                if (score == ScoreState.DOWN) {
+//                    v4bDown += 0.005;
+//                    v4bDown = Range.clip(v4bDown,0.8,0.9);
+//                    //Score Back
+//                } else if (score == ScoreState.SCORE_HIGH || score == ScoreState.SCORE_MID || score == ScoreState.SCORE_LOW) {
+//                    v4bScoreBack += 0.005;
+//                    v4bScoreBack = Range.clip(v4bScoreBack,0.9,1);
+//                    //Score Front Not Low
+//                } else if (score == ScoreState.SCORE_FRONT_MID || score == ScoreState.SCORE_FRONT_HIGH) {
+//                    v4bScoreFront += 0.005;
+//                    v4bScoreFront = Range.clip(v4bScoreFront,0.85,0.95);
+//                    //Score Front Low
+//                }else if(score == ScoreState.SCORE_FRONT_LOW){
+//                    v4bScoreFrontLow += 0.005;
+//                    v4bScoreFrontLow = Range.clip(v4bScoreFrontLow,0.85,0.95);
+//                }
+//                //Funny
+//            }else {
+//                //Down Funny
+//                if (score == ScoreState.DOWN) {
+//                    tippedHeight += 5;
+//                    tippedHeight = Range.clip(tippedHeight,90,150);
+//                    //Score Back Funny
+//                } else if (score == ScoreState.SCORE_HIGH || score == ScoreState.SCORE_MID || score == ScoreState.SCORE_LOW) {
+//                    v4bScoreBack += 0.005;
+//                    v4bScoreBack = Range.clip(v4bScoreBack,0.9,1);
+//                }
+//            }
+//            //Decrease
+//        } else if(controller2.get(RB1, TAP)){
+//            //Not funny
+//            if(!isFunny) {
+//                //Down
+//                if (score == ScoreState.DOWN) {
+//                    v4bDown -= 0.005;
+//                    v4bDown = Range.clip(v4bDown,0.8,0.9);
+//                    //Score Back
+//                } else if (score == ScoreState.SCORE_HIGH || score == ScoreState.SCORE_MID || score == ScoreState.SCORE_LOW) {
+//                    v4bScoreBack -= 0.005;
+//                    v4bScoreBack = Range.clip(v4bScoreBack,0.9,1);
+//                    //Score Front Not Low
+//                } else if (score == ScoreState.SCORE_FRONT_MID || score == ScoreState.SCORE_FRONT_HIGH) {
+//                    v4bScoreFront -= 0.005;
+//                    v4bScoreFront = Range.clip(v4bScoreFront,0.85,0.95);
+//                    //Score Front Low
+//                }else if(score == ScoreState.SCORE_FRONT_LOW){
+//                    v4bScoreFrontLow -= 0.005;
+//                    v4bScoreFrontLow = Range.clip(v4bScoreFrontLow,0.85,0.95);
+//                }
+//                //Funny
+//            }else {
+//                //Down Funny
+//                if (score == ScoreState.DOWN) {
+//                    tippedHeight -= 5;
+//                    tippedHeight = Range.clip(tippedHeight,90,150);
+//                    //Score Back Funny
+//                } else if (score == ScoreState.SCORE_HIGH || score == ScoreState.SCORE_MID || score == ScoreState.SCORE_LOW) {
+//                    v4bScoreBack -= 0.005;
+//                    v4bScoreBack = Range.clip(v4bScoreBack,0.9,1);
+//                }
+//            }
+//        }
 
         switch(score){
             case DOWN:
@@ -431,6 +432,12 @@ public class FullRegularTeleOp extends OpMode {
         //PID and Kinetic Turning
         double rotation = controller.get(RIGHT, X);
 
+
+        //Gyro Reset
+        if(controller.get(CROSS,TAP)){
+            robot.gyro.reset();
+            pid_on = false;
+        }
         // Turn off PID if we manually turn
         // Turn on PID if we're not manually turning and the robot's stops rotating
         double currentRateOfChange = robot.gyro.rateOfChange();

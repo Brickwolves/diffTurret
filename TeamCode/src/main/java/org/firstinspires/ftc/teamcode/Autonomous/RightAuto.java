@@ -114,18 +114,18 @@ public class RightAuto extends LinearOpMode {
         //To change speed, pass regulateSpeed1(*whateverspeedyouwant*) as an argument of Pose2D, followed by regulateSpeed2()
         Trajectory setUp = robot.drivetrain.trajectoryBuilder(startPos)
                 .splineToConstantHeading(new Vector2d(-35,50),Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(-35, 34),Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(-28, 28),Math.toRadians(90))
                 .build();
 
         Trajectory park1 = robot.drivetrain.trajectoryBuilder(setUp.end())
                 .splineToConstantHeading(new Vector2d(-10, 34),Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(-10, 15),Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(-10, 30),Math.toRadians(90))
                 .build();
 
 
         Trajectory park3 = robot.drivetrain.trajectoryBuilder(setUp.end())
                 .splineToConstantHeading(new Vector2d(-60, 34),Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(-60, 30),Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(-60, 25),Math.toRadians(90))
                 .build();
 
         while(opModeInInit()){
@@ -198,6 +198,11 @@ public class RightAuto extends LinearOpMode {
 
             if (signalSide == ONE){
                 robot.drivetrain.followTrajectory(setUp);
+                robot.drivetrain.turn(Math.toRadians(100));
+                robot.scorer.autoMid();
+                robot.scorer.sleep(2);
+                robot.scorer.autoDeposit();
+                robot.scorer.sleep(1);
                 robot.drivetrain.followTrajectory(park1);
                 robot.drivetrain.turn(Math.toRadians(270));
 //                robot.drivetrain.turn(Math.toRadians(270));
