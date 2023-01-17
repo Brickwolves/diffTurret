@@ -110,15 +110,15 @@ public class RightAuto extends LinearOpMode {
 
         //To change speed, pass regulateSpeed1(*whateverspeedyouwant*) as an argument of Pose2D, followed by regulateSpeed2()
         Trajectory setUp = robot.drivetrain.trajectoryBuilder(startPos)
-                .splineToConstantHeading(new Vector2d(-32, 36),Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(-30, 30),Math.toRadians(90))
                 .build();
 
         Trajectory park1 = robot.drivetrain.trajectoryBuilder(setUp.end())
-                .splineToConstantHeading(new Vector2d(-10, 36),Math.toRadians(90))
+                .lineToLinearHeading(new Pose2d(0, 30,Math.toRadians(90)))
                 .build();
 
         Trajectory park3 = robot.drivetrain.trajectoryBuilder(setUp.end())
-                .splineToConstantHeading(new Vector2d(-60, 36),Math.toRadians(90))
+                .lineToLinearHeading(new Pose2d(-60, 30,Math.toRadians(90)))
                 .build();
 
         while(opModeInInit()){
