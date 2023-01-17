@@ -4,6 +4,9 @@ package org.firstinspires.ftc.teamcode.Hardware;
 import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.derivativeWeight;
 import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.integralWeight;
 import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.proportionalWeight;
+import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.tD;
+import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.tI;
+import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.tP;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -51,7 +54,7 @@ import java.util.List;
  */
 //@Config
 public class LupineMecanumDrive extends MecanumDrive {
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(1.2, 0, 0.002);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(tP, tI, tD);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(1.1, 0, 0);
 
     public static double LATERAL_MULTIPLIER = 1;

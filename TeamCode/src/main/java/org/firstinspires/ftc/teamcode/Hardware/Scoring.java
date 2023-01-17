@@ -14,6 +14,7 @@ import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.hi
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.highJunction;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.midFunny;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.midJunction;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.stackIncrease;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.tipAngle;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.tippedHeight;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bDown;
@@ -46,6 +47,7 @@ public class Scoring {
     public boolean wentDown = false;
 
     public ElapsedTime time = new ElapsedTime();
+    public ElapsedTime sleep = new ElapsedTime();
 
 
 
@@ -73,6 +75,41 @@ public class Scoring {
         spool2.setPower(.6);
 
         beam1 = hardwareMap.get(TouchSensor.class, "beam1");
+    }
+
+    //AUTO
+    public void autoHigh(){
+
+    }
+
+    public void autoMid(){
+        grabber(grabberScore);
+        sleep(0.2);
+        slides(1,midJunction);
+        sleep(0.3);
+        v4b(v4bScoreBack);
+
+    }
+
+    public void autoLow(){
+
+    }
+
+    public void autoDeposit(){
+        open(false);
+        sleep(0.2);
+        close();
+        v4b(v4bDown);
+        sleep(0.3);
+        slides(1,0);
+        open(false);
+
+    }
+
+    public void stackPickup(int height){
+        v4b(v4bDown);
+        slides(1,(height-1)*stackIncrease);
+        open(false);
     }
 
     public boolean beamBroken(){
@@ -272,5 +309,12 @@ public class Scoring {
         grabber(grabberStartAuto);
         v4b(v4bStartAuto);
         slides(1,0);
+    }
+
+    public void sleep(double sleepTime){
+        sleep.reset();
+        while(sleep.seconds()<sleepTime){
+
+        }
     }
 }

@@ -107,18 +107,25 @@ public class RightAuto extends LinearOpMode {
         robot.drivetrain.setPoseEstimate(startPos);
 
 
+//        Trajectory avoid = robot.drivetrain.trajectoryBuilder(startPos)
+//                .lineToLinearHeading(new Pose2d(-35, 50,Math.toRadians(90)))
+//                .build();
 
         //To change speed, pass regulateSpeed1(*whateverspeedyouwant*) as an argument of Pose2D, followed by regulateSpeed2()
         Trajectory setUp = robot.drivetrain.trajectoryBuilder(startPos)
-                .splineToConstantHeading(new Vector2d(-30, 30),Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(-35,50),Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(-35, 34),Math.toRadians(90))
                 .build();
 
         Trajectory park1 = robot.drivetrain.trajectoryBuilder(setUp.end())
-                .lineToLinearHeading(new Pose2d(0, 30,Math.toRadians(90)))
+                .splineToConstantHeading(new Vector2d(-10, 34),Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(-10, 15),Math.toRadians(90))
                 .build();
 
+
         Trajectory park3 = robot.drivetrain.trajectoryBuilder(setUp.end())
-                .lineToLinearHeading(new Pose2d(-60, 30,Math.toRadians(90)))
+                .splineToConstantHeading(new Vector2d(-60, 34),Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(-60, 30),Math.toRadians(90))
                 .build();
 
         while(opModeInInit()){
@@ -192,13 +199,16 @@ public class RightAuto extends LinearOpMode {
             if (signalSide == ONE){
                 robot.drivetrain.followTrajectory(setUp);
                 robot.drivetrain.followTrajectory(park1);
+                robot.drivetrain.turn(Math.toRadians(270));
 //                robot.drivetrain.turn(Math.toRadians(270));
             }else if (signalSide == TWO){
                 robot.drivetrain.followTrajectory(setUp);
+                robot.drivetrain.turn(Math.toRadians(270));
 //                robot.drivetrain.turn(Math.toRadians(270));
             }else if (signalSide == THREE){
                 robot.drivetrain.followTrajectory(setUp);
                 robot.drivetrain.followTrajectory(park3);
+                robot.drivetrain.turn(Math.toRadians(270));
 //                robot.drivetrain.turn(Math.toRadians(270));
             }
 

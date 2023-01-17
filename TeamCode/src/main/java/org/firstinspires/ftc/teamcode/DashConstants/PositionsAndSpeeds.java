@@ -29,6 +29,8 @@ public class PositionsAndSpeeds {
     public static double grabberHide = 0.3;
     public static double grabberStartAuto = 0.31;
 
+    public static int stackIncrease = 10;
+
 
 
 

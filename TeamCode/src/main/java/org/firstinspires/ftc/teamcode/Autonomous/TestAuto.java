@@ -13,6 +13,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -21,7 +22,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Sensors.Camera;
 import org.firstinspires.ftc.teamcode.Utilities.Side;
 import org.firstinspires.ftc.teamcode.Vision.SignalPipeline;
 
-
+@Disabled
 @Autonomous(name="Test Auto", group="Autonomous Linear Opmode")
 public class TestAuto extends LinearOpMode {
     Robot robot;

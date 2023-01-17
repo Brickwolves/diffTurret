@@ -7,6 +7,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Hardware.LupineMecanumDrive;
@@ -14,6 +15,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Robot;
 import org.firstinspires.ftc.teamcode.Utilities.OpModeUtils;
 
 
+@Disabled
 @Autonomous(name="Test Auto2", group = "Autonomous Linear Opmode")
 public class TestAuto2 extends LinearOpMode {
     LupineMecanumDrive drive;
