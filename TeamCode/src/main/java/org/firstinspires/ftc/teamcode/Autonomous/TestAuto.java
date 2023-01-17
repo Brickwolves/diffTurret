@@ -33,8 +33,6 @@ public class TestAuto extends LinearOpMode {
 
     public void initialize() {
         setOpMode(this);
-        Side.setBlue();
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -47,14 +45,12 @@ public class TestAuto extends LinearOpMode {
         robot = new Robot();
 
 
-        robot.drivetrain.setPoseEstimate(new Pose2d(0,0,Math.toRadians(0)));
+        robot.drivetrain.setPoseEstimate(new Pose2d(0,0,Math.toRadians(90)));
 
 
         //To change speed, pass regulateSpeed1(*whateverspeedyouwant*) as an argument of Pose2D, followed by regulateSpeed2()
-        Trajectory traj1 = robot.drivetrain.trajectoryBuilder(new Pose2d(0,0,Math.toRadians(0)))
-                .lineTo(new Vector2d(0, 30),
-                        regulateSpeed1(30),
-                        regulateSpeed2())
+        Trajectory traj1 = robot.drivetrain.trajectoryBuilder(new Pose2d())
+                .lineTo(new Vector2d(0, 30))
                 .build();
 
 
@@ -67,12 +63,14 @@ public class TestAuto extends LinearOpMode {
         if (opModeIsActive()) {
 
             robot.drivetrain.followTrajectory(traj1);
+
+
             telemetry.addData("finalX", robot.drivetrain.getPoseEstimate().getX());
             telemetry.addData("finalY", robot.drivetrain.getPoseEstimate().getY());
             telemetry.update();
-
-
         }
+
     }
+
 }
 

@@ -1,7 +1,5 @@
-package org.firstinspires.ftc.teamcode.Autonomous;
+package org.firstinspires.ftc.teamcode.Autonomous.ElevenAutos;
 
-import static org.firstinspires.ftc.teamcode.Hardware.LupineMecanumDrive.regulateSpeed1;
-import static org.firstinspires.ftc.teamcode.Hardware.LupineMecanumDrive.regulateSpeed2;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 import static org.firstinspires.ftc.teamcode.Vision.SignalPipeline.SignalSide.ONE;
@@ -32,8 +30,8 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import java.util.ArrayList;
 
 
-@Autonomous(name="Right Auto", group="Autonomous Linear Opmode")
-public class RightAuto extends LinearOpMode {
+@Autonomous(name="Right Eleven", group="Autonomous Linear Opmode")
+public class RightEleven extends LinearOpMode {
     Robot robot;
 
     // Declare OpMode members.
@@ -110,16 +108,33 @@ public class RightAuto extends LinearOpMode {
 
         //To change speed, pass regulateSpeed1(*whateverspeedyouwant*) as an argument of Pose2D, followed by regulateSpeed2()
         Trajectory setUp = robot.drivetrain.trajectoryBuilder(startPos)
-                .splineToConstantHeading(new Vector2d(-32, 36),Math.toRadians(90))
+                .strafeRight(17)
                 .build();
 
-        Trajectory park1 = robot.drivetrain.trajectoryBuilder(setUp.end())
-                .splineToConstantHeading(new Vector2d(-10, 36),Math.toRadians(90))
+        Trajectory setUp2 = robot.drivetrain.trajectoryBuilder(setUp.end())
+                .back(38)
                 .build();
 
-        Trajectory park3 = robot.drivetrain.trajectoryBuilder(setUp.end())
-                .splineToConstantHeading(new Vector2d(-60, 36),Math.toRadians(90))
+        Trajectory park1 = robot.drivetrain.trajectoryBuilder(setUp2.end())
+                .strafeRight(34)
                 .build();
+
+        Trajectory park3 = robot.drivetrain.trajectoryBuilder(setUp2.end())
+                .strafeLeft(34)
+                .build();
+
+        Trajectory rotate1 = robot.drivetrain.trajectoryBuilder(park1.end())
+                .splineTo(new Vector2d(robot.drivetrain.getPoseEstimate().getX(),robot.drivetrain.getPoseEstimate().getY()),90)
+                .build();
+
+        Trajectory rotate2 = robot.drivetrain.trajectoryBuilder(setUp2.end())
+                .splineTo(new Vector2d(robot.drivetrain.getPoseEstimate().getX(),robot.drivetrain.getPoseEstimate().getY()),90)
+                .build();
+
+        Trajectory rotate3 = robot.drivetrain.trajectoryBuilder(park3.end())
+                .splineTo(new Vector2d(robot.drivetrain.getPoseEstimate().getX(),robot.drivetrain.getPoseEstimate().getY()),90)
+                .build();
+
 
         while(opModeInInit()){
             ArrayList<AprilTagDetection> detections = aprilTagDetectionPipeline.getDetectionsUpdate();
@@ -191,16 +206,24 @@ public class RightAuto extends LinearOpMode {
 
             if (signalSide == ONE){
                 robot.drivetrain.followTrajectory(setUp);
+                robot.drivetrain.followTrajectory(setUp2);
                 robot.drivetrain.followTrajectory(park1);
-//                robot.drivetrain.turn(Math.toRadians(270));
+                robot.drivetrain.updatePoseEstimate();
+                robot.drivetrain.followTrajectory(rotate1);
             }else if (signalSide == TWO){
                 robot.drivetrain.followTrajectory(setUp);
-//                robot.drivetrain.turn(Math.toRadians(270));
+                robot.drivetrain.followTrajectory(setUp2);
+                robot.drivetrain.updatePoseEstimate();
+                robot.drivetrain.followTrajectory(rotate2);
             }else if (signalSide == THREE){
                 robot.drivetrain.followTrajectory(setUp);
+                robot.drivetrain.followTrajectory(setUp2);
                 robot.drivetrain.followTrajectory(park3);
-//                robot.drivetrain.turn(Math.toRadians(270));
+                robot.drivetrain.updatePoseEstimate();
+                robot.drivetrain.followTrajectory(rotate3);
             }
+
+
 
             multTelemetry.addData("signal side", signalSide);
             multTelemetry.addData("ending auto", "ok");
