@@ -55,7 +55,7 @@ import java.util.List;
 //@Config
 public class LupineMecanumDrive extends MecanumDrive {
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(tP, tI, tD);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, 3);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(0.00001, 0, 0.001);
 
     public static double LATERAL_MULTIPLIER = 1;
 

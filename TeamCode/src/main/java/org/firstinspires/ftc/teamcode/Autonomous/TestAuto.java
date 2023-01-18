@@ -22,7 +22,6 @@ import org.firstinspires.ftc.teamcode.Hardware.Sensors.Camera;
 import org.firstinspires.ftc.teamcode.Utilities.Side;
 import org.firstinspires.ftc.teamcode.Vision.SignalPipeline;
 
-@Disabled
 @Autonomous(name="Test Auto", group="Autonomous Linear Opmode")
 public class TestAuto extends LinearOpMode {
     Robot robot;
@@ -65,7 +64,6 @@ public class TestAuto extends LinearOpMode {
 
             robot.drivetrain.turn(90);
             robot.drivetrain.turn(180);
-            robot.drivetrain.turn(270);
 
 
             telemetry.addData("finalX", robot.drivetrain.getPoseEstimate().getX());
