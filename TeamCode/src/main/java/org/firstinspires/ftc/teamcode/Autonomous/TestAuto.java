@@ -63,7 +63,9 @@ public class TestAuto extends LinearOpMode {
 
         if (opModeIsActive()) {
 
-            robot.drivetrain.followTrajectory(traj1);
+            robot.drivetrain.turn(90);
+            robot.drivetrain.turn(180);
+            robot.drivetrain.turn(270);
 
 
             telemetry.addData("finalX", robot.drivetrain.getPoseEstimate().getX());
