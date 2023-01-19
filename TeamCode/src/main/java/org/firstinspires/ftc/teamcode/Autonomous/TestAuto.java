@@ -45,7 +45,9 @@ public class TestAuto extends LinearOpMode {
         robot = new Robot();
 
 
-        robot.drivetrain.setPoseEstimate(new Pose2d(0,0,Math.toRadians(90)));
+        Pose2d startPos = new Pose2d(0,0,Math.toRadians(90));
+
+        robot.drivetrain.setPoseEstimate(startPos);
 
 
         //To change speed, pass regulateSpeed1(*whateverspeedyouwant*) as an argument of Pose2D, followed by regulateSpeed2()
@@ -62,8 +64,7 @@ public class TestAuto extends LinearOpMode {
 
         if (opModeIsActive()) {
 
-            robot.drivetrain.turn(90);
-            robot.drivetrain.turn(180);
+            robot.drivetrain.turn(Math.toRadians(90));
 
 
             telemetry.addData("finalX", robot.drivetrain.getPoseEstimate().getX());

@@ -55,7 +55,7 @@ import java.util.List;
 //@Config
 public class LupineMecanumDrive extends MecanumDrive {
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(tP, tI, tD);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(0.00001, 0, 0.001);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(11, 0, 1);
 
     public static double LATERAL_MULTIPLIER = 1;
 
@@ -158,6 +158,8 @@ public class LupineMecanumDrive extends MecanumDrive {
         return getVelocityConstraint(speed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH);
     }
 
+
+
     public static TrajectoryAccelerationConstraint regulateSpeed2(){
         return LupineMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL);
     }
@@ -193,6 +195,10 @@ public class LupineMecanumDrive extends MecanumDrive {
     public void turn(double angle) {
         turnAsync(angle);
         waitForIdle();
+    }
+
+    public void turnTo(double angle){
+        turn(angle-getPoseEstimate().getHeading());
     }
 
     public void followTrajectoryAsync(Trajectory trajectory) {

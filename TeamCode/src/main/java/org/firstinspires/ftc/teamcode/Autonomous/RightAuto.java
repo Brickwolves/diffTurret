@@ -117,13 +117,17 @@ public class RightAuto extends LinearOpMode {
                 .build();
 
         Trajectory setUp2 = robot.drivetrain.trajectoryBuilder(setUp.end())
-                .lineToConstantHeading(new Vector2d(-28, 32),
-                        regulateSpeed1(20),
-                        regulateSpeed2())
+                .lineToLinearHeading(new Pose2d(-35.2,35.2,Math.toRadians(135)))
                 .build();
+
+//        Trajectory setUp3 = robot.drivetrain.trajectoryBuilder(setUp2.end())
+//                .splineToConstantHeading(new Vector2d(-28, 32),Math.toRadians(135),
+//                        regulateSpeed1(20),
+//                        regulateSpeed2())
+//                .build();
         Trajectory park1 = robot.drivetrain.trajectoryBuilder(setUp2.end())
-                .splineToConstantHeading(new Vector2d(-10, 34),Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(-10, 30),Math.toRadians(90))
+                .lineToConstantHeading(new Vector2d(-13, 42))
+                .splineToConstantHeading(new Vector2d(-13, 43),Math.toRadians(90))
                 .build();
 
         Trajectory park2 = robot.drivetrain.trajectoryBuilder(setUp2.end())
@@ -131,8 +135,7 @@ public class RightAuto extends LinearOpMode {
                 .build();
 
         Trajectory park3 = robot.drivetrain.trajectoryBuilder(setUp2.end())
-                .splineToConstantHeading(new Vector2d(-60, 34),Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(-60, 35),Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(-64, 37),Math.toRadians(90))
                 .build();
 
         while(opModeInInit()){
@@ -204,8 +207,8 @@ public class RightAuto extends LinearOpMode {
 
 
             robot.drivetrain.followTrajectory(setUp);
-            robot.drivetrain.turn(Math.toRadians(120));
-            robot.drivetrain.followTrajectory((setUp2));
+            robot.drivetrain.followTrajectory(setUp2);
+//            robot.drivetrain.followTrajectory(setUp3);
             robot.scorer.autoMid();
             robot.scorer.sleep(2);
             robot.scorer.autoDeposit();
@@ -213,16 +216,12 @@ public class RightAuto extends LinearOpMode {
 
             if (signalSide == ONE) {
                 robot.drivetrain.followTrajectory(park1);
-                robot.drivetrain.turn(Math.toRadians(270));
             }else if(signalSide == TWO){
                 robot.drivetrain.followTrajectory(park2);
-                robot.drivetrain.turn(Math.toRadians(220));
             }else if (signalSide == THREE){
                 robot.drivetrain.followTrajectory(park3);
-                robot.drivetrain.turn(Math.toRadians(270));
-//                robot.drivetrain.turn(Math.toRadians(270));
             }
-;
+            robot.drivetrain.turnTo(Math.toRadians(270));
 
             multTelemetry.addData("signal side", signalSide);
             multTelemetry.addData("ending auto", "ok");

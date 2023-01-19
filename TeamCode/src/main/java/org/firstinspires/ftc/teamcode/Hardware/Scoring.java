@@ -84,9 +84,9 @@ public class Scoring {
 
     public void autoMid(){
         sleep(0.4);
-        slides(1,midJunction+100);
+        slides(1,midJunction);
         sleep(0.4);
-        v4b(v4bScoreBack+0.08);
+        v4b(v4bScoreBack);
         grabber(grabberScore);
 
     }
