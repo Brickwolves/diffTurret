@@ -117,7 +117,7 @@ public class RightAuto extends LinearOpMode {
                 .build();
 
         Trajectory setUp2 = robot.drivetrain.trajectoryBuilder(setUp.end())
-                .lineToLinearHeading(new Pose2d(-35.2,35.2,Math.toRadians(135)))
+                .lineToLinearHeading(new Pose2d(-35.2,35.2,Math.toRadians(138)))
                 .build();
 
 //        Trajectory setUp3 = robot.drivetrain.trajectoryBuilder(setUp2.end())
@@ -135,7 +135,7 @@ public class RightAuto extends LinearOpMode {
                 .build();
 
         Trajectory park3 = robot.drivetrain.trajectoryBuilder(setUp2.end())
-                .splineToConstantHeading(new Vector2d(-64, 37),Math.toRadians(90))
+                .lineToConstantHeading(new Vector2d(-64, 37))
                 .build();
 
         while(opModeInInit()){

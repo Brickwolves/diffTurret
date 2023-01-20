@@ -78,7 +78,6 @@ public class LeftAuto extends LinearOpMode {
 
         initialize();
 
-        robot = new Robot();
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
@@ -103,35 +102,42 @@ public class LeftAuto extends LinearOpMode {
 
 
 
-        robot.drivetrain.setPoseEstimate(new Pose2d(-40,60,Math.toRadians(270)));
-
-
 
         //To change speed, pass regulateSpeed1(*whateverspeedyouwant*) as an argument of Pose2D, followed by regulateSpeed2()
-        Trajectory traj1 = robot.drivetrain.trajectoryBuilder(new Pose2d(-40,60,Math.toRadians(270)))
-                .splineTo(new Vector2d(-30, 35),Math.toRadians(270),
-                        regulateSpeed1(30),
-                        regulateSpeed2())
-                .splineTo(new Vector2d(-10, 35),Math.toRadians(90),
-                        regulateSpeed1(30),
-                        regulateSpeed2())
+        Pose2d startPos = new Pose2d(-30,-60,Math.toRadians(270));
+        robot.drivetrain.setPoseEstimate(startPos);
+
+
+        Trajectory preSetUp = robot.drivetrain.trajectoryBuilder(startPos)
+                .splineToConstantHeading(new Vector2d(-40,-55),Math.toRadians(270))
                 .build();
 
-        Trajectory traj2 = robot.drivetrain.trajectoryBuilder(new Pose2d(40,70,Math.toRadians(270)))
-                .splineTo(new Vector2d(-30, 35),Math.toRadians(270),
-                        regulateSpeed1(30),
-                        regulateSpeed2())
+        //To change speed, pass regulateSpeed1(*whateverspeedyouwant*) as an argument of Pose2D, followed by regulateSpeed2()
+        Trajectory setUp = robot.drivetrain.trajectoryBuilder(preSetUp.end())
+                .splineToConstantHeading(new Vector2d(-35,-50),Math.toRadians(270))
                 .build();
 
-        Trajectory traj3 = robot.drivetrain.trajectoryBuilder(new Pose2d(40,70,Math.toRadians(270)))
-                .splineTo(new Vector2d(-30, 35),Math.toRadians(270),
-                        regulateSpeed1(30),
-                        regulateSpeed2())
-                .splineTo(new Vector2d(-60, 35),Math.toRadians(270),
-                        regulateSpeed1(30),
-                        regulateSpeed2())
+        Trajectory setUp2 = robot.drivetrain.trajectoryBuilder(setUp.end())
+                .lineToLinearHeading(new Pose2d(-35.2,-35.2,Math.toRadians(45)))
                 .build();
 
+//        Trajectory setUp3 = robot.drivetrain.trajectoryBuilder(setUp2.end())
+//                .splineToConstantHeading(new Vector2d(-28, 32),Math.toRadians(135),
+//                        regulateSpeed1(20),
+//                        regulateSpeed2())
+//                .build();
+        Trajectory park1 = robot.drivetrain.trajectoryBuilder(setUp2.end())
+                .lineToConstantHeading(new Vector2d(-13, -42))
+                .splineToConstantHeading(new Vector2d(-13, -43),Math.toRadians(270))
+                .build();
+
+        Trajectory park2 = robot.drivetrain.trajectoryBuilder(setUp2.end())
+                .lineToConstantHeading(new Vector2d(-40,-28))
+                .build();
+
+        Trajectory park3 = robot.drivetrain.trajectoryBuilder(setUp2.end())
+                .lineToConstantHeading(new Vector2d(-64, -37))
+                .build();
 
 
 
@@ -140,9 +146,9 @@ public class LeftAuto extends LinearOpMode {
 
             if(detections != null)
             {
-                telemetry.addData("FPS", camera.getFps());
-                telemetry.addData("Overhead ms", camera.getOverheadTimeMs());
-                telemetry.addData("Pipeline ms", camera.getPipelineTimeMs());
+//                telemetry.addData("FPS", camera.getFps());
+//                telemetry.addData("Overhead ms", camera.getOverheadTimeMs());
+//                telemetry.addData("Pipeline ms", camera.getPipelineTimeMs());
 
                 // If we don't see any tags
                 if(detections.size() == 0)
@@ -179,13 +185,16 @@ public class LeftAuto extends LinearOpMode {
                         if(detection.id == 18){
                             signalSide = ONE;
                         }
-                        telemetry.addLine(String.format("\nDetected tag ID=%d", detection.id));
-                        telemetry.addLine(String.format("Translation X: %.2f feet", detection.pose.x*FEET_PER_METER));
-                        telemetry.addLine(String.format("Translation Y: %.2f feet", detection.pose.y*FEET_PER_METER));
-                        telemetry.addLine(String.format("Translation Z: %.2f feet", detection.pose.z*FEET_PER_METER));
-                        telemetry.addLine(String.format("Rotation Yaw: %.2f degrees", Math.toDegrees(detection.pose.yaw)));
-                        telemetry.addLine(String.format("Rotation Pitch: %.2f degrees", Math.toDegrees(detection.pose.pitch)));
-                        telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
+
+                        multTelemetry.addData("Signal", signalSide);
+                        multTelemetry.update();
+//                        telemetry.addLine(String.format("\nDetected tag ID=%d", detection.id));
+//                        telemetry.addLine(String.format("Translation X: %.2f feet", detection.pose.x*FEET_PER_METER));
+//                        telemetry.addLine(String.format("Translation Y: %.2f feet", detection.pose.y*FEET_PER_METER));
+//                        telemetry.addLine(String.format("Translation Z: %.2f feet", detection.pose.z*FEET_PER_METER));
+//                        telemetry.addLine(String.format("Rotation Yaw: %.2f degrees", Math.toDegrees(detection.pose.yaw)));
+//                        telemetry.addLine(String.format("Rotation Pitch: %.2f degrees", Math.toDegrees(detection.pose.pitch)));
+//                        telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
                     }
                 }
 
@@ -200,16 +209,23 @@ public class LeftAuto extends LinearOpMode {
 
             multTelemetry.addData("signal side", signalSide);
             multTelemetry.update();
+            robot.drivetrain.followTrajectory(setUp);
+            robot.drivetrain.followTrajectory(setUp2);
+//            robot.drivetrain.followTrajectory(setUp3);
+            robot.scorer.autoMid();
+            robot.scorer.sleep(2);
+            robot.scorer.autoDeposit();
+            robot.scorer.sleep(1);
 
-            if (signalSide == ONE){
-                robot.drivetrain.followTrajectory(traj1);
+            if (signalSide == ONE) {
+                robot.drivetrain.followTrajectory(park3);
+            }else if(signalSide == TWO){
+                robot.drivetrain.followTrajectory(park2);
+            }else if (signalSide == THREE){
+                robot.drivetrain.followTrajectory(park1);
             }
-            if (signalSide == TWO){
-                robot.drivetrain.followTrajectory(traj2);
-            }
-            if (signalSide == THREE){
-                robot.drivetrain.followTrajectory(traj3);
-            }
+            robot.drivetrain.turnTo(Math.toRadians(90));
+
 
             multTelemetry.addData("signal side", signalSide);
             multTelemetry.addData("ending auto", "ok");
