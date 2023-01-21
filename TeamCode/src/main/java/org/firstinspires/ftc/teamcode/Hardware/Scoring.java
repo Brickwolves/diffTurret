@@ -10,11 +10,13 @@ import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.gr
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberScoreFront;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberStartAuto;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberTip;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.highFront;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.highFunny;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.highJunction;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.midFunny;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.midJunction;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.stackIncrease;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.stackedHeight;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.tipAngle;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.tippedHeight;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bDown;
@@ -109,7 +111,10 @@ public class Scoring {
     public void stackPickup(int height){
         v4b(v4bDown);
         slides(1,(height-1)*stackIncrease);
-        open(false);
+    }
+
+    public void stackEscape(int height){
+        slides(1,(height+4)*stackIncrease);
     }
 
     public boolean beamBroken(){
@@ -162,7 +167,7 @@ public class Scoring {
     public void highFront(boolean funny) {
         if (!funny) {
             close();
-            slides(1, highJunction);
+            slides(1, highFront);
             v4b(v4bScoreFront);
             if (time.seconds() > .2) {
                 v4b(v4bScoreFront);
@@ -286,8 +291,9 @@ public class Scoring {
         if(inRange(0,time.seconds(), .3)){
             open(false);
             fullyDown = true;
+            grabber(grabberDown);
         }
-        if(inRange(.5,time.seconds(),2)){
+        if(inRange(0.8,time.seconds(),2)){
             v4b(v4bDown);
         }
         if(time.seconds()>.8) {

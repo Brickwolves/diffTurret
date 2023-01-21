@@ -28,6 +28,7 @@ import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.gr
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberScoreFront;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberTip;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.rateOfChange;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.stackedHeight;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.tipAngle;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.tippedHeight;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bDown;
@@ -78,6 +79,7 @@ public class FullRegularTeleOp extends OpMode {
         TIPPED_FORWARDS, TIPPED_BACKWARDS,
         SCORE_HIGH, SCORE_MID, SCORE_LOW,
         SCORE_FRONT_HIGH, SCORE_FRONT_MID, SCORE_FRONT_LOW,
+        STACKED_HEIGHT, ESCAPE
     }
 
     public ScoreState score = ScoreState.DOWN;
@@ -98,6 +100,7 @@ public class FullRegularTeleOp extends OpMode {
     public void init() {
         setOpMode(this);
 
+        stackedHeight = 1;
 
         pid = new PID(proportionalWeight, integralWeight, derivativeWeight);
 
@@ -177,7 +180,7 @@ public class FullRegularTeleOp extends OpMode {
 
 
 
-        if(score == ScoreState.DOWN) {
+        if(score == ScoreState.DOWN || score == ScoreState.STACKED_HEIGHT) {
             if(!manualClaw && !isFunny) {
                 if (fullyDown) {
                     if (clawOpen) {
@@ -366,8 +369,21 @@ public class FullRegularTeleOp extends OpMode {
             case SCORE_FRONT_HIGH:
                 robot.scorer.highFront(isFunny);
                 break;
+            case STACKED_HEIGHT:
+                robot.scorer.stackPickup(stackedHeight);
+                break;
+            case ESCAPE:
+                robot.scorer.stackEscape(stackedHeight);
+                break;
         }
 
+        if(controller2.get(RB1, TAP) && score == ScoreState.STACKED_HEIGHT && stackedHeight < 5){
+            stackedHeight += 1;
+        }
+
+        if(controller2.get(LB1, TAP) && score == ScoreState.STACKED_HEIGHT && stackedHeight > 1){
+            stackedHeight -= 1;
+        }
 
         if (controller.get(SQUARE, TAP) && score != ScoreState.DOWN && !isTipped) {
             coneTipped = "Straight";
@@ -375,6 +391,21 @@ public class FullRegularTeleOp extends OpMode {
             score = ScoreState.DOWN;
             robot.scorer.time.reset();
         }
+
+        if(controller2.get(CIRCLE,TAP)) {
+            if (!isTipped && !isFunny) {
+                if (score != ScoreState.STACKED_HEIGHT) {
+                    score = ScoreState.STACKED_HEIGHT;
+                    robot.scorer.time.reset();
+                    isFunny = false;
+                    coneTipped = "Straight";
+                } else {
+                    score = ScoreState.ESCAPE;
+                    robot.scorer.time.reset();
+                }
+            }
+            }
+
 
         if (controller2.get(DPAD_DN, TAP) && score != ScoreState.SCORE_FRONT_LOW && !isTipped) {
             score = ScoreState.SCORE_FRONT_LOW;
