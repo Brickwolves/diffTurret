@@ -104,39 +104,32 @@ public class LeftAuto extends LinearOpMode {
 
 
         //To change speed, pass regulateSpeed1(*whateverspeedyouwant*) as an argument of Pose2D, followed by regulateSpeed2()
-        Pose2d startPos = new Pose2d(-30,-60,Math.toRadians(270));
+        Pose2d startPos = new Pose2d(30,60,Math.toRadians(90));
         robot.drivetrain.setPoseEstimate(startPos);
 
 
-        Trajectory preSetUp = robot.drivetrain.trajectoryBuilder(startPos)
-                .splineToConstantHeading(new Vector2d(-40,-55),Math.toRadians(270))
-                .build();
-
         //To change speed, pass regulateSpeed1(*whateverspeedyouwant*) as an argument of Pose2D, followed by regulateSpeed2()
-        Trajectory setUp = robot.drivetrain.trajectoryBuilder(preSetUp.end())
-                .splineToConstantHeading(new Vector2d(-35,-50),Math.toRadians(270))
+        Trajectory setUp = robot.drivetrain.trajectoryBuilder(startPos)
+                .lineToConstantHeading(new Vector2d(35,50))
                 .build();
 
         Trajectory setUp2 = robot.drivetrain.trajectoryBuilder(setUp.end())
-                .lineToLinearHeading(new Pose2d(-35.2,-35.2,Math.toRadians(45)))
+                .lineToConstantHeading(new Vector2d(27,28))
+                .build();
+        Trajectory setUp3 = robot.drivetrain.trajectoryBuilder(setUp2.end())
+                .lineToConstantHeading(new Vector2d(26,27))
+                .build();
+        Trajectory setUp4 = robot.drivetrain.trajectoryBuilder(setUp3.end())
+                .lineToConstantHeading(new Vector2d(35,35))
                 .build();
 
-//        Trajectory setUp3 = robot.drivetrain.trajectoryBuilder(setUp2.end())
-//                .splineToConstantHeading(new Vector2d(-28, 32),Math.toRadians(135),
-//                        regulateSpeed1(20),
-//                        regulateSpeed2())
-//                .build();
-        Trajectory park1 = robot.drivetrain.trajectoryBuilder(setUp2.end())
-                .lineToConstantHeading(new Vector2d(-13, -42))
-                .splineToConstantHeading(new Vector2d(-13, -43),Math.toRadians(270))
+        Trajectory park3 = robot.drivetrain.trajectoryBuilder(setUp4.end())
+                .lineToConstantHeading(new Vector2d(10,35))
                 .build();
 
-        Trajectory park2 = robot.drivetrain.trajectoryBuilder(setUp2.end())
-                .lineToConstantHeading(new Vector2d(-40,-28))
-                .build();
 
-        Trajectory park3 = robot.drivetrain.trajectoryBuilder(setUp2.end())
-                .lineToConstantHeading(new Vector2d(-64, -37))
+        Trajectory park1 = robot.drivetrain.trajectoryBuilder(setUp4.end())
+                .lineToConstantHeading(new Vector2d(65,35))
                 .build();
 
 
@@ -211,20 +204,22 @@ public class LeftAuto extends LinearOpMode {
             multTelemetry.update();
             robot.drivetrain.followTrajectory(setUp);
             robot.drivetrain.followTrajectory(setUp2);
-//            robot.drivetrain.followTrajectory(setUp3);
+            robot.drivetrain.turnTo(Math.toRadians(45));
             robot.scorer.autoMid();
             robot.scorer.sleep(2);
             robot.scorer.autoDeposit();
             robot.scorer.sleep(1);
+            robot.drivetrain.followTrajectory(setUp3);
+            robot.drivetrain.followTrajectory(setUp4);
+
 
             if (signalSide == ONE) {
-                robot.drivetrain.followTrajectory(park3);
-            }else if(signalSide == TWO){
-                robot.drivetrain.followTrajectory(park2);
-            }else if (signalSide == THREE){
                 robot.drivetrain.followTrajectory(park1);
+            }else if(signalSide == TWO){
+            }else if (signalSide == THREE){
+                robot.drivetrain.followTrajectory(park3);
             }
-            robot.drivetrain.turnTo(Math.toRadians(90));
+            robot.drivetrain.turnTo(Math.toRadians(270));
 
 
             multTelemetry.addData("signal side", signalSide);
