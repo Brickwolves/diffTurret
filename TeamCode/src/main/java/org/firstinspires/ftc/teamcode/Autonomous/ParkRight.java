@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
-import static org.firstinspires.ftc.teamcode.Hardware.LupineMecanumDrive.regulateSpeed1;
-import static org.firstinspires.ftc.teamcode.Hardware.LupineMecanumDrive.regulateSpeed2;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 import static org.firstinspires.ftc.teamcode.Vision.SignalPipeline.SignalSide.ONE;
@@ -32,14 +30,23 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import java.util.ArrayList;
 
 
-@Autonomous(name="Left Auto", group="Autonomous Linear Opmode")
-public class LeftAuto extends LinearOpMode {
+@Autonomous(name="Right Park", group="Autonomous Linear Opmode")
+public class ParkRight extends LinearOpMode {
     Robot robot;
+
+    // Declare OpMode members.
+    private ElapsedTime runtime = new ElapsedTime();
+    public SignalPipeline.SignalSide signalSide;
+
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
 
     static final double FEET_PER_METER = 3.28084;
 
+    // Lens intrinsics
+    // UNITS ARE PIXELS
+    // NOTE: this calibration is for the C920 webcam at 800x448.
+    // You will need to do your own calibration for other configurations!
     double fx = 578.272;
     double fy = 578.272;
     double cx = 402.145;
@@ -57,18 +64,11 @@ public class LeftAuto extends LinearOpMode {
 
 
 
-    // Declare OpMode members.
-    private ElapsedTime runtime = new ElapsedTime();
-    public SignalPipeline.SignalSide signalSide;
-
-
-
     public void initialize() {
         setOpMode(this);
         robot = new Robot(true);
         Side.setBlue();
         robot.scorer.autoStart();
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -78,13 +78,15 @@ public class LeftAuto extends LinearOpMode {
 
         initialize();
 
+
+
+
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
 
         camera.setPipeline(aprilTagDetectionPipeline);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
-
         {
             @Override
             public void onOpened()
@@ -99,40 +101,35 @@ public class LeftAuto extends LinearOpMode {
             }
         });
 
-
-
-
-
-        //To change speed, pass regulateSpeed1(*whateverspeedyouwant*) as an argument of Pose2D, followed by regulateSpeed2()
-        Pose2d startPos = new Pose2d(30,60,Math.toRadians(90));
+        Pose2d startPos = new Pose2d(-40,60,Math.toRadians(90));
         robot.drivetrain.setPoseEstimate(startPos);
 
 
+//        Trajectory avoid = robot.drivetrain.trajectoryBuilder(startPos)
+//                .lineToLinearHeading(new Pose2d(-35, 50,Math.toRadians(90)))
+//                .build();
+
         //To change speed, pass regulateSpeed1(*whateverspeedyouwant*) as an argument of Pose2D, followed by regulateSpeed2()
         Trajectory setUp = robot.drivetrain.trajectoryBuilder(startPos)
-                .lineToConstantHeading(new Vector2d(35,50))
+                .back(5)
                 .build();
 
-        Trajectory setUp2 = robot.drivetrain.trajectoryBuilder(setUp.end())
-                .lineToConstantHeading(new Vector2d(27,28))
-                .build();
-        Trajectory setUp3 = robot.drivetrain.trajectoryBuilder(setUp2.end())
-                .lineToConstantHeading(new Vector2d(26,27))
-                .build();
-        Trajectory setUp4 = robot.drivetrain.trajectoryBuilder(setUp3.end())
-                .lineToConstantHeading(new Vector2d(35,35))
+        Trajectory finishPark = robot.drivetrain.trajectoryBuilder(new Pose2d())
+                .back(30)
                 .build();
 
-        Trajectory park3 = robot.drivetrain.trajectoryBuilder(setUp4.end())
-                .lineToConstantHeading(new Vector2d(10,35))
+//        Trajectory setUp3 = robot.drivetrain.trajectoryBuilder(finishPark.end())
+//                .splineToConstantHeading(new Vector2d(-28, 32),Math.toRadians(135),
+//                        regulateSpeed1(20),
+//                        regulateSpeed2())
+//                .build();
+        Trajectory park1 = robot.drivetrain.trajectoryBuilder(setUp.end())
+                .strafeRight(24)
                 .build();
 
-
-        Trajectory park1 = robot.drivetrain.trajectoryBuilder(setUp4.end())
-                .lineToConstantHeading(new Vector2d(65,35))
+        Trajectory park3 = robot.drivetrain.trajectoryBuilder(setUp.end())
+                .strafeLeft(24)
                 .build();
-
-
 
         while(opModeInInit()){
             ArrayList<AprilTagDetection> detections = aprilTagDetectionPipeline.getDetectionsUpdate();
@@ -178,7 +175,6 @@ public class LeftAuto extends LinearOpMode {
                         if(detection.id == 18){
                             signalSide = ONE;
                         }
-
                         multTelemetry.addData("Signal", signalSide);
                         multTelemetry.update();
 //                        telemetry.addLine(String.format("\nDetected tag ID=%d", detection.id));
@@ -191,9 +187,8 @@ public class LeftAuto extends LinearOpMode {
                     }
                 }
 
-                telemetry.update();
+//                telemetry.update();
             }
-
 
             sleep(20);
         }
@@ -202,30 +197,24 @@ public class LeftAuto extends LinearOpMode {
 
             multTelemetry.addData("signal side", signalSide);
             multTelemetry.update();
+
+
             robot.drivetrain.followTrajectory(setUp);
-            robot.drivetrain.followTrajectory(setUp2);
-            robot.drivetrain.turnTo(Math.toRadians(45));
-            robot.scorer.autoMid();
-            robot.scorer.sleep(2);
-            robot.scorer.autoDeposit();
-            robot.scorer.sleep(1);
-            robot.drivetrain.followTrajectory(setUp3);
-            robot.drivetrain.followTrajectory(setUp4);
 
 
             if (signalSide == ONE) {
                 robot.drivetrain.followTrajectory(park1);
-            }else if(signalSide == TWO){
+//            }else if(signalSide == TWO){
+//                robot.drivetrain.followTrajectory(park2);
             }else if (signalSide == THREE){
                 robot.drivetrain.followTrajectory(park3);
             }
+            robot.drivetrain.followTrajectory(finishPark);
             robot.drivetrain.turnTo(Math.toRadians(270));
-
 
             multTelemetry.addData("signal side", signalSide);
             multTelemetry.addData("ending auto", "ok");
             multTelemetry.update();
-
 
         }
     }

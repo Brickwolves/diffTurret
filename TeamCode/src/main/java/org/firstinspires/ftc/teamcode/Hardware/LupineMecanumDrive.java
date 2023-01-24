@@ -4,6 +4,9 @@ package org.firstinspires.ftc.teamcode.Hardware;
 import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.derivativeWeight;
 import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.integralWeight;
 import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.proportionalWeight;
+import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.tD;
+import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.tI;
+import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.tP;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -51,8 +54,8 @@ import java.util.List;
  */
 //@Config
 public class LupineMecanumDrive extends MecanumDrive {
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(1.2, 0, 0.002);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(1.1, 0, 0);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(tP, tI, tD);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(11, 0, 1);
 
     public static double LATERAL_MULTIPLIER = 1;
 
@@ -155,6 +158,8 @@ public class LupineMecanumDrive extends MecanumDrive {
         return getVelocityConstraint(speed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH);
     }
 
+
+
     public static TrajectoryAccelerationConstraint regulateSpeed2(){
         return LupineMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL);
     }
@@ -190,6 +195,10 @@ public class LupineMecanumDrive extends MecanumDrive {
     public void turn(double angle) {
         turnAsync(angle);
         waitForIdle();
+    }
+
+    public void turnTo(double angle){
+        turn(angle-getPoseEstimate().getHeading());
     }
 
     public void followTrajectoryAsync(Trajectory trajectory) {
