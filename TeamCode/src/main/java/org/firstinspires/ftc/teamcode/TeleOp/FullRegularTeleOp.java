@@ -30,6 +30,7 @@ import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.integralWeight
 import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.proportionalWeight;
 import static org.firstinspires.ftc.teamcode.Utilities.NonConstants.fullyDown;
 
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -37,9 +38,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Controls.ButtonControls;
 import org.firstinspires.ftc.teamcode.Controls.Controller;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
+import org.firstinspires.ftc.teamcode.Odometry.util.LynxModuleUtil;
 import org.firstinspires.ftc.teamcode.Utilities.Files.BlackBox.BlackBoxLogger;
 import org.firstinspires.ftc.teamcode.Utilities.Side;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
+import org.firstinspires.ftc.teamcode.Utilities.revextensions2.ExpansionHubEx;
 
 //@Disabled
 @TeleOp(name="Regular TeleOp", group="Iterative Opmode")
@@ -74,6 +77,9 @@ public class FullRegularTeleOp extends OpMode {
     Controller controller2;
 
 
+    ExpansionHubEx controlHub;
+
+
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -82,6 +88,8 @@ public class FullRegularTeleOp extends OpMode {
     @Override
     public void init() {
         setOpMode(this);
+
+        controlHub = new ExpansionHubEx(hardwareMap.getAll(LynxModule.class).get(1));
 
 
         pid = new PID(proportionalWeight, integralWeight, derivativeWeight);
@@ -144,6 +152,7 @@ public class FullRegularTeleOp extends OpMode {
 
         double power;
 
+        controlHub.getServoBusCurrentDraw(ExpansionHubEx.CurrentDrawUnits.MILLIAMPS);
 
 
 
