@@ -12,4 +12,8 @@ public class PIDWeights {
     public static double tP = 5.5;
     public static double tI = 0;
     public static double tD = 0.002;
+
+    public static double vP = 0.5;
+    public static double vI = 0.0;
+    public static double vD = 0.002;
 }

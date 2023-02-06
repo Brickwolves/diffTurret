@@ -45,9 +45,9 @@ import org.firstinspires.ftc.teamcode.Utilities.Side;
 import org.firstinspires.ftc.teamcode.Utilities.MathUtils;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
 
-@Disabled
-@TeleOp(name="Basic TeleOp", group="Iterative Opmode")
-public class BasicTeleOp extends OpMode {
+
+@TeleOp(name="Test TeleOp", group="Iterative Opmode")
+public class TestTeleOp extends OpMode {
 
     // Declare OpMode members.
     private final ElapsedTime runtime = new ElapsedTime();
@@ -131,8 +131,6 @@ public class BasicTeleOp extends OpMode {
 
         double power;
 
-
-
         //PID and Kinetic Turning
         double rotation = controller.get(RIGHT, X);
 
@@ -143,6 +141,9 @@ public class BasicTeleOp extends OpMode {
             pid_on = false;
         } else if (currentRateOfChange <= rateOfChange) pid_on = true;
 
+        if(controller2.get(RB2, DOWN)){
+            robot.scorer.v4bNoSensor(controller2.get(LEFT,Y));
+        }
 
         // Lock the heading if we JUST turned PID on
         // Correct our heading if the PID has and is still on
@@ -180,7 +181,6 @@ public class BasicTeleOp extends OpMode {
     /*
          ----------- L O G G I N G -----------
                                             */
-        multTelemetry.addData("Tipping?", isTipped);
         multTelemetry.update();
     }
 

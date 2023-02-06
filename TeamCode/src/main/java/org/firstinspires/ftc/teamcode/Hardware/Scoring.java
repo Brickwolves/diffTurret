@@ -13,6 +13,7 @@ import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.gr
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.highFront;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.highFunny;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.highJunction;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.midFront;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.midFunny;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.midJunction;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.stackIncrease;
@@ -27,19 +28,26 @@ import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4
 import static org.firstinspires.ftc.teamcode.Utilities.MathUtils.inRange;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
 import static org.firstinspires.ftc.teamcode.Utilities.NonConstants.fullyDown;
+import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.vD;
+import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.vI;
+import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.vP;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.Utilities.PID;
 
 public class Scoring {
 
     public DcMotor spool;
     public DcMotor spool2;
     public Servo squeezer;
-    public Servo v4b1;
-    public Servo v4b2;
+    public CRServo v4b1;
+    public CRServo v4b2;
+    public PID v4bPID;
     public Servo grabberSpin;
     public TouchSensor beam1;
     public boolean previousPress = false;
@@ -58,8 +66,9 @@ public class Scoring {
         squeezer = hardwareMap.get(Servo.class, "squeeze");
         squeezer.setPosition(.3);
 
-        v4b1 = hardwareMap.get(Servo.class, "v4b1");
-        v4b2 = hardwareMap.get(Servo.class,"v4b2");
+        v4b1 = hardwareMap.get(CRServo.class, "v4b1");
+        v4b2 = hardwareMap.get(CRServo.class,"v4b2");
+        v4bPID = new PID(vP,vI,vD);
 
         grabberSpin = hardwareMap.get(Servo.class, "spin");
 
@@ -148,9 +157,16 @@ public class Scoring {
     }
 
     public void v4b(double target){
-        v4b1.setPosition(target);
-        v4b2.setPosition(1-target);
+        //1 should be changed to absolute encoder value
+        v4b1.setPower(v4bPID.update(target - 1, false));
+        v4b2.setPower(1-(v4bPID.update(target - 1, false)));
     }
+
+    public void v4bNoSensor(double speed){
+        v4b1.setPower(speed);
+        v4b2.setPower(-speed);
+    }
+
     public void grabber(double target){
         grabberSpin.setPosition(target);
     }
@@ -181,7 +197,7 @@ public class Scoring {
     public void midFront(boolean funny){
         if (!funny) {
             close();
-            slides(1,midJunction);
+            slides(1,midFront);
             v4b(v4bScoreFront);
             if(time.seconds() > .2){
                 v4b(v4bScoreFront);

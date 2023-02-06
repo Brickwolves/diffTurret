@@ -75,7 +75,6 @@ public class FullRegularTeleOp extends OpMode {
     public boolean clawOpen = false;
     public boolean cacheBeam;
 
-    public BlackBoxLogger logger;
 
     public enum ScoreState {
         DOWN,
@@ -107,7 +106,7 @@ public class FullRegularTeleOp extends OpMode {
         setOpMode(this);
 
         stackedHeight = 1;
-        controlHub = new ExpansionHubEx(hardwareMap.getAll(LynxModule.class).get(1));
+        controlHub = new ExpansionHubEx(hardwareMap.getAll(LynxModule.class).get(0));
 
 
         pid = new PID(proportionalWeight, integralWeight, derivativeWeight);
@@ -122,8 +121,6 @@ public class FullRegularTeleOp extends OpMode {
 
 
         robot.gyro.setDatum(IMU_DATUM);
-
-        logger = new BlackBoxLogger();
 
 
         multTelemetry.addData("Status", "Initialized");
@@ -169,7 +166,6 @@ public class FullRegularTeleOp extends OpMode {
 
         double power;
 
-        controlHub.getServoBusCurrentDraw(ExpansionHubEx.CurrentDrawUnits.MILLIAMPS);
 
 
 
@@ -544,12 +540,13 @@ public class FullRegularTeleOp extends OpMode {
         multTelemetry.addData("Manual", manualClaw);
         multTelemetry.addData("claw open", clawOpen);
         multTelemetry.addData("V4b score back", v4bScoreBack);
+        multTelemetry.addData("Servo Bus MilliAmps",controlHub.getServoBusCurrentDraw(ExpansionHubEx.CurrentDrawUnits.MILLIAMPS));
+
 
         multTelemetry.addData("Funny", isFunny);
         multTelemetry.addData("Slides Height", -robot.scorer.spool.getCurrentPosition());
         multTelemetry.addData("is beam broken", robot.scorer.beamBroken());
-        multTelemetry.addData("v4b1", robot.scorer.v4b1.getPosition());
-        multTelemetry.addData("v4b2", robot.scorer.v4b2.getPosition());
+
         multTelemetry.update();
 
     }
