@@ -11,7 +11,6 @@ import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.LB1;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.LB2;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.RB1;
-import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.RB2;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.SQUARE;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.TRIANGLE;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.LEFT;
@@ -20,21 +19,11 @@ import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.INV
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.SHIFTED_X;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.X;
 
-import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.Y;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.driveSpeed;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberDown;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberFunny;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberScore;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberScoreFront;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberTip;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.rateOfChange;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.stackedHeight;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.tipAngle;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.tippedHeight;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bDown;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreBack;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreFront;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreFrontLow;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.IMU_DATUM;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
@@ -47,13 +36,10 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.Controls.ButtonControls;
 import org.firstinspires.ftc.teamcode.Controls.Controller;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
-import org.firstinspires.ftc.teamcode.Odometry.util.LynxModuleUtil;
-import org.firstinspires.ftc.teamcode.Utilities.Files.BlackBox.BlackBoxLogger;
 import org.firstinspires.ftc.teamcode.Utilities.Side;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
 import org.firstinspires.ftc.teamcode.Utilities.revextensions2.ExpansionHubEx;
@@ -162,6 +148,7 @@ public class FullRegularTeleOp extends OpMode {
     @Override
     public void loop() {
         Controller.update();
+        robot.scorer.intake.updateSpeed();
 
 
         double power;
@@ -209,10 +196,16 @@ public class FullRegularTeleOp extends OpMode {
 
         if(controller.get(DPAD_UP,TAP)){
             coneTipped = "Straight";
+            if(score == ScoreState.DOWN) {
+                robot.scorer.intake.runIntake(.3);
+            }else{
+                robot.scorer.intake.runIntake(0);
+            }
             isFunny = false;
         }
         if(controller.get(DPAD_DN, TAP)){
             coneTipped = "Forwards";
+            robot.scorer.intake.runIntake(0);
             isFunny = true;
 
         }
@@ -546,7 +539,7 @@ public class FullRegularTeleOp extends OpMode {
         multTelemetry.addData("Funny", isFunny);
         multTelemetry.addData("Slides Height", -robot.scorer.spool.getCurrentPosition());
         multTelemetry.addData("is beam broken", robot.scorer.beamBroken());
-
+        multTelemetry.addData("Intake Speed", robot.scorer.intake.getSpeed());
         multTelemetry.update();
 
     }

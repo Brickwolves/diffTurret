@@ -54,6 +54,12 @@ public class MathUtils {
         return input > low && input < high;
     }
 
+    public static double linearConversion(double value, double oldMin, double oldMax, double newMin, double newMax){
+        double oldRange = (oldMax - oldMin);
+        double newRange = (newMax - newMin);
+        return (((value - oldMin) * newRange) / oldRange) + newMin;
+    }
+
     /**
      * @param x
      * @param a_min

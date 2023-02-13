@@ -25,6 +25,7 @@ import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreFront;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreFrontLow;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bStartAuto;
+import static org.firstinspires.ftc.teamcode.Utilities.Constants.slidesOffset;
 import static org.firstinspires.ftc.teamcode.Utilities.MathUtils.inRange;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
 import static org.firstinspires.ftc.teamcode.Utilities.NonConstants.fullyDown;
@@ -50,6 +51,7 @@ public class Scoring {
     public PID v4bPID;
     public Servo grabberSpin;
     public TouchSensor beam1;
+    public Intake intake;
     public boolean previousPress = false;
     public boolean clawToggleOpen = false;
 
@@ -62,6 +64,8 @@ public class Scoring {
 
 
     public Scoring(){
+
+        intake = new Intake();
 
         squeezer = hardwareMap.get(Servo.class, "squeeze");
         squeezer.setPosition(.3);
@@ -170,11 +174,13 @@ public class Scoring {
     public void grabber(double target){
         grabberSpin.setPosition(target);
     }
+
     public void slides(double power, int target){
+        int newTarget = target - (int)slidesOffset;
         spool.setPower(power);
         spool2.setPower(power);
-        spool.setTargetPosition(-target);
-        spool2.setTargetPosition(target);
+        spool.setTargetPosition(-newTarget);
+        spool2.setTargetPosition(newTarget);
     }
 
     //Score Methods
@@ -338,5 +344,9 @@ public class Scoring {
         while(sleep.seconds()<sleepTime){
 
         }
+    }
+
+    public int getHeight(){
+        return (Math.abs(spool.getCurrentPosition()) + Math.abs(spool2.getCurrentPosition()))/2;
     }
 }
