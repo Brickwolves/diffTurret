@@ -1,9 +1,9 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawClose;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.depositDrop;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.highJunction;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.midJunction;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.slidesDepositDrop;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.slidesHighJunction;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.slidesMidJunction;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawOpen;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
 
@@ -78,15 +78,15 @@ public class Grabber {
     public void high(){
         spool.setPower(1);
         spool2.setPower(1);
-        spool.setTargetPosition(-highJunction);
-        spool2.setTargetPosition(highJunction);
+        spool.setTargetPosition(-slidesHighJunction);
+        spool2.setTargetPosition(slidesHighJunction);
     }
 
     public void middle(){
         spool.setPower(.8);
-        spool.setTargetPosition(-midJunction);
+        spool.setTargetPosition(-slidesMidJunction);
         spool2.setPower(.8);
-        spool2.setTargetPosition(midJunction);
+        spool2.setTargetPosition(slidesMidJunction);
 
     }
 
@@ -108,8 +108,8 @@ public class Grabber {
         spool.setPower(.3);
         spool2.setPower(.3);
         if(!wentDown) {
-            spool.setTargetPosition(-(spool.getCurrentPosition() - depositDrop));
-            spool2.setTargetPosition((spool.getCurrentPosition() - depositDrop));
+            spool.setTargetPosition(-(spool.getCurrentPosition() - slidesDepositDrop));
+            spool2.setTargetPosition((spool.getCurrentPosition() - slidesDepositDrop));
             wentDown = true;
         }
         if(time.seconds() > .6) {

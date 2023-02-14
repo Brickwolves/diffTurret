@@ -22,10 +22,14 @@ import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.SHI
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.X;
 
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.Y;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberDown;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberScore;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.rateOfChange;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.slidesHighJunction;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.tipAngle;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bDown;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreBack;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreFront;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.IMU_DATUM;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
@@ -58,7 +62,7 @@ public class TestTeleOp extends OpMode {
     private boolean pid_on_last_cycle = false;
     private boolean KETurns = false;
     public boolean isTipped = false;
-
+    public boolean idk = false;
 
 
     // Declare OpMode members.
@@ -141,8 +145,24 @@ public class TestTeleOp extends OpMode {
             pid_on = false;
         } else if (currentRateOfChange <= rateOfChange) pid_on = true;
 
-        if(controller2.get(RB2, DOWN)){
-            robot.scorer.v4bNoSensor(controller2.get(LEFT,Y));
+        if(controller2.get(DPAD_UP,TAP)){
+            idk = true;
+        }else if(controller2.get(DPAD_DN,TAP)){
+            idk = false;
+        }
+        if(controller2.get(CIRCLE,TOGGLE)){
+            robot.scorer.close();
+        }else{
+            robot.scorer.open(false);
+        }
+        if(idk){
+            robot.scorer.grabber(grabberScore);
+            robot.scorer.slides(1,slidesHighJunction);
+            robot.scorer.v4b(v4bScoreBack);
+        }else{
+            robot.scorer.grabber(grabberDown);
+            robot.scorer.slides(1,0);
+            robot.scorer.v4b(v4bDown);
         }
 
         // Lock the heading if we JUST turned PID on
@@ -181,6 +201,9 @@ public class TestTeleOp extends OpMode {
     /*
          ----------- L O G G I N G -----------
                                             */
+        multTelemetry.addData("absoluteEncoder", robot.scorer.encoder.getAngle());
+        multTelemetry.addData("servo speed", robot.scorer.v4b1.getPower());
+        multTelemetry.addData("servo speed 2", robot.scorer.v4b2.getPower());
         multTelemetry.update();
     }
 

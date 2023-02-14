@@ -38,17 +38,20 @@ public class PID {
         double iComponent = integralSum * integralWeight;
         double dComponent = rateOfChange * derivativeWeight;
 
-        if (isTuning){
-            multTelemetry.addData("P", pComponent);
-            multTelemetry.addData("I", iComponent);
-            multTelemetry.addData("D", dComponent);
-        }
+//        if (isTuning){
+//            multTelemetry.addData("P", pComponent);
+//            multTelemetry.addData("I", iComponent);
+//            multTelemetry.addData("D", dComponent);
+//        }
 
         return pComponent + iComponent + dComponent;
 
 
     }
 
-
-
+    public void setWeights(double proportionalWeight, double integralWeight, double derivativeWeight) {
+        this.proportionalWeight = proportionalWeight;
+        this.integralWeight = integralWeight;
+        this.derivativeWeight = derivativeWeight;
+    }
 }

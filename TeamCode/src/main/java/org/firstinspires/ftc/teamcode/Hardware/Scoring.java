@@ -3,35 +3,38 @@ package org.firstinspires.ftc.teamcode.Hardware;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawClose;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawOpen;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawTipped;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberFunny;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberScoreFunny;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberDown;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberHide;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberScore;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberScoreFront;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberStartAuto;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberTip;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.highFront;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.highFunny;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.highJunction;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.midFront;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.midFunny;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.midJunction;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.stackIncrease;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.stackedHeight;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.tipAngle;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.tippedHeight;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.slidesHighFront;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.slidesHighFunny;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.slidesHighJunction;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.slidesMidFront;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.slidesMidFunny;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.slidesMidJunction;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.slidesStackIncrease;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.slidesTippedHeight;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bDown;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreBack;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreFront;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreFrontLow;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bStartAuto;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bUndershoot;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bUndershootSpeed;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.slidesOffset;
 import static org.firstinspires.ftc.teamcode.Utilities.MathUtils.inRange;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
 import static org.firstinspires.ftc.teamcode.Utilities.NonConstants.fullyDown;
+import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.vD;
 import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.vI;
 import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.vP;
+
+import static java.lang.Math.abs;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -39,6 +42,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Hardware.Sensors.AbsoluteEncoder;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
 
 public class Scoring {
@@ -52,6 +56,7 @@ public class Scoring {
     public Servo grabberSpin;
     public TouchSensor beam1;
     public Intake intake;
+    public AbsoluteEncoder encoder;
     public boolean previousPress = false;
     public boolean clawToggleOpen = false;
 
@@ -76,6 +81,7 @@ public class Scoring {
 
         grabberSpin = hardwareMap.get(Servo.class, "spin");
 
+        encoder = new AbsoluteEncoder("encoder");
 
         spool = hardwareMap.get(DcMotor.class, "spool");
         spool.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -99,7 +105,7 @@ public class Scoring {
 
     public void autoMid(){
         sleep(0.4);
-        slides(1,midJunction);
+        slides(1, slidesMidJunction);
         sleep(0.4);
         v4b(v4bScoreBack);
         grabber(grabberScore);
@@ -123,11 +129,11 @@ public class Scoring {
 
     public void stackPickup(int height){
         v4b(v4bDown);
-        slides(1,(height-1)*stackIncrease);
+        slides(1,(height-1)* slidesStackIncrease);
     }
 
     public void stackEscape(int height){
-        slides(1,(height+4)*stackIncrease);
+        slides(1,(height+4)* slidesStackIncrease);
     }
 
     public boolean beamBroken(){
@@ -161,14 +167,39 @@ public class Scoring {
     }
 
     public void v4b(double target){
-        //1 should be changed to absolute encoder value
-        v4b1.setPower(v4bPID.update(target - 1, false));
-        v4b2.setPower(1-(v4bPID.update(target - 1, false)));
+        //if velocity is more undershoot velocity, target becomes undershoot of target
+        //basically if you're fast because far away, go for undershoot, but when you get close, go to your actual position
+        double velocity = encoder.getVelocity();
+        double adjustedTarget = abs(velocity) > v4bUndershootSpeed ?
+                target + (v4bUndershoot * -Math.signum(target - encoder.getAngle()))
+                : target;
+        v4bPID.setWeights(vP,vI,vD);
+        if(inRange(adjustedTarget-2, encoder.getAngle(), adjustedTarget+2)) {
+            v4b1.setPower(0);
+            v4b2.setPower(0);
+        }else {
+            v4b1.setPower(v4bPID.update(adjustedTarget - encoder.getAngle(), false));
+            v4b2.setPower(-(v4bPID.update(adjustedTarget - encoder.getAngle(), false)));
+        }
+        multTelemetry.addData("Velocity", velocity);
+
     }
 
     public void v4bNoSensor(double speed){
         v4b1.setPower(speed);
         v4b2.setPower(-speed);
+    }
+
+    public void v4bNoPID(double target){
+        if(!inRange(target-2,encoder.getAngle(),target+2)){
+            if(encoder.getAngle() > target){
+                v4b1.setPower(-1);
+                v4b2.setPower(1);
+            }else if(encoder.getAngle() < target){
+                v4b1.setPower(1);
+                v4b2.setPower(-1);
+            }
+        }
     }
 
     public void grabber(double target){
@@ -189,7 +220,7 @@ public class Scoring {
     public void highFront(boolean funny) {
         if (!funny) {
             close();
-            slides(1, highFront);
+            slides(1, slidesHighFront);
             v4b(v4bScoreFront);
             if (time.seconds() > .2) {
                 v4b(v4bScoreFront);
@@ -203,7 +234,7 @@ public class Scoring {
     public void midFront(boolean funny){
         if (!funny) {
             close();
-            slides(1,midFront);
+            slides(1, slidesMidFront);
             v4b(v4bScoreFront);
             if(time.seconds() > .2){
                 v4b(v4bScoreFront);
@@ -235,11 +266,11 @@ public class Scoring {
         if(time.seconds() > .2){
             v4b(v4bScoreBack);
             if(funny) {
-                slides(1,highFunny);
-                grabber(grabberFunny);
+                slides(1, slidesHighFunny);
+                grabber(grabberScoreFunny);
             }else{
                 grabber(grabberScore);
-                slides(1,highJunction);
+                slides(1, slidesHighJunction);
             }
         }
     }
@@ -250,11 +281,11 @@ public class Scoring {
         if(time.seconds() > .2){
             v4b(v4bScoreBack);
             if(funny) {
-                slides(1,midFunny);
-                grabber(grabberFunny);
+                slides(1, slidesMidFunny);
+                grabber(grabberScoreFunny);
             }else{
                 grabber(grabberScore);
-                slides(1,midJunction);
+                slides(1, slidesMidJunction);
             }
         }
     }
@@ -266,7 +297,7 @@ public class Scoring {
         if(time.seconds() > .2){
             v4b(v4bScoreBack);
             if(funny) {
-                grabber(grabberFunny);
+                grabber(grabberScoreFunny);
             }else{
                 grabber(grabberScore);
             }
@@ -300,7 +331,7 @@ public class Scoring {
                 slides(1,0);
             } else if(coneAngle.equals("Forwards")) {
                 grabber(grabberTip);
-                slides(.5,tippedHeight);
+                slides(.5, slidesTippedHeight);
             }
         }
         if(time.seconds()>1.8){
@@ -347,6 +378,6 @@ public class Scoring {
     }
 
     public int getHeight(){
-        return (Math.abs(spool.getCurrentPosition()) + Math.abs(spool2.getCurrentPosition()))/2;
+        return (abs(spool.getCurrentPosition()) + abs(spool2.getCurrentPosition()))/2;
     }
 }
