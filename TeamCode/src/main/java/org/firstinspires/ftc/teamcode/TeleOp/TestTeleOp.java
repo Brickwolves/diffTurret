@@ -132,6 +132,7 @@ public class TestTeleOp extends OpMode {
     @Override
     public void loop() {
         Controller.update();
+        robot.scorer.intake.updateSpeed();
 
         double power;
 
@@ -150,11 +151,23 @@ public class TestTeleOp extends OpMode {
         }else if(controller2.get(DPAD_DN,TAP)){
             idk = false;
         }
-        if(controller2.get(CIRCLE,TOGGLE)){
-            robot.scorer.close();
+
+        if(controller.get(CIRCLE,TOGGLE)){
+            if(!idk) {
+                robot.scorer.open(false);
+            }else{
+                robot.scorer.openScore();
+            }
         }else{
-            robot.scorer.open(false);
+            robot.scorer.close();
         }
+
+        if(controller2.get(TRIANGLE,TOGGLE)){
+            robot.scorer.intake.runIntake(0.8);
+        }else{
+            robot.scorer.intake.runIntake(0);
+        }
+
         if(idk){
             robot.scorer.grabber(grabberScore);
             robot.scorer.slides(1,slidesHighJunction);
@@ -204,6 +217,9 @@ public class TestTeleOp extends OpMode {
         multTelemetry.addData("absoluteEncoder", robot.scorer.encoder.getAngle());
         multTelemetry.addData("servo speed", robot.scorer.v4b1.getPower());
         multTelemetry.addData("servo speed 2", robot.scorer.v4b2.getPower());
+        multTelemetry.addData("intake speed", robot.scorer.intake.getSpeed());
+        multTelemetry.addData("Slide 1",robot.scorer.spool.getCurrentPosition());
+        multTelemetry.addData("Slide 1",robot.scorer.spool2.getCurrentPosition());
         multTelemetry.update();
     }
 

@@ -15,7 +15,7 @@ public class PositionsAndSpeeds {
     public static int slidesStackIncrease = 45;
 
 //WHY
-    public static double v4bDown = 286;
+    public static double v4bDown = 295;
     public static double v4bDownFunny = 276;
     public static double v4bScoreBack = 77;
     public static double v4bScoreBackLow = 62;
@@ -42,7 +42,8 @@ public class PositionsAndSpeeds {
     public static double rateOfChange = 100;
 
 
-    public static double clawOpen = 0.4;
+    public static double clawOpen = 0.36;
+    public static double clawOpenScore = 0.2;
     public static double clawTipped = 0.3;
     public static double clawClose = 0;
 

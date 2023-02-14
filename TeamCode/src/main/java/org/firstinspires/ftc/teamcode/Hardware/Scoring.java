@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Hardware;
 
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawClose;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawOpen;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawOpenScore;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawTipped;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberScoreFunny;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberDown;
@@ -155,6 +156,10 @@ public class Scoring {
             squeezer.setPosition(clawOpen);
         }
     }
+
+     public void openScore(){
+        squeezer.setPosition(clawOpenScore);
+     }
     public void close(boolean down){
         if(down){
             slides(1,100);
