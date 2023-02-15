@@ -9,6 +9,7 @@ import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.gr
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberHide;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberScore;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberScoreFront;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberScoreFunnyFront;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberStartAuto;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberTip;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.slidesHighFront;
@@ -21,6 +22,7 @@ import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.sl
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.slidesTippedHeight;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bDown;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreBack;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreBackLow;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreFront;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreFrontLow;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bStartAuto;
@@ -114,11 +116,15 @@ public class Scoring {
     }
 
     public void autoLow(){
+        sleep(0.4);
+        slides(1, 0);
+        v4b(v4bScoreBackLow);
+        grabber(grabberScore);
 
     }
 
     public void autoDeposit(){
-        open(false);
+        openScore();
         sleep(0.4);
         close();
         v4b(v4bDown);
@@ -232,7 +238,13 @@ public class Scoring {
                 grabber(grabberScoreFront);
             }
         }else{
-            highBack(true);
+            close();
+            slides(1, slidesHighFront);
+            v4b(v4bScoreFront);
+            if (time.seconds() > .2) {
+                v4b(v4bScoreFront);
+                grabber(grabberScoreFunnyFront);
+            }
         }
     }
 
@@ -246,7 +258,13 @@ public class Scoring {
                 grabber(grabberScoreFront);
             }
         }else{
-            midBack(true);
+            close();
+            slides(1, slidesMidFront);
+            v4b(v4bScoreFront);
+            if(time.seconds() > .2){
+                v4b(v4bScoreFront);
+                grabber(grabberScoreFunnyFront);
+            }
         }
     }
 
@@ -260,7 +278,13 @@ public class Scoring {
                 grabber(grabberScoreFront);
             }
         }else{
-            lowBack(true);
+            close();
+            slides(1,0);
+            v4b(v4bScoreFrontLow);
+            if(time.seconds() > .2){
+                v4b(v4bScoreFrontLow);
+                grabber(grabberScoreFunnyFront);
+            }
         }
     }
 
@@ -310,9 +334,9 @@ public class Scoring {
     }
 
     //Deposit
-    public void deposit(String coneAngle){
+    public void startTeleOp(String coneAngle){
         if(inRange(0,time.seconds(), .3)){
-            open(false);
+            openScore();
             fullyDown = false;
         }
         if(inRange(.3,time.seconds(), .5)){
@@ -345,7 +369,7 @@ public class Scoring {
         }
     }
 
-    public void deposit(String coneAngle, boolean start){
+    public void startTeleOp(String coneAngle, boolean start){
         if(inRange(0,time.seconds(), .3)){
             open(false);
             fullyDown = true;

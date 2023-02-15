@@ -120,7 +120,7 @@ public class FullRegularTeleOp extends OpMode {
     @Override
     public void init_loop() {
 
-        robot.scorer.deposit(coneTipped, true);
+        robot.scorer.startTeleOp(coneTipped, true);
         multTelemetry.addData("Tipping?", isTipped);
         multTelemetry.update();
     }
@@ -344,7 +344,7 @@ public class FullRegularTeleOp extends OpMode {
         switch(score){
             case DOWN:
                 if(!isTipped) {
-                    robot.scorer.deposit(coneTipped);
+                    robot.scorer.startTeleOp(coneTipped);
                 }else{
                     robot.scorer.crashSlides();
                 }

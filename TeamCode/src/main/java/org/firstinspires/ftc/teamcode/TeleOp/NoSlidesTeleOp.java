@@ -99,7 +99,7 @@ public class NoSlidesTeleOp extends OpMode {
     public void init_loop() {
 
 
-        robot.scorer.deposit("Straight");
+        robot.scorer.startTeleOp("Straight");
         multTelemetry.addData("Tipping?", isTipped);
         multTelemetry.update();
     }
@@ -167,7 +167,7 @@ public class NoSlidesTeleOp extends OpMode {
         switch(score){
             case DOWN:
                 if(!isTipped) {
-                    robot.scorer.deposit("Straight");
+                    robot.scorer.startTeleOp("Straight");
                 }else{
                     robot.scorer.crashSlides();
                 }
