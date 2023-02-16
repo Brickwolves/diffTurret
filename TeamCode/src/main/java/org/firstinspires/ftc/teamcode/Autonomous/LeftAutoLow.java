@@ -126,6 +126,10 @@ public class LeftAutoLow extends LinearOpMode {
         Trajectory cycleSetup3 = robot.drivetrain.trajectoryBuilder(cycleSetup2.end())
                 .lineToConstantHeading(new Vector2d(50,23))
                 .build();
+        Trajectory cycleSetup4 = robot.drivetrain.trajectoryBuilder(cycleSetup3.end())
+                .lineToConstantHeading(new Vector2d(58,15))
+                .build();
+
 
 
         while(opModeInInit()){
@@ -196,31 +200,15 @@ public class LeftAutoLow extends LinearOpMode {
 
             multTelemetry.addData("signal side", signalSide);
             multTelemetry.update();
-            robot.drivetrain.followTrajectory(preloadSetup1);
-            robot.drivetrain.followTrajectory(preloadSetup2);
-            robot.drivetrain.turnTo(Math.toRadians(45));
-            robot.scorer.autoMid();
-            robot.scorer.sleep(1);
-            robot.scorer.autoDeposit();
-            robot.drivetrain.followTrajectory(cycleSetup1);
-            robot.drivetrain.turnTo(Math.toRadians(150));
-            robot.drivetrain.followTrajectory(cycleSetup2);
-            robot.scorer.stackPickup(5);
-            robot.scorer.close();
-            robot.scorer.stackUp();
-            robot.scorer.autoLow();
-
-
-
-
-
+            robot.preloadMidLeft();
+            robot.cycleLowLeft(5);
             if (signalSide == ONE) {
-                robot.drivetrain.followTrajectory(park1);
+                robot.drivetrain.followTrajectory(robot.park1);
             }else if(signalSide == TWO){
+                robot.drivetrain.followTrajectory(robot.park2);
             }else if (signalSide == THREE){
-                robot.drivetrain.followTrajectory(park3);
+                robot.drivetrain.followTrajectory(robot.lowCycleLeft4);
             }
-            robot.drivetrain.turnTo(Math.toRadians(270));
 
 
             multTelemetry.addData("signal side", signalSide);
