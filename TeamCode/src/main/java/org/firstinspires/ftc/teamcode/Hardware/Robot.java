@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberDown;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 
@@ -57,11 +58,11 @@ public class Robot {
       startLeft = new Pose2d(30,60,Math.toRadians(90));
 
       midPreloadLeft1 = drivetrain.trajectoryBuilder(startLeft)
-              .lineToConstantHeading(new Vector2d(35,45))
+              .lineToConstantHeading(new Vector2d(37,47))
               .build();
 
       midPreloadLeft2 = drivetrain.trajectoryBuilder(midPreloadLeft1.end())
-              .lineToConstantHeading(new Vector2d(26,27))
+              .lineToConstantHeading(new Vector2d(28,29))
               .build();
       lowCycleLeft1 = drivetrain.trajectoryBuilder(midPreloadLeft2.end())
               .lineToConstantHeading(new Vector2d(50,15))
@@ -85,17 +86,18 @@ public class Robot {
    }
    public void preloadMidLeft(){
       drivetrain.followTrajectory(midPreloadLeft1);
+      scorer.grabber(grabberDown);
       drivetrain.followTrajectory(midPreloadLeft2);
-      drivetrain.turnTo(Math.toRadians(45));
       scorer.autoMid();
-      scorer.sleep(1);
+      drivetrain.turnTo(Math.toRadians(45));
+      scorer.sleep(2);
       scorer.autoDeposit();
    }
 
    public void cycleLowLeft(int cycles){
       int stackHeight = 5;
       drivetrain.followTrajectory(lowCycleLeft1);
-      drivetrain.turnTo(150);
+      drivetrain.turnTo(Math.toRadians(150));
       scorer.stackPickup(stackHeight);
       drivetrain.followTrajectory(lowCycleLeft2);
       while(cycles > 0){

@@ -25,7 +25,6 @@ import org.firstinspires.ftc.teamcode.Vision.SignalPipeline;
 @Autonomous(name="Test Auto", group="Autonomous Linear Opmode")
 public class TestAuto extends LinearOpMode {
     Robot robot;
-    Camera camera;
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     public SignalPipeline.SignalSide signalSide;
@@ -42,18 +41,10 @@ public class TestAuto extends LinearOpMode {
 
         initialize();
 
-        robot = new Robot();
-
-
-        Pose2d startPos = new Pose2d(0,0,Math.toRadians(90));
-
-        robot.drivetrain.setPoseEstimate(startPos);
+        robot = new Robot(true);
 
 
         //To change speed, pass regulateSpeed1(*whateverspeedyouwant*) as an argument of Pose2D, followed by regulateSpeed2()
-        Trajectory traj1 = robot.drivetrain.trajectoryBuilder(new Pose2d())
-                .lineTo(new Vector2d(0, 30))
-                .build();
 
 
 
@@ -64,7 +55,10 @@ public class TestAuto extends LinearOpMode {
 
         if (opModeIsActive()) {
 
-            robot.drivetrain.turn(Math.toRadians(90));
+            runtime.reset();
+            while(runtime.seconds()<20) {
+                robot.scorer.autoHigh();
+            }
 
 
             telemetry.addData("finalX", robot.drivetrain.getPoseEstimate().getX());

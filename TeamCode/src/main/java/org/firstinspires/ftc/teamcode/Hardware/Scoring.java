@@ -77,7 +77,6 @@ public class Scoring {
         intake = new Intake();
 
         squeezer = hardwareMap.get(Servo.class, "squeeze");
-        squeezer.setPosition(.3);
 
         v4b1 = hardwareMap.get(CRServo.class, "v4b1");
         v4b2 = hardwareMap.get(CRServo.class,"v4b2");
@@ -104,15 +103,15 @@ public class Scoring {
 
     //AUTO
     public void autoHigh(){
-
+        v4b(v4bScoreBack);
     }
 
     public void autoMid(){
         sleep(0.4);
         slides(1, slidesMidJunction);
+        grabber(grabberScore);
         sleep(0.4);
         v4b(v4bScoreBack);
-        grabber(grabberScore);
 
     }
 
@@ -126,12 +125,11 @@ public class Scoring {
 
     public void autoDeposit(){
         openScore();
-        sleep(0.4);
+        sleep(0.8);
         close();
         v4b(v4bDown);
         sleep(0.6);
         slides(1,0);
-        autoStart();
 
     }
 
