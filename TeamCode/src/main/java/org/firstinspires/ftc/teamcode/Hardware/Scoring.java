@@ -21,6 +21,7 @@ import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.sl
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.slidesStackIncrease;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.slidesTippedHeight;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bDown;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bDownFunny;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreBack;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreBackLow;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreFront;
@@ -192,7 +193,8 @@ public class Scoring {
             v4b1.setPower(v4bPID.update(adjustedTarget - encoder.getAngle(), false));
             v4b2.setPower(-(v4bPID.update(adjustedTarget - encoder.getAngle(), false)));
         }
-        multTelemetry.addData("Velocity", velocity);
+        multTelemetry.addData("adjusted target", adjustedTarget);
+        multTelemetry.addData("get angle", encoder.getAngle());
 
     }
 
@@ -334,7 +336,7 @@ public class Scoring {
     }
 
     //Deposit
-    public void startTeleOp(String coneAngle){
+    public void deposit(String coneAngle){
         if(inRange(0,time.seconds(), .3)){
             openScore();
             fullyDown = false;
@@ -344,17 +346,18 @@ public class Scoring {
         }
         if(inRange(.7,time.seconds(),.8)){
             v4b(v4bDown);
-            slides(1,0);
             grabber(grabberHide);
         }
         if(inRange(1.5,time.seconds(),1.7)){
+            slides(1,0);
             if(coneAngle.equals("Straight")) {
                 open(false);
             } else if(coneAngle.equals("Forwards")) {
+                v4b(v4bDownFunny);
                 open(true);
             }
         }
-        if(1.5<time.seconds()) {
+        if(2<time.seconds()) {
             if(coneAngle.equals("Straight")) {
                 grabber(grabberDown);
                 slides(1,0);
@@ -365,11 +368,15 @@ public class Scoring {
         }
         if(time.seconds()>1.8){
             fullyDown = true;
-            v4b(v4bDown);
+            if(coneAngle.equals("Forwards")){
+                v4b(v4bDownFunny);
+            }else {
+                v4b(v4bDown);
+            }
         }
     }
 
-    public void startTeleOp(String coneAngle, boolean start){
+    public void startTeleop(String coneAngle){
         if(inRange(0,time.seconds(), .3)){
             open(false);
             fullyDown = true;

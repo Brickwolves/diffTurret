@@ -15,13 +15,16 @@ public class PositionsAndSpeeds {
     public static int slidesStackIncrease = 45;
 
 //WHY
-    public static double v4bDown = 0.03;
-    public static double Tipped = .89;
-    public static double v4bScoreBack = 0.8;
-    public static double v4bScoreFront = 0.24;
-    public static double v4bScoreFrontLow = 0.25;
-    public static double v4bScoreBackLow;
-    public static double v4bStartAuto = 0.01;
+    public static double v4bDown = 295;
+    public static double v4bDownFunny = 276;
+    public static double v4bScoreBack = 77;
+    public static double v4bScoreBackLow = 62;
+    public static double v4bScoreFront = 205;
+    public static double v4bScoreFrontLow = 225;
+    public static double v4bStartAuto = 287;
+    public static double v4bUndershoot = 20;
+    public static double v4bUndershootSpeed = 140;
+
 
     public static double grabberDown = 0.86;
     public static double grabberScore = 0.9;

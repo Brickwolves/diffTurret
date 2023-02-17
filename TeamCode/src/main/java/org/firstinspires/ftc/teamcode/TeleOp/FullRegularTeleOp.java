@@ -120,7 +120,7 @@ public class FullRegularTeleOp extends OpMode {
     @Override
     public void init_loop() {
 
-        robot.scorer.startTeleOp(coneTipped, true);
+        robot.scorer.startTeleop(coneTipped);
         multTelemetry.addData("Tipping?", isTipped);
         multTelemetry.update();
     }
@@ -168,7 +168,7 @@ public class FullRegularTeleOp extends OpMode {
 
         manualClaw = controller.get(TRIANGLE, TOGGLE);
 
-        clawOpen = (robot.scorer.updateBeam() || controller.get(CIRCLE, TAP)) != clawOpen;
+        clawOpen = (/*robot.scorer.updateBeam() || */controller.get(CIRCLE, TAP)) != clawOpen;
 
 
 
@@ -176,7 +176,7 @@ public class FullRegularTeleOp extends OpMode {
             if(!manualClaw && !isFunny) {
                 if (fullyDown) {
                     if (clawOpen) {
-                        robot.scorer.open(isFunny);
+                        robot.scorer.open(false);
                     } else {
                         robot.scorer.close();
                     }
@@ -196,16 +196,16 @@ public class FullRegularTeleOp extends OpMode {
 
         if(controller.get(DPAD_UP,TAP)){
             coneTipped = "Straight";
-            if(score == ScoreState.DOWN) {
-                robot.scorer.intake.runIntake(.3);
-            }else{
-                robot.scorer.intake.runIntake(0);
-            }
+            robot.scorer.intake.runIntake(0);
             isFunny = false;
         }
         if(controller.get(DPAD_DN, TAP)){
             coneTipped = "Forwards";
-            robot.scorer.intake.runIntake(0);
+            if(score == ScoreState.DOWN) {
+                robot.scorer.intake.runIntake(0);
+            }else{
+                robot.scorer.intake.runIntake(0);
+            }
             isFunny = true;
 
         }
@@ -344,7 +344,7 @@ public class FullRegularTeleOp extends OpMode {
         switch(score){
             case DOWN:
                 if(!isTipped) {
-                    robot.scorer.startTeleOp(coneTipped);
+                    robot.scorer.deposit(coneTipped);
                 }else{
                     robot.scorer.crashSlides();
                 }
@@ -406,7 +406,7 @@ public class FullRegularTeleOp extends OpMode {
 
 
         if (controller2.get(DPAD_DN, TAP) && score != ScoreState.SCORE_FRONT_LOW && !isTipped) {
-            score = ScoreState.SCORE_FRONT_LOW;
+            score = ScoreState.SCORE_LOW;
             robot.scorer.time.reset();
         }
 
@@ -540,6 +540,8 @@ public class FullRegularTeleOp extends OpMode {
         multTelemetry.addData("Slides Height", -robot.scorer.spool.getCurrentPosition());
         multTelemetry.addData("is beam broken", robot.scorer.beamBroken());
         multTelemetry.addData("Intake Speed", robot.scorer.intake.getSpeed());
+        multTelemetry.addData("servo speed", robot.scorer.v4b1.getPower());
+        multTelemetry.addData("servo speed 2", robot.scorer.v4b2.getPower());
         multTelemetry.update();
 
     }
