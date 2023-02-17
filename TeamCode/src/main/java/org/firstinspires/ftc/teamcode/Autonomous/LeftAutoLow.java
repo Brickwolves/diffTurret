@@ -32,7 +32,6 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.ArrayList;
 
-@Disabled
 @Autonomous(name="Left Low 1+5", group="Autonomous Linear Opmode")
 public class LeftAutoLow extends LinearOpMode {
     Robot robot;
@@ -194,13 +193,33 @@ public class LeftAutoLow extends LinearOpMode {
 
 
             sleep(20);
+            robot.scorer.autoStart();
         }
 
         if (opModeIsActive()) {
 
             multTelemetry.addData("signal side", signalSide);
             multTelemetry.update();
-            robot.preloadMidLeft();
+            while(opModeIsActive() && !robot.drivetrain.isBusy()){
+                robot.preloadMidLeft();
+            }
+
+            int stackHeight = 5;
+            robot.drivetrain.followTrajectory(robot.lowCycleLeft1);
+            robot.drivetrain.turnTo(Math.toRadians(150));
+            robot.scorer.stackPickup(stackHeight);
+            robot.drivetrain.followTrajectory(robot.lowCycleLeft2);
+            while(opModeIsActive() && runtime.seconds() < 25){
+                robot.scorer.close();
+                robot.scorer.stackEscape(stackHeight);
+                stackHeight = stackHeight - 1;
+                robot.scorer.autoLow();
+                robot.drivetrain.followTrajectory(robot.lowCycleLeft3);
+                robot.scorer.autoDeposit();
+                robot.scorer.stackPickup(stackHeight);
+                robot.drivetrain.followTrajectory(robot.lowCycleLeft4);
+            }
+
             robot.cycleLowLeft(5);
             if (signalSide == ONE) {
                 robot.drivetrain.followTrajectory(robot.park1);

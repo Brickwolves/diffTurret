@@ -33,7 +33,7 @@ public class PositionsAndSpeeds {
     public static double grabberScoreFunny = 0.78;
     public static double grabberTip = 0.92;
     public static double grabberHide = 0.83;
-    public static double grabberStartAuto = 1;//
+    public static double grabberStartAuto = 0.78;//
 
 
 
