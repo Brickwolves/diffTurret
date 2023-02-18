@@ -69,7 +69,6 @@ public class ParkOnlyRight extends LinearOpMode {
         setOpMode(this);
         robot = new Robot(true);
         Side.setBlue();
-        robot.scorer.autoStart();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
