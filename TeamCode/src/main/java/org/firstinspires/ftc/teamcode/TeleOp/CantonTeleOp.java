@@ -33,7 +33,6 @@ import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.proportionalWe
 import static org.firstinspires.ftc.teamcode.Utilities.NonConstants.fullyDown;
 
 import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -45,9 +44,9 @@ import org.firstinspires.ftc.teamcode.Utilities.Side;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
 import org.firstinspires.ftc.teamcode.Utilities.revextensions2.ExpansionHubEx;
 
-@Disabled
-@TeleOp(name="Regular TeleOp", group="Iterative Opmode")
-public class FullRegularTeleOp extends OpMode {
+//@Disabled
+@TeleOp(name="TeleOp", group="Iterative Opmode")
+public class CantonTeleOp extends OpMode {
 
     // Declare OpMode members.
     private final ElapsedTime runtime = new ElapsedTime();
@@ -403,7 +402,7 @@ public class FullRegularTeleOp extends OpMode {
                     robot.scorer.time.reset();
                 }
             }
-            }
+        }
 
 
         if (controller2.get(DPAD_DN, TAP) && score != ScoreState.SCORE_FRONT_LOW && !isTipped) {
@@ -421,32 +420,6 @@ public class FullRegularTeleOp extends OpMode {
             robot.scorer.time.reset();
         }
 
-        if(controller2.get(TRIANGLE, TAP)){
-            if(score == ScoreState.SCORE_LOW) {
-                score = ScoreState.SCORE_FRONT_LOW;
-                robot.scorer.time.reset();
-            }
-            else if(score == ScoreState.SCORE_MID){
-                score = ScoreState.SCORE_FRONT_MID;
-                robot.scorer.time.reset();
-            }
-            else if(score == ScoreState.SCORE_HIGH){
-                score = ScoreState.SCORE_FRONT_HIGH;
-                robot.scorer.time.reset();
-            }
-            else if(score == ScoreState.SCORE_FRONT_LOW) {
-                score = ScoreState.SCORE_LOW;
-                robot.scorer.time.reset();
-            }
-            else if(score == ScoreState.SCORE_FRONT_MID){
-                score = ScoreState.SCORE_MID;
-                robot.scorer.time.reset();
-            }
-            else if(score == ScoreState.SCORE_FRONT_HIGH){
-                score = ScoreState.SCORE_HIGH;
-                robot.scorer.time.reset();
-            }
-        }
 
 
         if(score != ScoreState.DOWN){

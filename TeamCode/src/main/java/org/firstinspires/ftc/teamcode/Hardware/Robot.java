@@ -20,9 +20,6 @@ public class Robot {
    public IMU gyro;
    public Grabber grabber;
    public Scoring scorer;
-   public Trajectory midPreloadLeft1;
-   public Trajectory midPreloadLeft2;
-   public Trajectory lowCycleLeft1;
    public Trajectory lowCycleLeft2;
    public Trajectory lowCycleLeft3;
    public Trajectory lowCycleLeft4;
@@ -57,17 +54,9 @@ public class Robot {
       multTelemetry.update();
       startLeft = new Pose2d(30,60,Math.toRadians(90));
 
-      midPreloadLeft1 = drivetrain.trajectoryBuilder(startLeft)
-              .lineToConstantHeading(new Vector2d(37,47))
-              .build();
-
-      midPreloadLeft2 = drivetrain.trajectoryBuilder(midPreloadLeft1.end())
-              .lineToConstantHeading(new Vector2d(28,29))
-              .build();
-      lowCycleLeft1 = drivetrain.trajectoryBuilder(midPreloadLeft2.end())
-              .lineToConstantHeading(new Vector2d(50,15))
-              .build();
       postRotateLeft = new Pose2d(50,15,Math.toRadians(150));
+
+
       lowCycleLeft2 = drivetrain.trajectoryBuilder(postRotateLeft)
               .lineToConstantHeading(new Vector2d(58,15))
               .build();
@@ -84,37 +73,29 @@ public class Robot {
               .lineToConstantHeading(new Vector2d(35,12))
               .build();
    }
-   public void preloadMidLeft(){
-      drivetrain.followTrajectory(midPreloadLeft1);
-      scorer.grabber(grabberDown);
-      drivetrain.followTrajectory(midPreloadLeft2);
-      scorer.autoMid();
-      drivetrain.turnTo(Math.toRadians(45));
-      scorer.sleep(2);
-      scorer.autoDeposit();
-   }
 
-   public void cycleLowLeft(int cycles){
-      int stackHeight = 5;
-      drivetrain.followTrajectory(lowCycleLeft1);
-      drivetrain.turnTo(Math.toRadians(150));
-      scorer.stackPickup(stackHeight);
-      drivetrain.followTrajectory(lowCycleLeft2);
-      while(cycles > 0){
-         scorer.close();
-         scorer.stackEscape(stackHeight);
-         stackHeight = stackHeight - 1;
-         scorer.autoLow();
-         drivetrain.followTrajectory(lowCycleLeft3);
-         scorer.autoDeposit();
-         if(cycles == 1){
-            break;
-         }
-         scorer.stackPickup(stackHeight);
-         drivetrain.followTrajectory(lowCycleLeft4);
-         cycles = cycles - 1;
-      }
-   }
+
+//   public void cycleLowLeft(int cycles){
+//      int stackHeight = 5;
+//      drivetrain.followTrajectory(lowCycleLeft1);
+//      drivetrain.turnTo(Math.toRadians(150));
+//      scorer.stackPickup(stackHeight);
+//      drivetrain.followTrajectory(lowCycleLeft2);
+//      while(cycles > 0){
+//         scorer.close();
+//         scorer.stackEscape(stackHeight);
+//         stackHeight = stackHeight - 1;
+//         scorer.autoLow();
+//         drivetrain.followTrajectory(lowCycleLeft3);
+//         scorer.autoDeposit();
+//         if(cycles == 1){
+//            break;
+//         }
+//         scorer.stackPickup(stackHeight);
+//         drivetrain.followTrajectory(lowCycleLeft4);
+//         cycles = cycles - 1;
+//      }
+//   }
 
 
 

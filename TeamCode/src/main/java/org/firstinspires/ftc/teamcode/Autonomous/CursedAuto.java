@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
-import static org.firstinspires.ftc.teamcode.Hardware.LupineMecanumDrive.regulateSpeed1;
-import static org.firstinspires.ftc.teamcode.Hardware.LupineMecanumDrive.regulateSpeed2;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberDown;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bDown;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreBack;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreBackLow;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bStartAuto;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 import static org.firstinspires.ftc.teamcode.Vision.SignalPipeline.SignalSide.ONE;
@@ -16,12 +19,12 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
+import org.firstinspires.ftc.teamcode.Hardware.V4BUpdater;
 import org.firstinspires.ftc.teamcode.Utilities.Side;
 import org.firstinspires.ftc.teamcode.Vision.AprilTags.AprilTagDetectionPipeline;
 import org.firstinspires.ftc.teamcode.Vision.SignalPipeline;
@@ -32,11 +35,16 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.ArrayList;
 
-@Autonomous(name="Left Low 1+5", group="Autonomous Linear Opmode")
-public class LeftAutoLow extends LinearOpMode {
+@Autonomous(name="CURSED AUTO (left)", group="Autonomous Linear Opmode")
+public class CursedAuto extends LinearOpMode {
     Robot robot;
+    V4BUpdater specialV4B;
     OpenCvCamera camera;
+    public Trajectory midPreloadLeft1;
+    public Trajectory midPreloadLeft2;
+    public Trajectory lowCycleLeft1;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
+    public Pose2d startLeft;
 
     static final double FEET_PER_METER = 3.28084;
 
@@ -66,9 +74,39 @@ public class LeftAutoLow extends LinearOpMode {
     public void initialize() {
         setOpMode(this);
         robot = new Robot(true);
+        specialV4B = new V4BUpdater(robot.scorer);
+
         Side.setBlue();
         robot.scorer.autoStart();
 
+        startLeft = new Pose2d(30,60,Math.toRadians(90));
+
+        midPreloadLeft1 = robot.drivetrain.trajectoryBuilder(startLeft)
+                .lineToConstantHeading(new Vector2d(37,47))
+                .build();
+
+        midPreloadLeft2 = robot.drivetrain.trajectoryBuilder(midPreloadLeft1.end())
+                .lineToConstantHeading(new Vector2d(28,29))
+                .build();
+
+        lowCycleLeft1 = robot.drivetrain.trajectoryBuilder(midPreloadLeft2.end())
+                .lineToConstantHeading(new Vector2d(50,15))
+                .build();
+
+
+
+    }
+
+    public void preloadMidLeft(){
+        robot.drivetrain.followTrajectory(midPreloadLeft1);
+        robot.scorer.grabber(grabberDown);
+        robot.drivetrain.followTrajectory(midPreloadLeft2);
+        robot.scorer.autoMid();
+        specialV4B.setTarget(v4bScoreBack);
+        robot.drivetrain.turnTo(Math.toRadians(45));
+        robot.scorer.sleep(2);
+        robot.scorer.autoDeposit();
+        specialV4B.setTarget(v4bDown);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -128,6 +166,8 @@ public class LeftAutoLow extends LinearOpMode {
         Trajectory cycleSetup4 = robot.drivetrain.trajectoryBuilder(cycleSetup3.end())
                 .lineToConstantHeading(new Vector2d(58,15))
                 .build();
+
+
 
 
 
@@ -197,43 +237,48 @@ public class LeftAutoLow extends LinearOpMode {
         }
 
         if (opModeIsActive()) {
+            specialV4B.setTarget(v4bStartAuto);
+            specialV4B.start();
 
-            multTelemetry.addData("signal side", signalSide);
-            multTelemetry.update();
-            while(opModeIsActive() && !robot.drivetrain.isBusy()){
-                robot.preloadMidLeft();
-            }
+            robot.drivetrain.followTrajectory(midPreloadLeft1);
+            preloadMidLeft();
 
-            int stackHeight = 5;
-            robot.drivetrain.followTrajectory(robot.lowCycleLeft1);
-            robot.drivetrain.turnTo(Math.toRadians(150));
-            robot.scorer.stackPickup(stackHeight);
-            robot.drivetrain.followTrajectory(robot.lowCycleLeft2);
-            while(opModeIsActive() && runtime.seconds() < 25){
-                robot.scorer.close();
-                robot.scorer.stackEscape(stackHeight);
-                stackHeight = stackHeight - 1;
-                robot.scorer.autoLow();
-                robot.drivetrain.followTrajectory(robot.lowCycleLeft3);
-                robot.scorer.autoDeposit();
-                robot.scorer.stackPickup(stackHeight);
-                robot.drivetrain.followTrajectory(robot.lowCycleLeft4);
-            }
 
-            robot.cycleLowLeft(5);
-            if (signalSide == ONE) {
-                robot.drivetrain.followTrajectory(robot.park1);
-            }else if(signalSide == TWO){
-                robot.drivetrain.followTrajectory(robot.park2);
-            }else if (signalSide == THREE){
-                robot.drivetrain.followTrajectory(robot.lowCycleLeft4);
-            }
+
+//            int stackHeight = 5;
+//            robot.drivetrain.followTrajectory(robot.lowCycleLeft1);
+//            preloadMidLeft();
+//            robot.drivetrain.turnTo(Math.toRadians(150));
+////            robot.scorer.stackPickup(stackHeight);
+//            robot.drivetrain.followTrajectory(robot.lowCycleLeft2);
+//            runtime.reset();
+//            while(opModeIsActive() && runtime.seconds() < 25){
+//                robot.scorer.close();
+////                robot.scorer.stackEscape(stackHeight);
+////                stackHeight = stackHeight - 1;
+//                robot.scorer.autoLow();
+//                specialV4B.setTarget(v4bScoreBackLow);
+//                robot.drivetrain.followTrajectory(robot.lowCycleLeft3);
+//                robot.scorer.autoDeposit();
+////                robot.scorer.stackPickup(stackHeight);
+//                robot.drivetrain.followTrajectory(robot.lowCycleLeft4);
+//            }
+//
+//            robot.cycleLowLeft(5);
+//            if (signalSide == ONE) {
+//                robot.drivetrain.followTrajectory(robot.park1);
+//            }else if(signalSide == TWO){
+//                robot.drivetrain.followTrajectory(robot.park2);
+//            }else if (signalSide == THREE){
+//                robot.drivetrain.followTrajectory(robot.lowCycleLeft4);
+//            }
 
 
             multTelemetry.addData("signal side", signalSide);
             multTelemetry.addData("ending auto", "ok");
             multTelemetry.update();
 
+            specialV4B.exit();
 
         }
     }

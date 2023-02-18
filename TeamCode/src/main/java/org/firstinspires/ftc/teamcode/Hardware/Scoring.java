@@ -22,6 +22,7 @@ import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.sl
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.slidesTippedHeight;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bDown;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bDownFunny;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bF;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreBack;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreBackLow;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreFront;
@@ -188,41 +189,12 @@ public class Scoring {
             v4b1.setPower(0);
             v4b2.setPower(0);
         }else {
-            v4b1.setPower(v4bPID.update(adjustedTarget - encoder.getAngle(), false));
-            v4b2.setPower(-(v4bPID.update(adjustedTarget - encoder.getAngle(), false)));
+            v4b1.setPower(v4bF*v4bPID.update(adjustedTarget - encoder.getAngle(), false));
+            v4b2.setPower(-(v4bF*v4bPID.update(adjustedTarget - encoder.getAngle(), false)));
         }
         multTelemetry.addData("adjusted target", adjustedTarget);
         multTelemetry.addData("get angle", encoder.getAngle());
 
-    }
-
-    public class virtual4Bar extends Thread{
-        Scoring scorer;
-        double target;
-        boolean runPID = false;
-        boolean stop = false;
-        public virtual4Bar(Scoring scorer){
-            this.scorer = scorer;
-        }
-        public void setTarget(double target){
-            this.target = target;
-        }
-
-        @Override
-        public void run() {
-            while(!stop && !super.isInterrupted()){
-                if(runPID){
-                    scorer.v4b(target);
-                }
-            }
-        }
-        public void doRun(boolean run){
-            runPID = run;
-        }
-        public void exit(){
-            stop = true;
-            super.interrupt();
-        }
     }
 
     public void v4bNoSensor(double speed){
