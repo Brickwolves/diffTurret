@@ -23,6 +23,7 @@ import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.sl
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bDown;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bDownFunny;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bF;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bHide;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreBack;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreBackLow;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreFront;
@@ -344,7 +345,7 @@ public class Scoring {
             close();
         }
         if(inRange(.7,time.seconds(),.8)){
-            v4b(v4bDown);
+            v4b(v4bHide);
             grabber(grabberHide);
         }
         if(inRange(1.5,time.seconds(),1.7)){
@@ -352,7 +353,6 @@ public class Scoring {
             if(coneAngle.equals("Straight")) {
                 open(false);
             } else if(coneAngle.equals("Forwards")) {
-                v4b(v4bDownFunny);
                 open(true);
             }
         }
@@ -377,15 +377,19 @@ public class Scoring {
 
     public void startTeleop(String coneAngle){
         if(inRange(0,time.seconds(), .3)){
-            open(false);
+            close();
             fullyDown = true;
             grabber(grabberDown);
         }
         if(inRange(0.8,time.seconds(),2)){
+            if(encoder.getAngle()<180){
+                v4bF = 0.4;
+            }
             v4b(v4bDown);
         }
         if(time.seconds()>.8) {
             slides(1,0);
+            v4bF = 1.5;
         }
     }
 

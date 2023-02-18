@@ -23,6 +23,7 @@ import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.dr
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.rateOfChange;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.stackedHeight;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.tipAngle;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bF;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreBack;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.IMU_DATUM;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
@@ -206,7 +207,7 @@ public class CantonTeleOp extends OpMode {
             }else{
                 robot.scorer.intake.runIntake(0);
             }
-            isFunny = true;
+            isFunny = false;
 
         }
 //
@@ -516,6 +517,7 @@ public class CantonTeleOp extends OpMode {
         multTelemetry.addData("Intake Speed", robot.scorer.intake.getSpeed());
         multTelemetry.addData("servo speed", robot.scorer.v4b1.getPower());
         multTelemetry.addData("servo speed 2", robot.scorer.v4b2.getPower());
+        multTelemetry.addData("v4bF", v4bF);
         multTelemetry.update();
 
     }
