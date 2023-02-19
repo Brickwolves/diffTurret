@@ -382,10 +382,16 @@ public class Scoring {
             grabber(grabberDown);
         }
         if(inRange(0.8,time.seconds(),2)){
+            if(encoder.getAngle()<120){
+                v4bF = 0.8;
+            }
             v4b(v4bDown);
         }
         if(time.seconds()>.8) {
             slides(1,0);
+        }
+        if(time.seconds()>1.2){
+            v4bF = 1.3;
         }
     }
 
