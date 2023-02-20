@@ -45,7 +45,7 @@ public class PositionsAndSpeeds {
 
 
     public static double clawOpen = 0.36;
-    public static double clawOpenScore = 0.2;
+    public static double clawOpenScore = 0.28;
     public static double clawTipped = 0.3;
     public static double clawClose = 0;
 

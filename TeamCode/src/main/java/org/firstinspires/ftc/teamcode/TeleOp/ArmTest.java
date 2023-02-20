@@ -45,7 +45,7 @@ package org.firstinspires.ftc.teamcode.TeleOp;
         import org.firstinspires.ftc.teamcode.Utilities.MathUtils;
         import org.firstinspires.ftc.teamcode.Utilities.PID;
 
-
+@Disabled
 @TeleOp(name="ArmTest TeleOp", group="Iterative Opmode")
 public class ArmTest extends OpMode {
 

@@ -21,7 +21,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Robot;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.Camera;
 import org.firstinspires.ftc.teamcode.Utilities.Side;
 import org.firstinspires.ftc.teamcode.Vision.SignalPipeline;
-
+@Disabled
 @Autonomous(name="Test Auto", group="Autonomous Linear Opmode")
 public class TestAuto extends LinearOpMode {
     Robot robot;

@@ -344,7 +344,7 @@ public class Scoring {
         if(inRange(.3,time.seconds(), .5)){
             close();
         }
-        if(inRange(.7,time.seconds(),.8)){
+        if(inRange(1.2,time.seconds(),1.5)){
             v4b(v4bHide);
             grabber(grabberHide);
         }
@@ -365,7 +365,7 @@ public class Scoring {
                 slides(.5, slidesTippedHeight);
             }
         }
-        if(time.seconds()>1.8){
+        if(time.seconds()>2.2){
             fullyDown = true;
             if(coneAngle.equals("Forwards")){
                 v4b(v4bDownFunny);
