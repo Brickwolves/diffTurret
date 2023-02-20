@@ -23,7 +23,6 @@ import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.sl
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bDown;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bDownFunny;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bF;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bHide;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreBack;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreBackLow;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreFront;
@@ -344,8 +343,8 @@ public class Scoring {
         if(inRange(.3,time.seconds(), .5)){
             close();
         }
-        if(inRange(1.2,time.seconds(),1.5)){
-            v4b(v4bHide);
+        if(inRange(.7,time.seconds(),.8)){
+            v4b(v4bDown);
             grabber(grabberHide);
         }
         if(inRange(1.5,time.seconds(),1.7)){
@@ -353,6 +352,7 @@ public class Scoring {
             if(coneAngle.equals("Straight")) {
                 open(false);
             } else if(coneAngle.equals("Forwards")) {
+                v4b(v4bDownFunny);
                 open(true);
             }
         }
@@ -365,7 +365,7 @@ public class Scoring {
                 slides(.5, slidesTippedHeight);
             }
         }
-        if(time.seconds()>2.2){
+        if(time.seconds()>1.8){
             fullyDown = true;
             if(coneAngle.equals("Forwards")){
                 v4b(v4bDownFunny);
@@ -377,19 +377,21 @@ public class Scoring {
 
     public void startTeleop(String coneAngle){
         if(inRange(0,time.seconds(), .3)){
-            close();
+            open(false);
             fullyDown = true;
             grabber(grabberDown);
         }
         if(inRange(0.8,time.seconds(),2)){
-            if(encoder.getAngle()<180){
-                v4bF = 0.4;
+            if(encoder.getAngle()<120){
+                v4bF = 0.8;
             }
             v4b(v4bDown);
         }
         if(time.seconds()>.8) {
             slides(1,0);
-            v4bF = 1.5;
+        }
+        if(time.seconds()>1.2){
+            v4bF = 1.3;
         }
     }
 
