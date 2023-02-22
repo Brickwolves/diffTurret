@@ -1,9 +1,9 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawClose;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.slidesDepositDrop;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.slidesHighJunction;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.slidesMidJunction;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.SlidePositions.slidesDepositDrop;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.SlidePositions.slidesHighJunction;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.SlidePositions.slidesMidJunction;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawOpen;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
 
