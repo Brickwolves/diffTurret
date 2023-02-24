@@ -204,9 +204,6 @@ public class TestTeleOp extends OpMode {
     /*
          ----------- L O G G I N G -----------
                                             */
-        multTelemetry.addData("absoluteEncoder", robot.scorer.encoder.getAngle());
-        multTelemetry.addData("servo speed", robot.scorer.v4b1.getPower());
-        multTelemetry.addData("servo speed 2", robot.scorer.v4b2.getPower());
         multTelemetry.addData("intake speed", robot.scorer.intake.getSpeed());
         multTelemetry.addData("Slide 1",robot.scorer.spool.getCurrentPosition());
         multTelemetry.addData("Slide 1",robot.scorer.spool2.getCurrentPosition());

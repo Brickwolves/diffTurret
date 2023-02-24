@@ -1,38 +1,36 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
-        import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState.DOWN;
-        import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState.TOGGLE;
-        import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.LB1;
-        import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.LB2;
-        import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.RB1;
-        import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.RB2;
-        import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.LEFT;
-        import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.RIGHT;
-        import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.INVERT_SHIFTED_Y;
-        import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.SHIFTED_X;
-        import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.X;
+import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState.DOWN;
+import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState.TAP;
+import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState.TOGGLE;
+import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.CIRCLE;
+import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.LB1;
+import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.LB2;
+import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.RB1;
+import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.LEFT;
+import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.RIGHT;
+import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.INVERT_SHIFTED_Y;
+import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.SHIFTED_X;
+import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.X;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bDown;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bScoreBack;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.rateOfChange;
+import static org.firstinspires.ftc.teamcode.Utilities.Constants.IMU_DATUM;
+import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
+import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
+import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.derivativeWeight;
+import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.integralWeight;
+import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.proportionalWeight;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
-        import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.Y;
-        import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.rateOfChange;
-        import static org.firstinspires.ftc.teamcode.Utilities.Constants.IMU_DATUM;
-        import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
-        import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
-        import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.derivativeWeight;
-        import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.integralWeight;
-        import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.proportionalWeight;
+import org.firstinspires.ftc.teamcode.Controls.ButtonControls;
+import org.firstinspires.ftc.teamcode.Controls.Controller;
+import org.firstinspires.ftc.teamcode.Hardware.Robot;
+import org.firstinspires.ftc.teamcode.Utilities.Side;
+import org.firstinspires.ftc.teamcode.Utilities.PID;
 
-        import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-        import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-        import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-        import com.qualcomm.robotcore.util.ElapsedTime;
-
-        import org.firstinspires.ftc.teamcode.Controls.ButtonControls;
-        import org.firstinspires.ftc.teamcode.Controls.Controller;
-        import org.firstinspires.ftc.teamcode.Hardware.Robot;
-        import org.firstinspires.ftc.teamcode.Utilities.Side;
-        import org.firstinspires.ftc.teamcode.Utilities.PID;
-
-@Disabled
 @TeleOp(name="ArmTest TeleOp", group="Iterative Opmode")
 public class ArmTest extends OpMode {
 
@@ -45,7 +43,7 @@ public class ArmTest extends OpMode {
     private boolean pid_on_last_cycle = false;
     private boolean KETurns = false;
     public boolean isTipped = false;
-
+    public boolean isDown = false;
 
 
     // Declare OpMode members.
@@ -128,8 +126,18 @@ public class ArmTest extends OpMode {
             pid_on = false;
         } else if (currentRateOfChange <= rateOfChange) pid_on = true;
 
-        if(controller2.get(RB2, DOWN)){
-            robot.scorer.v4bNoSensor(controller2.get(LEFT,Y));
+
+
+        if(controller2.get(CIRCLE,TAP)){
+            isDown = !isDown;
+        }
+
+        if(isDown) {
+            robot.scorer.v4b(v4bScoreBack);
+        }
+
+        else {
+            robot.scorer.v4b(v4bDown);
         }
 
         // Lock the heading if we JUST turned PID on

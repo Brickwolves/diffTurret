@@ -24,7 +24,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
-import org.firstinspires.ftc.teamcode.Hardware.V4BUpdater;
 import org.firstinspires.ftc.teamcode.Utilities.Side;
 import org.firstinspires.ftc.teamcode.Vision.AprilTags.AprilTagDetectionPipeline;
 import org.firstinspires.ftc.teamcode.Vision.SignalPipeline;
@@ -39,7 +38,6 @@ import java.util.ArrayList;
 @Autonomous(name="CURSED AUTO (left)", group="Autonomous Linear Opmode")
 public class CursedAutoLeft extends LinearOpMode {
     Robot robot;
-    V4BUpdater specialV4B;
     OpenCvCamera camera;
     public Trajectory midPreloadLeft1;
     public Trajectory midPreloadLeft2;
@@ -75,7 +73,6 @@ public class CursedAutoLeft extends LinearOpMode {
     public void initialize() {
         setOpMode(this);
         robot = new Robot(true);
-        specialV4B = new V4BUpdater(robot.scorer);
 
         Side.setBlue();
         robot.scorer.autoStart();
@@ -103,11 +100,9 @@ public class CursedAutoLeft extends LinearOpMode {
         robot.scorer.grabber(grabberDown);
         robot.drivetrain.followTrajectory(midPreloadLeft2);
         robot.scorer.autoMid();
-        specialV4B.setTarget(v4bScoreBack);
         robot.drivetrain.turnTo(Math.toRadians(45));
         robot.scorer.sleep(2);
         robot.scorer.autoDeposit();
-        specialV4B.setTarget(v4bDown);
         robot.drivetrain.followTrajectory(lowCycleLeft1);
     }
 
@@ -239,8 +234,6 @@ public class CursedAutoLeft extends LinearOpMode {
         }
 
         if (opModeIsActive()) {
-            specialV4B.setTarget(v4bStartAuto);
-            specialV4B.start();
             preloadMidLeft();
             robot.cycleLowLeft(5);
             if (signalSide == ONE) {
@@ -256,7 +249,6 @@ public class CursedAutoLeft extends LinearOpMode {
             multTelemetry.addData("ending auto", "ok");
             multTelemetry.update();
 
-            specialV4B.exit();
 
         }
     }

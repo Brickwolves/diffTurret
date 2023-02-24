@@ -1,9 +1,4 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
-
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberDown;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bDown;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreBack;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bStartAuto;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 import static org.firstinspires.ftc.teamcode.Vision.SignalPipeline.SignalSide.ONE;
@@ -25,7 +20,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
-import org.firstinspires.ftc.teamcode.Hardware.V4BUpdater;
+
 import org.firstinspires.ftc.teamcode.Utilities.Side;
 import org.firstinspires.ftc.teamcode.Vision.AprilTags.AprilTagDetectionPipeline;
 import org.firstinspires.ftc.teamcode.Vision.SignalPipeline;
@@ -37,10 +32,9 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import java.util.ArrayList;
 
 @Disabled
-@Autonomous(name="CURSED AUTO (left)", group="Autonomous Linear Opmode")
+@Autonomous(name="CURSED AUTO (right)", group="Autonomous Linear Opmode")
 public class CursedAutoRight extends LinearOpMode {
     Robot robot;
-    V4BUpdater specialV4B;
     OpenCvCamera camera;
     public Trajectory midPreloadRight1;
     public Trajectory midPreloadRight2;
@@ -78,7 +72,6 @@ public class CursedAutoRight extends LinearOpMode {
     public void initialize() {
         setOpMode(this);
         robot = new Robot(true);
-        specialV4B = new V4BUpdater(robot.scorer);
 
         Side.setBlue();
         robot.scorer.autoStart();
@@ -99,24 +92,18 @@ public class CursedAutoRight extends LinearOpMode {
                 .build();
 
         //Trajectories for Cycle
-        cycleRightStart = new Pose2d((-47,62,Math.toRadians(150));
+        cycleRightStart = new Pose2d(-47,62,Math.toRadians(150));
 
-        lowCycleRight2  = robot.drivetrain.trajectoryBuilder(cycleRightStart)
-                .lineToConstantHeading(new Vector2d(-60,16));
-                .build();
 
     }
 
     public void preloadMidRight(){
         robot.drivetrain.followTrajectory(midPreloadRight1);
-        robot.scorer.grabber(grabberDown);
         robot.drivetrain.followTrajectory(midPreloadRight2);
         robot.scorer.autoMid();
-        specialV4B.setTarget(v4bScoreBack);
         robot.drivetrain.turnTo(Math.toRadians(45));
         robot.scorer.sleep(2);
         robot.scorer.autoDeposit();
-        specialV4B.setTarget(v4bDown);
         robot.drivetrain.followTrajectory(lowCycleRight1);
         robot.drivetrain.turnTo(Math.toRadians(150));
     }
@@ -249,10 +236,7 @@ public class CursedAutoRight extends LinearOpMode {
         }
 
         if (opModeIsActive()) {
-            specialV4B.setTarget(v4bStartAuto);
-            specialV4B.start();
             preloadMidRight();
-            robot.cycleLowRight(5);
             if (signalSide == ONE) {
                 robot.drivetrain.followTrajectory(robot.park1Left);
             }else if(signalSide == TWO){
@@ -266,7 +250,6 @@ public class CursedAutoRight extends LinearOpMode {
             multTelemetry.addData("ending auto", "ok");
             multTelemetry.update();
 
-            specialV4B.exit();
 
         }
     }
