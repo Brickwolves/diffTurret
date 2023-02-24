@@ -1,9 +1,14 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4b0;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4b90;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bSpeed;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawClose;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawOpen;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawOpenScore;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawTipped;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberPositions.grabber0;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberPositions.grabber90;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberPositions.grabberScoreFunny;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberPositions.grabberDown;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberPositions.grabberHide;
@@ -29,6 +34,7 @@ import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bStartAuto;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.slidesOffset;
 import static org.firstinspires.ftc.teamcode.Utilities.MathUtils.inRange;
+import static org.firstinspires.ftc.teamcode.Utilities.MathUtils.interpolateRanges;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
 import static org.firstinspires.ftc.teamcode.Utilities.NonConstants.fullyDown;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
@@ -37,6 +43,7 @@ import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.vI;
 import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.vP;
 
 import static java.lang.Math.abs;
+import static java.lang.Math.round;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -50,14 +57,11 @@ public class Scoring {
     public DcMotor spool;
     public DcMotor spool2;
     public Servo squeezer;
-//    public CRServo v4b1;
-//    public CRServo v4b2;
     public DcMotor v4b;
     public PID v4bPID;
     public Servo grabberSpin;
     public TouchSensor beam1;
     public Intake intake;
-//    public AbsoluteEncoder encoder;
     public boolean previousPress = false;
     public boolean clawToggleOpen = false;
 
@@ -74,9 +78,6 @@ public class Scoring {
         intake = new Intake();
 
         squeezer = hardwareMap.get(Servo.class, "squeeze");
-
-//        v4b1 = hardwareMap.get(CRServo.class, "v4b1");
-//        v4b2 = hardwareMap.get(CRServo.class,"v4b2");
         v4b = hardwareMap.get(DcMotor.class,"v4b");
         v4b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         v4b.setTargetPosition(0);
@@ -87,7 +88,6 @@ public class Scoring {
 
         grabberSpin = hardwareMap.get(Servo.class, "spin");
 
-//        encoder = new AbsoluteEncoder("encoder");
 
         spool = hardwareMap.get(DcMotor.class, "spool");
         spool.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -179,33 +179,17 @@ public class Scoring {
         squeezer.setPosition(clawClose);
     }
 
-    public void v4b(int target){
-        v4b.setTargetPosition(target);
+
+    public void v4b(int target) {
+        v4b.setPower(v4bSpeed);
+        v4b.setTargetPosition((int) interpolateRanges(target, 0, 90, v4b0, v4b90));
         multTelemetry.addData("target", target);
         multTelemetry.addData("current", v4b.getCurrentPosition());
-
     }
-
-
-//    public void v4bNoSensor(double speed){
-//        v4b1.setPower(speed);
-//        v4b2.setPower(-speed);
-//    }
-//
-//    public void v4bNoPID(double target){
-//        if(!inRange(target-2,encoder.getAngle(),target+2)){
-//            if(encoder.getAngle() > target){
-//                v4b1.setPower(-1);
-//                v4b2.setPower(1);
-//            }else if(encoder.getAngle() < target){
-//                v4b1.setPower(1);
-//                v4b2.setPower(-1);
-//            }
-//        }
-//    }
 
     public void grabber(double target){
         grabberSpin.setPosition(target);
+        //grabberSpin.setPosition(interpolateRanges(target, 0, 90, grabber0, grabber90));
     }
 
     public void slides(double power, int target){

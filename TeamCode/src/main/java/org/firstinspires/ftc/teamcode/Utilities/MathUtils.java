@@ -134,4 +134,12 @@ public class MathUtils {
     public static Point tilesToOdo(Point tilesInput){
         return tilesInput;
     }
+
+    /*
+    number n that is on range start1->end1 to range start2->end2
+     */
+    public static double interpolateRanges(double n, double start1, double end1, double start2, double end2){
+        double ratio = (n-start1) / (end1-start1);
+        return start2 + (ratio * (end2 - start2));
+    }
 }
