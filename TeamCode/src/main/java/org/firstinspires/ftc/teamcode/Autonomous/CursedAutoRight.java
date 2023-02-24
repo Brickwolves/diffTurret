@@ -1,9 +1,9 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberPositions.grabberDown;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bDown;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bScoreBack;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bStartAuto;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberDown;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bDown;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bScoreBack;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.v4bStartAuto;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 import static org.firstinspires.ftc.teamcode.Vision.SignalPipeline.SignalSide.ONE;
@@ -17,6 +17,7 @@ import androidx.annotation.RequiresApi;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.google.ar.core.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -37,15 +38,17 @@ import java.util.ArrayList;
 
 @Disabled
 @Autonomous(name="CURSED AUTO (left)", group="Autonomous Linear Opmode")
-public class CursedAuto extends LinearOpMode {
+public class CursedAutoRight extends LinearOpMode {
     Robot robot;
     V4BUpdater specialV4B;
     OpenCvCamera camera;
-    public Trajectory midPreloadLeft1;
-    public Trajectory midPreloadLeft2;
-    public Trajectory lowCycleLeft1;
+    public Trajectory midPreloadRight1;
+    public Trajectory midPreloadRight2;
+    public Trajectory lowCycleRight1;
+    public Trajectory lowCycleRight2;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
-    public Pose2d startLeft;
+    public Pose2d startRight;
+    public Pose2d cycleRightStart;
 
     static final double FEET_PER_METER = 3.28084;
 
@@ -80,34 +83,42 @@ public class CursedAuto extends LinearOpMode {
         Side.setBlue();
         robot.scorer.autoStart();
 
-        startLeft = new Pose2d(30,60,Math.toRadians(90));
+        //Trajectories for preload
+        startRight = new Pose2d(-40,62,Math.toRadians(90));
 
-        midPreloadLeft1 = robot.drivetrain.trajectoryBuilder(startLeft)
-                .lineToConstantHeading(new Vector2d(37,47))
+        midPreloadRight1 = robot.drivetrain.trajectoryBuilder(startRight)
+                .lineToConstantHeading(new Vector2d(-35,45))
                 .build();
 
-        midPreloadLeft2 = robot.drivetrain.trajectoryBuilder(midPreloadLeft1.end())
-                .lineToConstantHeading(new Vector2d(28,29))
+        midPreloadRight2 = robot.drivetrain.trajectoryBuilder(midPreloadRight1.end())
+                .lineToConstantHeading(new Vector2d(-25,26))
                 .build();
 
-        lowCycleLeft1 = robot.drivetrain.trajectoryBuilder(midPreloadLeft2.end())
-                .lineToConstantHeading(new Vector2d(50,15))
+        lowCycleRight1 = robot.drivetrain.trajectoryBuilder(midPreloadRight2.end())
+                .lineToConstantHeading(new Vector2d(-47,16))
                 .build();
 
+        //Trajectories for Cycle
+        cycleRightStart = new Pose2d((-47,62,Math.toRadians(150));
 
+        lowCycleRight2  = robot.drivetrain.trajectoryBuilder(cycleRightStart)
+                .lineToConstantHeading(new Vector2d(-60,16));
+                .build();
 
     }
 
-    public void preloadMidLeft(){
-        robot.drivetrain.followTrajectory(midPreloadLeft1);
+    public void preloadMidRight(){
+        robot.drivetrain.followTrajectory(midPreloadRight1);
         robot.scorer.grabber(grabberDown);
-        robot.drivetrain.followTrajectory(midPreloadLeft2);
+        robot.drivetrain.followTrajectory(midPreloadRight2);
         robot.scorer.autoMid();
         specialV4B.setTarget(v4bScoreBack);
         robot.drivetrain.turnTo(Math.toRadians(45));
         robot.scorer.sleep(2);
         robot.scorer.autoDeposit();
         specialV4B.setTarget(v4bDown);
+        robot.drivetrain.followTrajectory(lowCycleRight1);
+        robot.drivetrain.turnTo(Math.toRadians(150));
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -148,25 +159,25 @@ public class CursedAuto extends LinearOpMode {
 
 
         //To change speed, pass regulateSpeed1(*whateverspeedyouwant*) as an argument of Pose2D, followed by regulateSpeed2()
-        Trajectory preloadSetup1 = robot.drivetrain.trajectoryBuilder(startPos)
-                .lineToConstantHeading(new Vector2d(35,45))
-                .build();
-
-        Trajectory preloadSetup2 = robot.drivetrain.trajectoryBuilder(preloadSetup1.end())
-                .lineToConstantHeading(new Vector2d(26,27))
-                .build();
-        Trajectory cycleSetup1 = robot.drivetrain.trajectoryBuilder(preloadSetup2.end())
-                .lineToConstantHeading(new Vector2d(50,15))
-                .build();
-        Trajectory cycleSetup2 = robot.drivetrain.trajectoryBuilder(cycleSetup1.end())
-                .lineToConstantHeading(new Vector2d(58,15))
-                .build();
-        Trajectory cycleSetup3 = robot.drivetrain.trajectoryBuilder(cycleSetup2.end())
-                .lineToConstantHeading(new Vector2d(50,23))
-                .build();
-        Trajectory cycleSetup4 = robot.drivetrain.trajectoryBuilder(cycleSetup3.end())
-                .lineToConstantHeading(new Vector2d(58,15))
-                .build();
+//        Trajectory preloadSetup1 = robot.drivetrain.trajectoryBuilder(startPos)
+//                .lineToConstantHeading(new Vector2d(35,45))
+//                .build();
+//
+//        Trajectory preloadSetup2 = robot.drivetrain.trajectoryBuilder(preloadSetup1.end())
+//                .lineToConstantHeading(new Vector2d(26,27))
+//                .build();
+//        Trajectory cycleSetup1 = robot.drivetrain.trajectoryBuilder(preloadSetup2.end())
+//                .lineToConstantHeading(new Vector2d(50,15))
+//                .build();
+//        Trajectory cycleSetup2 = robot.drivetrain.trajectoryBuilder(cycleSetup1.end())
+//                .lineToConstantHeading(new Vector2d(58,15))
+//                .build();
+//        Trajectory cycleSetup3 = robot.drivetrain.trajectoryBuilder(cycleSetup2.end())
+//                .lineToConstantHeading(new Vector2d(50,23))
+//                .build();
+//        Trajectory cycleSetup4 = robot.drivetrain.trajectoryBuilder(cycleSetup3.end())
+//                .lineToConstantHeading(new Vector2d(58,15))
+//                .build();
 
 
 
@@ -240,39 +251,15 @@ public class CursedAuto extends LinearOpMode {
         if (opModeIsActive()) {
             specialV4B.setTarget(v4bStartAuto);
             specialV4B.start();
-
-            robot.drivetrain.followTrajectory(midPreloadLeft1);
-            preloadMidLeft();
-
-
-
-//            int stackHeight = 5;
-//            robot.drivetrain.followTrajectory(robot.lowCycleLeft1);
-//            preloadMidLeft();
-//            robot.drivetrain.turnTo(Math.toRadians(150));
-////            robot.scorer.stackPickup(stackHeight);
-//            robot.drivetrain.followTrajectory(robot.lowCycleLeft2);
-//            runtime.reset();
-//            while(opModeIsActive() && runtime.seconds() < 25){
-//                robot.scorer.close();
-////                robot.scorer.stackEscape(stackHeight);
-////                stackHeight = stackHeight - 1;
-//                robot.scorer.autoLow();
-//                specialV4B.setTarget(v4bScoreBackLow);
-//                robot.drivetrain.followTrajectory(robot.lowCycleLeft3);
-//                robot.scorer.autoDeposit();
-////                robot.scorer.stackPickup(stackHeight);
-//                robot.drivetrain.followTrajectory(robot.lowCycleLeft4);
-//            }
-//
-//            robot.cycleLowLeft(5);
-//            if (signalSide == ONE) {
-//                robot.drivetrain.followTrajectory(robot.park1);
-//            }else if(signalSide == TWO){
-//                robot.drivetrain.followTrajectory(robot.park2);
-//            }else if (signalSide == THREE){
-//                robot.drivetrain.followTrajectory(robot.lowCycleLeft4);
-//            }
+            preloadMidRight();
+            robot.cycleLowRight(5);
+            if (signalSide == ONE) {
+                robot.drivetrain.followTrajectory(robot.park1Left);
+            }else if(signalSide == TWO){
+                robot.drivetrain.followTrajectory(robot.park2Left);
+            }else if (signalSide == THREE){
+                robot.drivetrain.followTrajectory(robot.lowCycleLeft4);
+            }
 
 
             multTelemetry.addData("signal side", signalSide);
