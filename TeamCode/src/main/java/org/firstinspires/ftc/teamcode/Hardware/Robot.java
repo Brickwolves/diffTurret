@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.google.ar.core.Pose;
 
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.IMU;
 
@@ -25,6 +26,7 @@ public class Robot {
    public Pose2d postRotateLeft;
    public Trajectory park1Left;
    public Trajectory park2Left;
+   public Pose2d startRight;
 
 
 
@@ -50,6 +52,8 @@ public class Robot {
 
       multTelemetry.addData("Status", "Initialized");
       multTelemetry.update();
+
+      //Trajectories for Left Cycles
       startLeft = new Pose2d(30,60,Math.toRadians(90));
 
       postRotateLeft = new Pose2d(50,15,Math.toRadians(150));
@@ -69,6 +73,9 @@ public class Robot {
       park2Left = drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
               .lineToConstantHeading(new Vector2d(35,12))
               .build();
+
+      //Trajectories for Right Cycles
+      startRight = new Pose2d()
    }
 
 
