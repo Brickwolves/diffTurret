@@ -59,10 +59,10 @@ public class Robot {
       postRotateLeft = new Pose2d(50,15,Math.toRadians(150));
 
       lowCycleLeft2 = drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
-              .lineToConstantHeading(new Vector2d(58,15))
+              .lineToConstantHeading(new Vector2d(60,13))
               .build();
       lowCycleLeft3 = drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
-              .lineToConstantHeading(new Vector2d(50,23))
+              .lineToConstantHeading(new Vector2d(47,17))
               .build();
       lowCycleLeft4 = drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
               .lineToConstantHeading(new Vector2d(58,15))
@@ -81,23 +81,27 @@ public class Robot {
 
    public void cycleLowLeft(int cycles){
       int stackHeight = 5;
-      drivetrain.turnTo(Math.toRadians(150));
-      //stack position
+      drivetrain.turnTo(Math.toRadians(180));
+      scorer.stackPickup(stackHeight);
       drivetrain.followTrajectory(lowCycleLeft2);
       while(cycles > 0){
-         //close grabber
-         //escape from stack with stack height of stackHeight
+         while (!scorer.beamBroken()){
+            drivetrain.setDrivePower(1,0,0,.2);
+         }
+         drivetrain.setDrivePower(1,0,0,0);
+         scorer.close();
+         scorer.stackEscape(stackHeight);
          stackHeight = stackHeight - 1;
-         //v4b to low goal position
+         scorer.autoLow();
          drivetrain.followTrajectory(lowCycleLeft3);
-         //deposit
-         if(cycles == 1){
+         drivetrain.turnTo(270);
+         scorer.autoDeposit();
+         cycles = cycles - 1;
+         if (cycles == 0){
             break;
          }
-         //stack position
-         drivetrain.followTrajectory(lowCycleLeft4);
-         cycles = cycles - 1;
-      }
+         drivetrain.followTrajectory(lowCycleLeft2);
+         }
    }
 
 

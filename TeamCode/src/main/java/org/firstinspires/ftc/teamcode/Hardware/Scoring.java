@@ -121,7 +121,7 @@ public class Scoring {
     public void autoLow(){
         sleep(0.4);
         slides(1, 0);
-        v4b(v4bScoreBackLow);
+        v4b(v4bScoreFrontLow);
         grabber(grabberScore);
 
     }

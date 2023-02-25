@@ -88,7 +88,7 @@ public class CursedAutoLeft extends LinearOpMode {
                 .build();
 
         lowCycleLeft1 = robot.drivetrain.trajectoryBuilder(midPreloadLeft2.end())
-                .lineToConstantHeading(new Vector2d(50,15))
+                .lineToConstantHeading(new Vector2d(45,13))
                 .build();
 
 
