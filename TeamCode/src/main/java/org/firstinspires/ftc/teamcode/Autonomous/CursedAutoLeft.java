@@ -26,6 +26,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
+import org.firstinspires.ftc.teamcode.Odometry.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.Utilities.Side;
 import org.firstinspires.ftc.teamcode.Vision.AprilTags.AprilTagDetectionPipeline;
 import org.firstinspires.ftc.teamcode.Vision.SignalPipeline;
@@ -44,6 +45,7 @@ public class CursedAutoLeft extends LinearOpMode {
     public Trajectory midPreloadLeft1;
     public Trajectory midPreloadLeft2;
     public Trajectory lowCycleLeft1;
+    public TrajectorySequence driveToPreloadPole;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
     public Pose2d startLeft;
     public Pose2d postRotateLeft;
@@ -93,23 +95,39 @@ public class CursedAutoLeft extends LinearOpMode {
                 .build();
 
         lowCycleLeft1 = robot.drivetrain.trajectoryBuilder(robot.drivetrain.getPoseEstimate())
-                .lineToConstantHeading(new Vector2d(13,45))
+                .lineToConstantHeading(new Vector2d(45,13))
                 .build();
 
+        driveToPreloadPole = robot.drivetrain.trajectorySequenceBuilder(startLeft)
+                .lineToConstantHeading(new Vector2d(37,47))
+                .turn(Math.toRadians(45))
+                .addTemporalMarker(() -> robot.scorer.grabber(grabberDown))
+                .lineToConstantHeading(new Vector2d(26,27))
+                .build();
 
 
     }
 
     public void preloadMidLeft(){
+        /*
         robot.drivetrain.followTrajectory(midPreloadLeft1);
         robot.drivetrain.turnTo(Math.toRadians(45));
         robot.scorer.grabber(grabberDown);
         robot.drivetrain.followTrajectory(midPreloadLeft2);
+
+         */
+        while(robot.drivetrain.isBusy() && opModeIsActive()){
+            robot.drivetrain.followTrajectorySequenceAsync(driveToPreloadPole);
+            robot.scorer.v4bHold();
+        }
         robot.scorer.autoMid();
         robot.scorer.sleep(2);
         robot.scorer.autoDeposit();
         robot.scorer.grabber(grabberDown);
-        robot.drivetrain.followTrajectory(lowCycleLeft1);
+        while(robot.drivetrain.isBusy() && opModeIsActive()){
+            robot.drivetrain.followTrajectoryAsync(lowCycleLeft1);
+        }
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -140,42 +158,11 @@ public class CursedAutoLeft extends LinearOpMode {
             }
         });
 
-
-
-
-
-        //To change speed, pass regulateSpeed1(*whateverspeedyouwant*) as an argument of Pose2D, followed by regulateSpeed2()
-        Pose2d startPos = new Pose2d(30,60,Math.toRadians(90));
-        robot.drivetrain.setPoseEstimate(startPos);
-
-
-        //To change speed, pass regulateSpeed1(*whateverspeedyouwant*) as an argument of Pose2D, followed by regulateSpeed2()
-//        Trajectory preloadSetup1 = robot.drivetrain.trajectoryBuilder(startPos)
-//                .lineToConstantHeading(new Vector2d(35,45))
-//                .build();
-//
-//        Trajectory preloadSetup2 = robot.drivetrain.trajectoryBuilder(preloadSetup1.end())
-//                .lineToConstantHeading(new Vector2d(26,27))
-//                .build();
-//        Trajectory cycleSetup1 = robot.drivetrain.trajectoryBuilder(preloadSetup2.end())
-//                .lineToConstantHeading(new Vector2d(50,15))
-//                .build();
-//        Trajectory cycleSetup2 = robot.drivetrain.trajectoryBuilder(cycleSetup1.end())
-//                .lineToConstantHeading(new Vector2d(58,15))
-//                .build();
-//        Trajectory cycleSetup3 = robot.drivetrain.trajectoryBuilder(cycleSetup2.end())
-//                .lineToConstantHeading(new Vector2d(50,23))
-//                .build();
-//        Trajectory cycleSetup4 = robot.drivetrain.trajectoryBuilder(cycleSetup3.end())
-//                .lineToConstantHeading(new Vector2d(58,15))
-//                .build();
-
-
-
-
+        robot.drivetrain.setPoseEstimate(startLeft);
 
         while(opModeInInit()){
             v4bOffset = 0;
+            robot.scorer.v4bNeutral();
             ArrayList<AprilTagDetection> detections = aprilTagDetectionPipeline.getDetectionsUpdate();
 
             if(detections != null)

@@ -39,6 +39,7 @@ import static org.firstinspires.ftc.teamcode.Utilities.MathUtils.inRange;
 import static org.firstinspires.ftc.teamcode.Utilities.MathUtils.interpolateRanges;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
 import static org.firstinspires.ftc.teamcode.Utilities.NonConstants.fullyDown;
+import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.linearOpMode;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.vD;
 import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.vI;
@@ -82,6 +83,7 @@ public class Scoring {
     public double prevV4BVelocity = 0;
     public LoopTimer loopTimer = new LoopTimer();
     public AlphaNoiseFilter armAccelFilter = new AlphaNoiseFilter(0, Vinno);
+    public int v4BTarget = -60;
 
 
     public Scoring() {
@@ -97,7 +99,7 @@ public class Scoring {
 //        v4b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         v4b.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        v4bPID = new PID(vP, vI, vD);
+        //v4bPID = new PID(vP, vI, vD);
 
 
 
@@ -250,6 +252,7 @@ public class Scoring {
 
     //FeedForward V4B
     public void v4b(int target) {
+        v4BTarget = target;
         loopTimer.update();
         armAccelFilter.setInnovationGain(Vinno);
         //v4bPID.setWeights(vP, vI, vD);
@@ -273,7 +276,18 @@ public class Scoring {
         multTelemetry.addData("current", v4b.getCurrentPosition());
     }
 
+    public void v4bHold(){
+        v4b(v4BTarget);
+    }
+
+    public void v4bNeutral(){
+        v4b.setPower(0);
+    }
+
+
+
     //No controller V4B
+    @Deprecated
     public void v4b(int target, boolean feedForward) {
         int newTarget = target - (int)v4bOffset;
         v4b.setPower(0.6);
@@ -471,14 +485,15 @@ public class Scoring {
     public void autoStart(){
         close();
         grabber(grabberStartAuto);
-        v4b(v4bStartAuto);
+        v4bNeutral();
+        v4BTarget = v4bStartAuto;
         slides(1,0);
     }
 
     public void sleep(double sleepTime){
         sleep.reset();
-        while(sleep.seconds()<sleepTime){
-
+        while(sleep.seconds()<sleepTime && linearOpMode.opModeIsActive()){
+            v4b(v4BTarget);
         }
     }
 
