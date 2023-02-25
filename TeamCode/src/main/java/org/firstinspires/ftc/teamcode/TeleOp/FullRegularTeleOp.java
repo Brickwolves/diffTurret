@@ -24,6 +24,7 @@ import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.ra
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.stackedHeight;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.tipAngle;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bScoreBack;
+import static org.firstinspires.ftc.teamcode.Hardware.Scoring.beaconScore;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.IMU_DATUM;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.v4bOffset;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
@@ -106,6 +107,8 @@ public class FullRegularTeleOp extends OpMode {
         robot = new Robot(true);
         controller = new Controller(gamepad1);
         controller2 = new Controller(gamepad2);
+
+        beaconScore = false;
         /*
                     Y O U R   C O D E   H E R E
                                                     */
@@ -222,8 +225,9 @@ public class FullRegularTeleOp extends OpMode {
                 robot.scorer.intake.runIntake(0);
             }
             isFunny = true;
-
         }
+
+
 //
 //    //IVAN CODE
 //    //LEFT - Grabber Orientation
@@ -399,11 +403,18 @@ public class FullRegularTeleOp extends OpMode {
         }
 
         if (controller.get(SQUARE, TAP) && score != ScoreState.DOWN && !isTipped) {
+            beaconScore = false;
             coneTipped = "Straight";
             isFunny = false;
             score = ScoreState.DOWN;
             robot.scorer.time.reset();
         }
+
+        if (controller.get(TRIANGLE, TAP) && score != ScoreState.DOWN && !isTipped) {
+            beaconScore = true;
+            robot.scorer.openScore();
+        }
+
 
         if(controller2.get(CIRCLE,TAP)) {
             if (!isTipped && !isFunny) {

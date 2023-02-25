@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bHide;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawClose;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawOpen;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawOpenBeacon;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawOpenScore;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawTipped;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberPositions.grabberScoreFunny;
@@ -73,6 +74,7 @@ public class Scoring {
     public Intake intake;
     public boolean previousPress = false;
     public boolean clawToggleOpen = false;
+    public static boolean beaconScore;
 
 
     public boolean wentDown = false;
@@ -183,7 +185,11 @@ public class Scoring {
     }
 
     public void openScore() {
-        squeezer.setPosition(clawOpenScore);
+        if (beaconScore) {
+            squeezer.setPosition(clawOpenBeacon);
+        } else {
+            squeezer.setPosition(clawOpenScore);
+        }
     }
 
     public void close(boolean down) {
@@ -399,6 +405,7 @@ public class Scoring {
 
     //Deposit
     public void deposit(String coneAngle){
+        beaconScore = false;
         if(inRange(0,time.seconds(), .3)){
             openScore();
             fullyDown = false;
