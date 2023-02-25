@@ -13,9 +13,9 @@ public class ControllerWeights {
     public static double tI = 0;
     public static double tD = 0;
 
-    public static double vP = 0.0011;
+    public static double vP = 0.002;
     public static double vI = 0.0;
     public static double vD = 0;
 
-    public static double VkS, VkCos, VkV, VkA;
+    public static double VkS = 0, VkV = 0, VkA = 0;
 }
