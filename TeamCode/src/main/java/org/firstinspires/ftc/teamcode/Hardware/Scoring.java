@@ -2,8 +2,10 @@ package org.firstinspires.ftc.teamcode.Hardware;
 
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4b0;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4b90;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bHide;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawClose;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawOpen;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawOpenBeacon;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawOpenScore;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawTipped;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberPositions.grabberScoreFunny;
@@ -73,6 +75,7 @@ public class Scoring {
     public Intake intake;
     public boolean previousPress = false;
     public boolean clawToggleOpen = false;
+    public static boolean beaconScore;
 
 
     public boolean wentDown = false;
@@ -184,7 +187,11 @@ public class Scoring {
     }
 
     public void openScore() {
-        squeezer.setPosition(clawOpenScore);
+        if (beaconScore) {
+            squeezer.setPosition(clawOpenBeacon);
+        } else {
+            squeezer.setPosition(clawOpenScore);
+        }
     }
 
     public void close(boolean down) {
@@ -267,12 +274,12 @@ public class Scoring {
         double power = feedforward.calculate(velocity,accel);
         v4b.setPower(power);
         //abs(power) > 0.08 ? power : 0
-        multTelemetry.addData("power", v4b.getPower());
-        multTelemetry.addData("veloc", ((DcMotorEx) v4b).getVelocity());
-        multTelemetry.addData("calcVeloc", velocity);
-        multTelemetry.addData("calcAccel", accel);
+//        multTelemetry.addData("power", v4b.getPower());
+//        multTelemetry.addData("veloc", ((DcMotorEx) v4b).getVelocity());
+//        multTelemetry.addData("calcVeloc", velocity);
+//        multTelemetry.addData("calcAccel", accel);
         multTelemetry.addData("target", newTarget);
-        multTelemetry.addData("looptime", loopTimer.getHertz());
+//        multTelemetry.addData("looptime", loopTimer.getHertz());
         multTelemetry.addData("current", v4b.getCurrentPosition());
     }
 
@@ -319,7 +326,6 @@ public class Scoring {
             slides(1, slidesHighFront);
             v4b(v4bScoreFront);
             if (time.seconds() > .2) {
-                v4b(v4bScoreFront);
                 grabber(grabberScoreFront);
             }
         }else{
@@ -327,7 +333,6 @@ public class Scoring {
             slides(1, slidesHighFront);
             v4b(v4bScoreFront);
             if (time.seconds() > .2) {
-                v4b(v4bScoreFront);
                 grabber(grabberScoreFunnyFront);
             }
         }
@@ -339,13 +344,11 @@ public class Scoring {
             slides(1, slidesMidFront);
             v4b(v4bScoreFront);
             if(time.seconds() > .2){
-                v4b(v4bScoreFront);
                 grabber(grabberScoreFront);
             }
         }else{
             close();
             slides(1, slidesMidFront);
-            v4b(v4bScoreFront);
             if(time.seconds() > .2){
                 v4b(v4bScoreFront);
                 grabber(grabberScoreFunnyFront);
@@ -359,13 +362,11 @@ public class Scoring {
             slides(1,0);
             v4b(v4bScoreFrontLow);
             if(time.seconds() > .2){
-                v4b(v4bScoreFrontLow);
                 grabber(grabberScoreFront);
             }
         }else{
             close();
             slides(1,0);
-            v4b(v4bScoreFrontLow);
             if(time.seconds() > .2){
                 v4b(v4bScoreFrontLow);
                 grabber(grabberScoreFunnyFront);
@@ -378,7 +379,6 @@ public class Scoring {
         close();
         v4b(v4bScoreBack);
         if(time.seconds() > .2){
-            v4b(v4bScoreBack);
             if(funny) {
                 slides(1, slidesHighFunny);
                 grabber(grabberScoreFunny);
@@ -393,7 +393,6 @@ public class Scoring {
         close();
         v4b(v4bScoreBack);
         if(time.seconds() > .2){
-            v4b(v4bScoreBack);
             if(funny) {
                 slides(1, slidesMidFunny);
                 grabber(grabberScoreFunny);
@@ -409,7 +408,6 @@ public class Scoring {
         slides(1,0);
         v4b(v4bScoreBack);
         if(time.seconds() > .2){
-            v4b(v4bScoreBack);
             if(funny) {
                 grabber(grabberScoreFunny);
             }else{
@@ -420,6 +418,7 @@ public class Scoring {
 
     //Deposit
     public void deposit(String coneAngle){
+        beaconScore = false;
         if(inRange(0,time.seconds(), .3)){
             openScore();
             fullyDown = false;
@@ -428,15 +427,16 @@ public class Scoring {
             close();
         }
         if(inRange(.7,time.seconds(),.8)){
-            v4b(v4bDown);
             grabber(grabberHide);
+        }
+        if(inRange(0.7,time.seconds(),1.8)) {
+            v4b(v4bHide);
         }
         if(inRange(1.5,time.seconds(),1.7)){
             slides(1,0);
             if(coneAngle.equals("Straight")) {
                 open(false);
             } else if(coneAngle.equals("Forwards")) {
-                v4b(v4bDownFunny);
                 open(true);
             }
         }
@@ -459,17 +459,13 @@ public class Scoring {
         }
     }
 
-    public void startTeleop(String coneAngle){
-        if(inRange(0,time.seconds(), .3)){
-            open(false);
-            fullyDown = true;
-            grabber(grabberDown);
-        }
-        if(inRange(0.8,time.seconds(),2)){
-            v4b(v4bDown);
-        }
-        if(time.seconds()>.8) {
-            slides(1,0);
+    public void startTeleop(String coneAngle) {
+        open(false);
+        fullyDown = true;
+        grabber(grabberDown);
+        v4b(v4bDown);
+        if (time.seconds() > 1) {
+            slides(1, 0);
         }
     }
 
