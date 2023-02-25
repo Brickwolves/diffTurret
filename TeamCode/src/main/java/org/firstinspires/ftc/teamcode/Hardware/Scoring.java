@@ -84,6 +84,8 @@ public class Scoring {
         v4b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         v4b.setTargetPosition(0);
         v4b.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        v4b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        v4b.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         v4bPID = new PID(vP, vI, vD);
 
@@ -216,13 +218,31 @@ public class Scoring {
 //        multTelemetry.addData("current", v4b.getCurrentPosition());
 //    }
 
-    public void v4b(int target) {
-        int newTarget = target - (int)v4bOffset;
-        v4b.setPower(v4bSpeed);
-        v4b.setTargetPosition(interpolate(newTarget));
-        multTelemetry.addData("target", target);
-        multTelemetry.addData("current", v4b.getCurrentPosition());
+//    public void v4b(int target) {
+//        int newTarget = target - (int)v4bOffset;
+//        v4b.setPower(v4bSpeed);
+//        v4b.setTargetPosition(interpolate(newTarget));
+//        multTelemetry.addData("target", target);
+//        multTelemetry.addData("current", v4b.getCurrentPosition());
+//    }
+
+    //PID V4B
+//    public void v4b(int target) {
+//        int newTarget = target - (int)v4bOffset;
+//        v4b.setPower((v4bPID.update((double)(interpolate(newTarget) - v4b.getCurrentPosition()),false)));
+//        multTelemetry.addData("power", v4b.getPower());
+//        multTelemetry.addData("target", interpolate(newTarget));
+//        multTelemetry.addData("current", v4b.getCurrentPosition());
+//    }
+
+        public void v4b(int target) {
+            int newTarget = target - (int)v4bOffset;
+            v4b.setPower(0.6);
+            v4b.setTargetPosition(interpolate(newTarget));
+            multTelemetry.addData("target", interpolate(newTarget));
+            multTelemetry.addData("current", v4b.getCurrentPosition());
     }
+
 
     public void grabber(double target){
         grabberSpin.setPosition(target);
