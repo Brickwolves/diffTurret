@@ -19,9 +19,9 @@ import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.ti
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.IMU_DATUM;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
-import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.derivativeWeight;
-import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.integralWeight;
-import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.proportionalWeight;
+import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.derivativeWeight;
+import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.integralWeight;
+import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.proportionalWeight;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;

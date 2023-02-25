@@ -14,13 +14,14 @@ import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.SHI
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.X;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bDown;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bScoreBack;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberPositions.grabberHide;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.rateOfChange;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.IMU_DATUM;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
-import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.derivativeWeight;
-import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.integralWeight;
-import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.proportionalWeight;
+import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.derivativeWeight;
+import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.integralWeight;
+import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.proportionalWeight;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -43,7 +44,7 @@ public class ArmTest extends OpMode {
     private boolean pid_on_last_cycle = false;
     private boolean KETurns = false;
     public boolean isTipped = false;
-    public boolean isDown = false;
+    public boolean isDown = true;
 
 
     // Declare OpMode members.
@@ -116,6 +117,8 @@ public class ArmTest extends OpMode {
 
         double power;
 
+        robot.scorer.grabber(grabberHide);
+        robot.scorer.close();
         //PID and Kinetic Turning
         double rotation = controller.get(RIGHT, X);
 
@@ -130,14 +133,15 @@ public class ArmTest extends OpMode {
 
         if(controller2.get(CIRCLE,TAP)){
             isDown = !isDown;
+
         }
 
         if(isDown) {
-            robot.scorer.v4b(v4bScoreBack);
+            robot.scorer.v4b(v4bDown);
         }
 
         else {
-            robot.scorer.v4b(v4bDown);
+            robot.scorer.v4b(v4bScoreBack);
         }
 
         // Lock the heading if we JUST turned PID on
@@ -173,9 +177,7 @@ public class ArmTest extends OpMode {
 
         //SIDE
         Side.red = !controller2.get(RB1, TOGGLE);
-    /*
-         ----------- L O G G I N G -----------
-                                            */
+        multTelemetry.addData("isDown", isDown);
         multTelemetry.update();
     }
 

@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.config.Config;
 @Config
 public class PositionsAndSpeeds {
 
+    @Config
     public static class SlidePositions {
         public static int slidesHighJunction = 700;
         public static int slidesHighFront = 650;//9000
@@ -16,29 +17,35 @@ public class PositionsAndSpeeds {
         public static int slidesTippedHeight = 140;
         public static int slidesStackIncrease = 45;
     }
-
+    @Config
     public static class V4BPositions {
-        public static int v4bDown = 290;
-        public static int v4bHide = 130;
-        public static int v4bDownFunny = 276;
-        public static int v4bScoreBack = 82;
-        public static int v4bScoreBackLow = 62;
-        public static int v4bScoreFront = 205;
-        public static int v4bScoreFrontLow = 225;
-        public static int v4bStartAuto = 287;
+        //works in degrees
+        public static int v4bDown = -60;
+        public static int v4bHide = 0;
+        public static int v4bDownFunny = -30;
+        public static int v4bScoreBack = 170;
+        public static int v4bScoreBackLow = 0;
+        public static int v4bScoreFront = 18;
+        public static int v4bScoreFrontLow = 6;
+        public static int v4bStartAuto = 0;
+        public static int v4b0 = -226;
+        public static int v4b90 = -520;
+        public static double v4bSpeed = 0.6;
+        public static int v4bUndershoot = 30;
     }
 
-
+    @Config
     public static class grabberPositions {
-
-        public static double grabberDown = 0.89;
-        public static double grabberScore = 0.91;
-        public static double grabberScoreFront = 0.89;
-        public static double grabberScoreFunnyFront = 1;
-        public static double grabberScoreFunny = 0.81;
-        public static double grabberTip = 0.95;
-        public static double grabberHide = 0.86;
-        public static double grabberStartAuto = 0.81;
+        public static double grabberDown = 0.93 ;
+        public static double grabberScore = 0.95;
+        public static double grabberScoreFront = 0.91;
+        public static double grabberScoreFunnyFront = 0.8;
+        public static double grabberScoreFunny = 0.84;
+        public static double grabberTip = 0.98;
+        public static double grabberHide = 0.88;
+        public static double grabberStartAuto = 0.86;
+        public static double grabber0 = 0.5;
+        public static double grabber90 = 0.6;
     }
 
 

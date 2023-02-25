@@ -27,13 +27,12 @@ import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.IMU_DATUM;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
-import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.derivativeWeight;
-import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.integralWeight;
-import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.proportionalWeight;
+import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.derivativeWeight;
+import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.integralWeight;
+import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.proportionalWeight;
 import static org.firstinspires.ftc.teamcode.Utilities.NonConstants.fullyDown;
 
 import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -45,7 +44,6 @@ import org.firstinspires.ftc.teamcode.Utilities.Side;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
 import org.firstinspires.ftc.teamcode.Utilities.revextensions2.ExpansionHubEx;
 
-@Disabled
 @TeleOp(name="Regular TeleOp", group="Iterative Opmode")
 public class FullRegularTeleOp extends OpMode {
 
@@ -169,7 +167,7 @@ public class FullRegularTeleOp extends OpMode {
             robot.scorer.time.reset();
         }
 
-        manualClaw = controller.get(TRIANGLE, TOGGLE);
+        manualClaw = false;//controller.get(TRIANGLE, TOGGLE);
 
         clawOpen = (/*robot.scorer.updateBeam() || */controller.get(CIRCLE, TAP)) != clawOpen;
 
