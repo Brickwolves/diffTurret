@@ -75,7 +75,7 @@ public class Robot {
          public void update() {
 
          }
-      }
+      };
 
 
       multTelemetry.addData("Status", "Initialized");
