@@ -19,18 +19,19 @@ public class PositionsAndSpeeds {
     }
     @Config
     public static class V4BPositions {
-        //works in angles
+        //works in degrees
         public static int v4bDown = -60;
         public static int v4bHide = 0;
         public static int v4bDownFunny = -30;
-        public static int v4bScoreBack = 0;
+        public static int v4bScoreBack = 170;
         public static int v4bScoreBackLow = 0;
-        public static int v4bScoreFront = 0;
-        public static int v4bScoreFrontLow = 0;
+        public static int v4bScoreFront = 18;
+        public static int v4bScoreFrontLow = 6;
         public static int v4bStartAuto = 0;
         public static int v4b0 = -226;
         public static int v4b90 = -520;
         public static double v4bSpeed = 0.6;
+        public static int v4bUndershoot = 30;
     }
 
     @Config

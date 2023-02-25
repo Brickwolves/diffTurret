@@ -4,9 +4,9 @@ import static org.firstinspires.ftc.teamcode.Autonomous.CollinMovement.CollinMov
 import static org.firstinspires.ftc.teamcode.Autonomous.CollinTune.MoveTune.x;
 import static org.firstinspires.ftc.teamcode.Autonomous.CollinTune.MoveTune.y;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
-import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.derivativeWeight;
-import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.integralWeight;
-import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.proportionalWeight;
+import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.derivativeWeight;
+import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.integralWeight;
+import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.proportionalWeight;
 
 import static java.lang.Math.hypot;
 import static java.lang.Math.signum;
@@ -15,7 +15,6 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 import org.firstinspires.ftc.teamcode.Utilities.MathUtils;

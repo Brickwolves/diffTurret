@@ -2,15 +2,11 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 
 import static org.firstinspires.ftc.teamcode.Autonomous.CollinTune.MoveTune.x;
 import static org.firstinspires.ftc.teamcode.Autonomous.CollinTune.MoveTune.y;
-import static org.firstinspires.ftc.teamcode.Utilities.Constants.slidesOffset;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
-import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.derivativeWeight;
-import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.integralWeight;
-import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.proportionalWeight;
-import static org.firstinspires.ftc.teamcode.Vision.SignalPipeline.SignalSide.ONE;
-import static org.firstinspires.ftc.teamcode.Vision.SignalPipeline.SignalSide.THREE;
-import static org.firstinspires.ftc.teamcode.Vision.SignalPipeline.SignalSide.TWO;
+import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.derivativeWeight;
+import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.integralWeight;
+import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.proportionalWeight;
 
 import android.os.Build;
 
@@ -19,25 +15,13 @@ import androidx.annotation.RequiresApi;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
-import org.firstinspires.ftc.teamcode.Utilities.Side;
-import org.firstinspires.ftc.teamcode.Vision.AprilTags.AprilTagDetectionPipeline;
-import org.firstinspires.ftc.teamcode.Vision.SignalPipeline;
-import org.openftc.apriltag.AprilTagDetection;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
-
-import java.util.ArrayList;
 
 @Disabled
 @Autonomous(name="CollinTuning", group="Autonomous Linear Opmode")
