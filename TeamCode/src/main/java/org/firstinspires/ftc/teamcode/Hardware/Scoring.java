@@ -32,7 +32,6 @@ import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.slidesOffset;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.v4bOffset;
 import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.VkA;
-import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.VkCos;
 import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.VkS;
 import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.VkV;
 import static org.firstinspires.ftc.teamcode.Utilities.MathUtils.inRange;
@@ -55,6 +54,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Utilities.Files.BlackBox.LoopTimer;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
 
 public class Scoring {
@@ -75,7 +75,9 @@ public class Scoring {
 
     public ElapsedTime time = new ElapsedTime();
     public ElapsedTime sleep = new ElapsedTime();
-    ArmFeedforward feedforward = new ArmFeedforward(VkS, VkCos, VkV, VkA);
+    SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(VkS, VkV, VkA);
+    public double prevV4BVelocity = 0;
+    public LoopTimer loopTimer = new LoopTimer();
 
 
     public Scoring() {
@@ -91,7 +93,7 @@ public class Scoring {
 //        v4b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //        v4b.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-//        v4bPID = new PID(vP, vI, vD);
+        v4bPID = new PID(vP, vI, vD);
 
 
 
@@ -111,6 +113,7 @@ public class Scoring {
         spool2.setPower(.6);
 
         beam1 = hardwareMap.get(TouchSensor.class, "beam1");
+        loopTimer.reset();
     }
 
     //AUTO
@@ -243,21 +246,28 @@ public class Scoring {
 
     //FeedForward V4B
     public void v4b(int target, boolean feedForward) {
+        loopTimer.update();
+        v4bPID.setWeights(vP, vI, vD);
+        feedforward = new SimpleMotorFeedforward(VkS, VkV, VkA);
         int newTarget = target - (int)v4bOffset;
+        double error = newTarget - v4b.getCurrentPosition();
+        double velocity = v4bPID.update(error, false);
+        double accel = (velocity - prevV4BVelocity) / loopTimer.getSeconds();
+        prevV4BVelocity = velocity;
         //How does this know what to do if it doesn't get current position
-        v4b.setPower(feedforward.calculate(Math.toRadians(newTarget),2,2));
+        v4b.setPower(feedforward.calculate(velocity,accel));
         multTelemetry.addData("power", v4b.getPower());
         multTelemetry.addData("target", interpolate(newTarget));
         multTelemetry.addData("current", v4b.getCurrentPosition());
     }
 
     //No controller V4B
-        public void v4b(int target) {
-            int newTarget = target - (int)v4bOffset;
-            v4b.setPower(0.6);
-            v4b.setTargetPosition(interpolate(newTarget));
-            multTelemetry.addData("target", interpolate(newTarget));
-            multTelemetry.addData("current", v4b.getCurrentPosition());
+    public void v4b(int target) {
+        int newTarget = target - (int)v4bOffset;
+        v4b.setPower(0.6);
+        v4b.setTargetPosition(interpolate(newTarget));
+        multTelemetry.addData("target", interpolate(newTarget));
+        multTelemetry.addData("current", v4b.getCurrentPosition());
     }
 
 
