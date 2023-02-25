@@ -242,7 +242,7 @@ public class Scoring {
 //    }
 
     //FeedForward V4B
-    public void v4b(int target, boolean feedForward) {
+    public void v4b(int target) {
         int newTarget = target - (int)v4bOffset;
         //How does this know what to do if it doesn't get current position
         v4b.setPower(feedforward.calculate(Math.toRadians(newTarget),2,2));
@@ -252,7 +252,7 @@ public class Scoring {
     }
 
     //No controller V4B
-        public void v4b(int target) {
+        public void v4b(int target, boolean feedForward) {
             int newTarget = target - (int)v4bOffset;
             v4b.setPower(0.6);
             v4b.setTargetPosition(interpolate(newTarget));
