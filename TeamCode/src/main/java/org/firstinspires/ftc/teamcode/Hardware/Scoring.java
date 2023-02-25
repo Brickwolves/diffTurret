@@ -31,6 +31,7 @@ import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bStartAuto;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.slidesOffset;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.v4bOffset;
+import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.Vinno;
 import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.VkA;
 import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.VkS;
 import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.VkV;
@@ -50,10 +51,12 @@ import static java.lang.Math.signum;
 import com.arcrobotics.ftclib.controller.wpilibcontroller.ArmFeedforward;
 import com.arcrobotics.ftclib.controller.wpilibcontroller.SimpleMotorFeedforward;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Utilities.AlphaNoiseFilter;
 import org.firstinspires.ftc.teamcode.Utilities.Files.BlackBox.LoopTimer;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
 
@@ -78,6 +81,7 @@ public class Scoring {
     SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(VkS, VkV, VkA);
     public double prevV4BVelocity = 0;
     public LoopTimer loopTimer = new LoopTimer();
+    public AlphaNoiseFilter armAccelFilter = new AlphaNoiseFilter(0, Vinno);
 
 
     public Scoring() {
@@ -88,10 +92,10 @@ public class Scoring {
         squeezer = hardwareMap.get(Servo.class, "squeeze");
         v4b = hardwareMap.get(DcMotor.class, "v4b");
         v4b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        v4b.setTargetPosition(0);
-        v4b.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //v4b.setTargetPosition(0);
+        //v4b.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //        v4b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        v4b.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        v4b.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         v4bPID = new PID(vP, vI, vD);
 
@@ -245,24 +249,32 @@ public class Scoring {
 //    }
 
     //FeedForward V4B
-    public void v4b(int target, boolean feedForward) {
+    public void v4b(int target) {
         loopTimer.update();
-        v4bPID.setWeights(vP, vI, vD);
+        armAccelFilter.setInnovationGain(Vinno);
+        //v4bPID.setWeights(vP, vI, vD);
         feedforward = new SimpleMotorFeedforward(VkS, VkV, VkA);
-        int newTarget = target - (int)v4bOffset;
+        int newTarget = interpolate(target - (int)v4bOffset);
         double error = newTarget - v4b.getCurrentPosition();
-        double velocity = v4bPID.update(error, false);
+        double velocity = error * vP;
         double accel = (velocity - prevV4BVelocity) / loopTimer.getSeconds();
-        prevV4BVelocity = velocity;
+        accel = armAccelFilter.update(accel);
+        prevV4BVelocity = velocity;//((DcMotorEx) v4b).getVelocity();
         //How does this know what to do if it doesn't get current position
-        v4b.setPower(feedforward.calculate(velocity,accel));
+        double power = feedforward.calculate(velocity,accel);
+        v4b.setPower(power);
+        //abs(power) > 0.08 ? power : 0
         multTelemetry.addData("power", v4b.getPower());
-        multTelemetry.addData("target", interpolate(newTarget));
+        multTelemetry.addData("veloc", ((DcMotorEx) v4b).getVelocity());
+        multTelemetry.addData("calcVeloc", velocity);
+        multTelemetry.addData("calcAccel", accel);
+        multTelemetry.addData("target", newTarget);
+        multTelemetry.addData("looptime", loopTimer.getHertz());
         multTelemetry.addData("current", v4b.getCurrentPosition());
     }
 
     //No controller V4B
-    public void v4b(int target) {
+    public void v4b(int target, boolean feedForward) {
         int newTarget = target - (int)v4bOffset;
         v4b.setPower(0.6);
         v4b.setTargetPosition(interpolate(newTarget));

@@ -25,6 +25,7 @@ import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.st
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.tipAngle;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bScoreBack;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.IMU_DATUM;
+import static org.firstinspires.ftc.teamcode.Utilities.Constants.v4bOffset;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.derivativeWeight;
@@ -43,6 +44,8 @@ import org.firstinspires.ftc.teamcode.Hardware.Robot;
 import org.firstinspires.ftc.teamcode.Utilities.Side;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
 import org.firstinspires.ftc.teamcode.Utilities.revextensions2.ExpansionHubEx;
+
+import java.util.List;
 
 @TeleOp(name="Regular TeleOp", group="Iterative Opmode")
 public class FullRegularTeleOp extends OpMode {
@@ -78,7 +81,7 @@ public class FullRegularTeleOp extends OpMode {
     Controller controller2;
 
 
-    ExpansionHubEx controlHub;
+    List<LynxModule> hubs;
 
 
 
@@ -91,7 +94,10 @@ public class FullRegularTeleOp extends OpMode {
         setOpMode(this);
 
         stackedHeight = 1;
-        controlHub = new ExpansionHubEx(hardwareMap.getAll(LynxModule.class).get(0));
+        hubs = hardwareMap.getAll(LynxModule.class);
+        for (LynxModule hub: hubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        }
 
 
         pid = new PID(proportionalWeight, integralWeight, derivativeWeight);
@@ -118,6 +124,9 @@ public class FullRegularTeleOp extends OpMode {
      */
     @Override
     public void init_loop() {
+        for (LynxModule hub: hubs) {
+            hub.clearBulkCache();
+        }
 
         robot.scorer.startTeleop(coneTipped);
         multTelemetry.addData("Tipping?", isTipped);
@@ -130,6 +139,8 @@ public class FullRegularTeleOp extends OpMode {
     @Override
     public void start() {
         runtime.reset();
+        //TODO never delete this it makes your code really good
+        v4bOffset = 0;
 
 
         /*
@@ -146,6 +157,9 @@ public class FullRegularTeleOp extends OpMode {
 
     @Override
     public void loop() {
+        for (LynxModule hub: hubs) {
+            hub.clearBulkCache();
+        }
         Controller.update();
         robot.scorer.intake.updateSpeed();
 
@@ -534,7 +548,7 @@ public class FullRegularTeleOp extends OpMode {
         multTelemetry.addData("Manual", manualClaw);
         multTelemetry.addData("claw open", clawOpen);
         multTelemetry.addData("V4b score back", v4bScoreBack);
-        multTelemetry.addData("Servo Bus MilliAmps",controlHub.getServoBusCurrentDraw(ExpansionHubEx.CurrentDrawUnits.MILLIAMPS));
+        //multTelemetry.addData("Servo Bus MilliAmps",controlHub.getServoBusCurrentDraw(ExpansionHubEx.CurrentDrawUnits.MILLIAMPS));
 
 
         multTelemetry.addData("Funny", isFunny);
