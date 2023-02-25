@@ -75,7 +75,7 @@ public class Robot {
               .build();
 
       //Trajectories for Right Cycles
-      startRight = new Pose2d()
+      startRight = new Pose2d();
    }
 
 

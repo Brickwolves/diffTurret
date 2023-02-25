@@ -45,7 +45,6 @@ import org.firstinspires.ftc.teamcode.Utilities.Side;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
 import org.firstinspires.ftc.teamcode.Utilities.revextensions2.ExpansionHubEx;
 
-@Disabled
 @TeleOp(name="Regular TeleOp", group="Iterative Opmode")
 public class FullRegularTeleOp extends OpMode {
 

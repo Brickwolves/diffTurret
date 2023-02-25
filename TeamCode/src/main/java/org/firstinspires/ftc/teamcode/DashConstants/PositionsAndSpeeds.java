@@ -35,14 +35,14 @@ public class PositionsAndSpeeds {
 
     @Config
     public static class grabberPositions {
-        public static double grabberDown = 0.89;
-        public static double grabberScore = 0.91;
-        public static double grabberScoreFront = 0.89;
-        public static double grabberScoreFunnyFront = 1;
-        public static double grabberScoreFunny = 0.81;
-        public static double grabberTip = 0.95;
-        public static double grabberHide = 0.86;
-        public static double grabberStartAuto = 0.81;
+        public static double grabberDown = 0.93 ;
+        public static double grabberScore = 0.95;
+        public static double grabberScoreFront = 0.91;
+        public static double grabberScoreFunnyFront = 0.8;
+        public static double grabberScoreFunny = 0.84;
+        public static double grabberTip = 0.98;
+        public static double grabberHide = 0.88;
+        public static double grabberStartAuto = 0.86;
         public static double grabber0 = 0.5;
         public static double grabber90 = 0.6;
     }
