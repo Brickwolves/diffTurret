@@ -120,7 +120,7 @@ public class Scoring {
 
     public void autoMid() {
         sleep(0.4);
-        slides(1, slidesMidJunction);
+        slides(.5, slidesMidJunction);
         grabber(grabberScore);
         sleep(0.4);
         v4b(v4bScoreBack);

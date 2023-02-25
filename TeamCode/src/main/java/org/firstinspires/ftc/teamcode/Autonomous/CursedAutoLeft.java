@@ -36,7 +36,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.ArrayList;
 
-@Disabled
+
 @Autonomous(name="CURSED AUTO (left)", group="Autonomous Linear Opmode")
 public class CursedAutoLeft extends LinearOpMode {
     Robot robot;
@@ -46,6 +46,7 @@ public class CursedAutoLeft extends LinearOpMode {
     public Trajectory lowCycleLeft1;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
     public Pose2d startLeft;
+    public Pose2d postRotateLeft;
 
     static final double FEET_PER_METER = 3.28084;
 
@@ -85,12 +86,14 @@ public class CursedAutoLeft extends LinearOpMode {
                 .lineToConstantHeading(new Vector2d(37,47))
                 .build();
 
-        midPreloadLeft2 = robot.drivetrain.trajectoryBuilder(midPreloadLeft1.end())
-                .lineToConstantHeading(new Vector2d(28,29))
+        postRotateLeft = new Pose2d(37,47,45);
+
+        midPreloadLeft2 = robot.drivetrain.trajectoryBuilder(postRotateLeft)
+                .lineToConstantHeading(new Vector2d(26,27))
                 .build();
 
-        lowCycleLeft1 = robot.drivetrain.trajectoryBuilder(midPreloadLeft2.end())
-                .lineToConstantHeading(new Vector2d(45,13))
+        lowCycleLeft1 = robot.drivetrain.trajectoryBuilder(robot.drivetrain.getPoseEstimate())
+                .lineToConstantHeading(new Vector2d(13,45))
                 .build();
 
 
@@ -99,12 +102,13 @@ public class CursedAutoLeft extends LinearOpMode {
 
     public void preloadMidLeft(){
         robot.drivetrain.followTrajectory(midPreloadLeft1);
+        robot.drivetrain.turnTo(Math.toRadians(45));
         robot.scorer.grabber(grabberDown);
         robot.drivetrain.followTrajectory(midPreloadLeft2);
         robot.scorer.autoMid();
-        robot.drivetrain.turnTo(Math.toRadians(45));
         robot.scorer.sleep(2);
         robot.scorer.autoDeposit();
+        robot.scorer.grabber(grabberDown);
         robot.drivetrain.followTrajectory(lowCycleLeft1);
     }
 
@@ -237,14 +241,14 @@ public class CursedAutoLeft extends LinearOpMode {
 
         if (opModeIsActive()) {
             preloadMidLeft();
-            robot.cycleLowLeft(5);
-            if (signalSide == ONE) {
-                robot.drivetrain.followTrajectory(robot.park1Left);
-            }else if(signalSide == TWO){
-                robot.drivetrain.followTrajectory(robot.park2Left);
-            }else if (signalSide == THREE){
-                robot.drivetrain.followTrajectory(robot.lowCycleLeft4);
-            }
+//            robot.cycleLowLeft(5);
+//            if (signalSide == ONE) {
+//                robot.drivetrain.followTrajectory(robot.park1Left);
+//            }else if(signalSide == TWO){
+//                robot.drivetrain.followTrajectory(robot.park2Left);
+//            }else if (signalSide == THREE){
+//                robot.drivetrain.followTrajectory(robot.lowCycleLeft4);
+//            }
 
 
             multTelemetry.addData("signal side", signalSide);
