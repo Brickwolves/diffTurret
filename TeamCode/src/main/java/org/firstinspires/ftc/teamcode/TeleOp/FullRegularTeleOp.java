@@ -168,7 +168,7 @@ public class FullRegularTeleOp extends OpMode {
             robot.scorer.time.reset();
         }
 
-        manualClaw = controller.get(TRIANGLE, TOGGLE);
+        manualClaw = false;//controller.get(TRIANGLE, TOGGLE);
 
         clawOpen = (/*robot.scorer.updateBeam() || */controller.get(CIRCLE, TAP)) != clawOpen;
 

@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 
 import static org.firstinspires.ftc.teamcode.Hardware.LupineMecanumDrive.regulateSpeed1;
 import static org.firstinspires.ftc.teamcode.Hardware.LupineMecanumDrive.regulateSpeed2;
+import static org.firstinspires.ftc.teamcode.Utilities.Constants.slidesOffset;
+import static org.firstinspires.ftc.teamcode.Utilities.Constants.v4bOffset;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 
@@ -64,6 +66,9 @@ public class TestAuto extends LinearOpMode {
             telemetry.addData("finalX", robot.drivetrain.getPoseEstimate().getX());
             telemetry.addData("finalY", robot.drivetrain.getPoseEstimate().getY());
             telemetry.update();
+
+            slidesOffset = robot.scorer.getHeight();
+            v4bOffset = robot.scorer.v4b.getCurrentPosition();
         }
 
     }

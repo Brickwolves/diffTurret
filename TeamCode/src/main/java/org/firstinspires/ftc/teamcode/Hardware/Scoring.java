@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Hardware;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4b0;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4b90;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bSpeed;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bUndershoot;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawClose;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawOpen;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawOpenScore;
@@ -33,6 +34,7 @@ import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bScoreFrontLow;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bStartAuto;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.slidesOffset;
+import static org.firstinspires.ftc.teamcode.Utilities.Constants.v4bOffset;
 import static org.firstinspires.ftc.teamcode.Utilities.MathUtils.inRange;
 import static org.firstinspires.ftc.teamcode.Utilities.MathUtils.interpolateRanges;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
@@ -44,6 +46,7 @@ import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.vP;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.round;
+import static java.lang.Math.signum;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -72,19 +75,17 @@ public class Scoring {
     public ElapsedTime sleep = new ElapsedTime();
 
 
-
-    public Scoring(){
+    public Scoring() {
 
         intake = new Intake();
 
         squeezer = hardwareMap.get(Servo.class, "squeeze");
-        v4b = hardwareMap.get(DcMotor.class,"v4b");
+        v4b = hardwareMap.get(DcMotor.class, "v4b");
         v4b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         v4b.setTargetPosition(0);
         v4b.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        v4b.setPower(.5);
 
-        v4bPID = new PID(vP,vI,vD);
+        v4bPID = new PID(vP, vI, vD);
 
         grabberSpin = hardwareMap.get(Servo.class, "spin");
 
@@ -105,11 +106,11 @@ public class Scoring {
     }
 
     //AUTO
-    public void autoHigh(){
+    public void autoHigh() {
         v4b(v4bScoreBack);
     }
 
-    public void autoMid(){
+    public void autoMid() {
         sleep(0.4);
         slides(1, slidesMidJunction);
         grabber(grabberScore);
@@ -118,7 +119,7 @@ public class Scoring {
 
     }
 
-    public void autoLow(){
+    public void autoLow() {
         sleep(0.4);
         slides(1, 0);
         v4b(v4bScoreBackLow);
@@ -126,30 +127,30 @@ public class Scoring {
 
     }
 
-    public void autoDeposit(){
+    public void autoDeposit() {
         openScore();
         sleep(0.8);
         close();
         v4b(v4bDown);
         sleep(0.6);
-        slides(1,0);
+        slides(1, 0);
 
     }
 
-    public void stackPickup(int height){
+    public void stackPickup(int height) {
         v4b(v4bDown);
-        slides(1,(height-1)* slidesStackIncrease);
+        slides(1, (height - 1) * slidesStackIncrease);
     }
 
-    public void stackEscape(int height){
-        slides(1,(height+4)* slidesStackIncrease);
+    public void stackEscape(int height) {
+        slides(1, (height + 4) * slidesStackIncrease);
     }
 
-    public boolean beamBroken(){
+    public boolean beamBroken() {
         return beam1.isPressed();
     }
 
-    public boolean updateBeam(){
+    public boolean updateBeam() {
         boolean retVal = beam1.isPressed() && !previousPress;
         previousPress = beam1.isPressed();
         return retVal;
@@ -157,32 +158,68 @@ public class Scoring {
 
 
     //Base Movement Methods
-    public void open(boolean tipped){
-        if(tipped){
+    public void open(boolean tipped) {
+        if (tipped) {
             squeezer.setPosition(clawTipped);
-        }else {
+        } else {
             squeezer.setPosition(clawOpen);
         }
     }
 
-     public void openScore(){
+    public void openScore() {
         squeezer.setPosition(clawOpenScore);
-     }
-    public void close(boolean down){
-        if(down){
-            slides(1,100);
+    }
+
+    public void close(boolean down) {
+        if (down) {
+            slides(1, 100);
         }
         squeezer.setPosition(clawClose);
     }
 
-    public void close(){
+    public void close() {
         squeezer.setPosition(clawClose);
     }
 
+    public int interpolate(int target) {
+        return (int) interpolateRanges(target, 0, 90, v4b0, v4b90);
+    }
+
+    public int uninterpolate(int target) {
+        return (int) interpolateRanges(target, v4b0, v4b90, 0, 90);
+    }
+
+//    public void v4b(int target) {
+//        int undershoot;
+//        v4b.setPower(v4bSpeed);
+//        //target becomes new target with auto start offset
+//        int newTarget = target - (int)v4bOffset;
+//        //if current position is not close to new target (close means closer than the undershoot)
+//        if(!inRange(interpolate(newTarget)-(v4bUndershoot+10),v4b.getCurrentPosition(),interpolate(newTarget)+(v4bUndershoot-10))) {
+//            //if target is greater than the current position
+//            if (target > uninterpolate(v4b.getCurrentPosition())) {
+//                //add the undershoot
+//                undershoot = newTarget + v4bUndershoot;
+//            } else {
+//                //subtract the undershoot
+//                undershoot = newTarget - v4bUndershoot;
+//            }
+//            //go to the undershoot position
+//            v4b.setTargetPosition(interpolate(undershoot));
+//        }else{
+//            //if it is close then go to actual position
+//            v4b.setTargetPosition(interpolate(newTarget));
+//        }
+//
+//
+//        multTelemetry.addData("target", newTarget);
+//        multTelemetry.addData("current", v4b.getCurrentPosition());
+//    }
 
     public void v4b(int target) {
+        int newTarget = target - (int)v4bOffset;
         v4b.setPower(v4bSpeed);
-        v4b.setTargetPosition((int) interpolateRanges(target, 0, 90, v4b0, v4b90));
+        v4b.setTargetPosition(interpolate(newTarget));
         multTelemetry.addData("target", target);
         multTelemetry.addData("current", v4b.getCurrentPosition());
     }

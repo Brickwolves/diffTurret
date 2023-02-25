@@ -1,4 +1,6 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
+import static org.firstinspires.ftc.teamcode.Utilities.Constants.slidesOffset;
+import static org.firstinspires.ftc.teamcode.Utilities.Constants.v4bOffset;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 import static org.firstinspires.ftc.teamcode.Vision.SignalPipeline.SignalSide.ONE;
@@ -250,7 +252,8 @@ public class CursedAutoRight extends LinearOpMode {
             multTelemetry.addData("ending auto", "ok");
             multTelemetry.update();
 
-
+            slidesOffset = robot.scorer.getHeight();
+            v4bOffset = robot.scorer.v4b.getCurrentPosition();
         }
     }
 }

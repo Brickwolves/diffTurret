@@ -4,6 +4,8 @@ import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.gr
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bDown;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bScoreBack;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bStartAuto;
+import static org.firstinspires.ftc.teamcode.Utilities.Constants.slidesOffset;
+import static org.firstinspires.ftc.teamcode.Utilities.Constants.v4bOffset;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 import static org.firstinspires.ftc.teamcode.Vision.SignalPipeline.SignalSide.ONE;
@@ -249,6 +251,8 @@ public class CursedAutoLeft extends LinearOpMode {
             multTelemetry.addData("ending auto", "ok");
             multTelemetry.update();
 
+            slidesOffset = robot.scorer.getHeight();
+            v4bOffset = robot.scorer.v4b.getCurrentPosition();
 
         }
     }
