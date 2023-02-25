@@ -2,14 +2,10 @@ package org.firstinspires.ftc.teamcode.Hardware;
 
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4b0;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4b90;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bSpeed;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bUndershoot;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawClose;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawOpen;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawOpenScore;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawTipped;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberPositions.grabber0;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberPositions.grabber90;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberPositions.grabberScoreFunny;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberPositions.grabberDown;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberPositions.grabberHide;
@@ -35,19 +31,25 @@ import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bStartAuto;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.slidesOffset;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.v4bOffset;
+import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.VkA;
+import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.VkCos;
+import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.VkS;
+import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.VkV;
 import static org.firstinspires.ftc.teamcode.Utilities.MathUtils.inRange;
 import static org.firstinspires.ftc.teamcode.Utilities.MathUtils.interpolateRanges;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
 import static org.firstinspires.ftc.teamcode.Utilities.NonConstants.fullyDown;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
-import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.vD;
-import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.vI;
-import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.vP;
+import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.vD;
+import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.vI;
+import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.vP;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.round;
 import static java.lang.Math.signum;
 
+import com.arcrobotics.ftclib.controller.wpilibcontroller.ArmFeedforward;
+import com.arcrobotics.ftclib.controller.wpilibcontroller.SimpleMotorFeedforward;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
@@ -73,11 +75,13 @@ public class Scoring {
 
     public ElapsedTime time = new ElapsedTime();
     public ElapsedTime sleep = new ElapsedTime();
+    ArmFeedforward feedforward = new ArmFeedforward(VkS, VkCos, VkV, VkA);
 
 
     public Scoring() {
 
         intake = new Intake();
+
 
         squeezer = hardwareMap.get(Servo.class, "squeeze");
         v4b = hardwareMap.get(DcMotor.class, "v4b");
@@ -87,7 +91,9 @@ public class Scoring {
 //        v4b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //        v4b.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        v4bPID = new PID(vP, vI, vD);
+//        v4bPID = new PID(vP, vI, vD);
+
+
 
         grabberSpin = hardwareMap.get(Servo.class, "spin");
 
@@ -235,6 +241,17 @@ public class Scoring {
 //        multTelemetry.addData("current", v4b.getCurrentPosition());
 //    }
 
+    //FeedForward V4B
+    public void v4b(int target, boolean feedForward) {
+        int newTarget = target - (int)v4bOffset;
+        //How does this know what to do if it doesn't get current position
+        v4b.setPower(feedforward.calculate(Math.toRadians(newTarget),2,2));
+        multTelemetry.addData("power", v4b.getPower());
+        multTelemetry.addData("target", interpolate(newTarget));
+        multTelemetry.addData("current", v4b.getCurrentPosition());
+    }
+
+    //No controller V4B
         public void v4b(int target) {
             int newTarget = target - (int)v4bOffset;
             v4b.setPower(0.6);

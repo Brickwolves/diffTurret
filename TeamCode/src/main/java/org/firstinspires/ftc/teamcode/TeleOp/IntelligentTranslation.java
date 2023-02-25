@@ -29,9 +29,9 @@ import static org.firstinspires.ftc.teamcode.Utilities.ITUtils.kStrafe;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.dashboard;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
-import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.derivativeWeight;
-import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.integralWeight;
-import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.proportionalWeight;
+import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.derivativeWeight;
+import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.integralWeight;
+import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.proportionalWeight;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.geometry.Pose2d;

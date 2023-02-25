@@ -1,12 +1,9 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
 
-import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.derivativeWeight;
-import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.integralWeight;
-import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.proportionalWeight;
-import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.tD;
-import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.tI;
-import static org.firstinspires.ftc.teamcode.Utilities.PIDWeights.tP;
+import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.tD;
+import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.tI;
+import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.tP;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -16,7 +13,6 @@ import org.firstinspires.ftc.teamcode.Odometry.drive.TwoWheelTrackingLocalizer;
 
 import androidx.annotation.NonNull;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.drive.DriveSignal;
 import com.acmerobotics.roadrunner.drive.MecanumDrive;
@@ -43,7 +39,6 @@ import org.firstinspires.ftc.teamcode.Odometry.trajectorysequence.TrajectorySequ
 import org.firstinspires.ftc.teamcode.Odometry.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.Odometry.trajectorysequence.TrajectorySequenceRunner;
 import org.firstinspires.ftc.teamcode.Odometry.util.LynxModuleUtil;
-import org.opencv.core.Point;
 
 import java.util.ArrayList;
 import java.util.Arrays;
