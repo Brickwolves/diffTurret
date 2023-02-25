@@ -3,8 +3,12 @@ package org.firstinspires.ftc.teamcode.Hardware;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.localization.Localizer;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.google.ar.core.Pose;
 
@@ -27,6 +31,7 @@ public class Robot {
    public Trajectory park1Left;
    public Trajectory park2Left;
    public Pose2d startRight;
+   public Localizer localizer;
 
 
 
@@ -48,6 +53,29 @@ public class Robot {
 
       drivetrain = new LupineMecanumDrive(hardwareMap);
       gyro = new IMU("imu");
+      localizer = new Localizer() {
+         @NonNull
+         @Override
+         public Pose2d getPoseEstimate() {
+            return null;
+         }
+
+         @Override
+         public void setPoseEstimate(@NonNull Pose2d pose2d) {
+
+         }
+
+         @Nullable
+         @Override
+         public Pose2d getPoseVelocity() {
+            return null;
+         }
+
+         @Override
+         public void update() {
+
+         }
+      }
 
 
       multTelemetry.addData("Status", "Initialized");
@@ -59,13 +87,13 @@ public class Robot {
       postRotateLeft = new Pose2d(45,13,Math.toRadians(150));
 
       lowCycleLeft2 = drivetrain.trajectoryBuilder(postRotateLeft)
-              .lineToConstantHeading(new Vector2d(60,13))
+              .lineToConstantHeading(new Vector2d(60,17))
               .build();
-      lowCycleLeft3 = drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
-              .lineToConstantHeading(new Vector2d(47,17))
+      lowCycleLeft3 = drivetrain.trajectoryBuilder(lowCycleLeft2.end())
+              .lineToConstantHeading(new Vector2d(52,20))
               .build();
       lowCycleLeft4 = drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
-              .lineToConstantHeading(new Vector2d(60,13))
+              .lineToConstantHeading(new Vector2d(60,17))
               .build();
       park1Left = drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
               .lineToConstantHeading(new Vector2d(11,12))

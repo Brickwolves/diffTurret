@@ -138,6 +138,7 @@ public class ParkOnlyRight extends LinearOpMode {
                 .build();
 
         while(opModeInInit()){
+            v4bOffset = 0;
             ArrayList<AprilTagDetection> detections = aprilTagDetectionPipeline.getDetectionsUpdate();
 
             if(detections != null)
