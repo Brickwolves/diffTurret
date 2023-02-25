@@ -84,16 +84,16 @@ public class Robot {
       //Trajectories for Left Cycles
       startLeft = new Pose2d(30,60,Math.toRadians(90));
 
-      postRotateLeft = new Pose2d(45,13,Math.toRadians(150));
+      postRotateLeft = drivetrain.getPoseEstimate();
 
-      lowCycleLeft2 = drivetrain.trajectoryBuilder(postRotateLeft)
-              .lineToConstantHeading(new Vector2d(60,17))
+      lowCycleLeft2 = drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
+              .lineToConstantHeading(new Vector2d(60,13))
               .build();
-      lowCycleLeft3 = drivetrain.trajectoryBuilder(lowCycleLeft2.end())
-              .lineToConstantHeading(new Vector2d(52,20))
+      lowCycleLeft3 = drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
+              .lineToConstantHeading(new Vector2d(47,17))
               .build();
       lowCycleLeft4 = drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
-              .lineToConstantHeading(new Vector2d(60,17))
+              .lineToConstantHeading(new Vector2d(60,13))
               .build();
       park1Left = drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
               .lineToConstantHeading(new Vector2d(11,12))
