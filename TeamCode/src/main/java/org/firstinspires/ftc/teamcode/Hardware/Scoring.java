@@ -134,6 +134,7 @@ public class Scoring {
     }
 
     public void autoMid() {
+        braceOut();
         sleep(0.4);
         slides(.5, slidesMidJunction);
         grabber(grabberScore);
@@ -143,6 +144,7 @@ public class Scoring {
     }
 
     public void autoLow() {
+        braceOut();
         sleep(0.4);
         slides(1, 0);
         v4b(v4bScoreFrontLow);
@@ -158,6 +160,7 @@ public class Scoring {
         sleep(0.4);
         slides(1, 0);
         sleep(0.4);
+        braceIn();
         v4b(v4bDown);
     }
 

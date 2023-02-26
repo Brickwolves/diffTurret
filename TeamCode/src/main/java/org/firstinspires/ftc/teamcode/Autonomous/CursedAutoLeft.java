@@ -6,6 +6,9 @@ import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bStartAuto;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.slidesOffset;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.v4bOffset;
+import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.derivativeWeight;
+import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.integralWeight;
+import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.proportionalWeight;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 import static org.firstinspires.ftc.teamcode.Vision.SignalPipeline.SignalSide.ONE;
@@ -24,9 +27,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 import org.firstinspires.ftc.teamcode.Odometry.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.Utilities.PID;
 import org.firstinspires.ftc.teamcode.Utilities.Side;
 import org.firstinspires.ftc.teamcode.Vision.AprilTags.AprilTagDetectionPipeline;
 import org.firstinspires.ftc.teamcode.Vision.SignalPipeline;
@@ -44,10 +49,11 @@ public class CursedAutoLeft extends LinearOpMode {
     OpenCvCamera camera;
     public Trajectory midPreloadLeft1;
     public Trajectory midPreloadLeft2;
-    public Trajectory lowCycleLeft1;
+    public TrajectorySequence lowCycleLeft1;
+    public TrajectorySequence lowCycleLeft1HEHEHE;
     public TrajectorySequence driveToPreloadPole;
 
-    public Trajectory lowCycleLeft2;
+    public TrajectorySequence lowCycleLeft2;
     public Trajectory lowCycleLeft3;
     public Trajectory lowCycleLeft4;
 
@@ -56,6 +62,9 @@ public class CursedAutoLeft extends LinearOpMode {
 
     public Trajectory park1Left;
     public Trajectory park2Left;
+
+    public PID pid;
+
 
 
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
@@ -92,75 +101,103 @@ public class CursedAutoLeft extends LinearOpMode {
         Side.setBlue();
         robot.scorer.autoStart();
 
-        startLeft = new Pose2d(30,60,Math.toRadians(90));
+        pid =new PID(proportionalWeight,integralWeight,derivativeWeight);
 
-        midPreloadLeft1 = robot.drivetrain.trajectoryBuilder(startLeft)
-                .lineToConstantHeading(new Vector2d(37,47))
-                .build();
+        startLeft = new Pose2d(30,60,Math.toRadians(90));
 
         postRotateLeft = new Pose2d(37,47,45);
 
-        midPreloadLeft2 = robot.drivetrain.trajectoryBuilder(postRotateLeft)
-                .lineToConstantHeading(new Vector2d(26,27))
-                .build();
-
-        lowCycleLeft1 = robot.drivetrain.trajectoryBuilder(robot.drivetrain.getPoseEstimate())
-                .lineToConstantHeading(new Vector2d(45,13))
-                .build();
+        robot.drivetrain.setPoseEstimate(startLeft);
 
         driveToPreloadPole = robot.drivetrain.trajectorySequenceBuilder(startLeft)
-                .lineToConstantHeading(new Vector2d(37,47))
-                .turn(Math.toRadians(45))
-                .addTemporalMarker(() -> robot.scorer.grabber(grabberDown))
-                .lineToConstantHeading(new Vector2d(26,27))
+                .lineToConstantHeading(new Vector2d(37,40))
+                .turn(Math.toRadians(-45))
+                .addTemporalMarker(() -> robot.scorer.autoMid())
+                .lineToConstantHeading(new Vector2d(28,15))
+                .build();
+        lowCycleLeft1 = robot.drivetrain.trajectorySequenceBuilder(driveToPreloadPole.end())
+                .lineToConstantHeading(new Vector2d(32,22))
+                .lineToConstantHeading(new Vector2d(35,0))
+                .turn(Math.toRadians(135))
+                .lineToConstantHeading(new Vector2d(50,13))
                 .build();
 
-        lowCycleLeft2 = robot.drivetrain.trajectoryBuilder(postRotateLeft)
-                .lineToConstantHeading(new Vector2d(60,13))
-                .build();
 
-        lowCycleLeft3 = robot.drivetrain.trajectoryBuilder(lowCycleLeft2.end())
-                .lineToConstantHeading(new Vector2d(47,17))
-                .build();
 
-        lowCycleLeft4 = robot.drivetrain.trajectoryBuilder(lowCycleLeft3.end())
-                .lineToConstantHeading(new Vector2d(60,13))
-                .build();
 
-        park1Left = robot.drivetrain.trajectoryBuilder(lowCycleLeft4.end())
-                .lineToConstantHeading(new Vector2d(11,12))
-                .build();
 
-        park2Left = robot.drivetrain.trajectoryBuilder(lowCycleLeft4.end())
-                .lineToConstantHeading(new Vector2d(35,12))
-                .build();
-
+        waitForStart();
 
     }
 
-    public void preloadMidLeft(){
+    public void midCycleAutos(){
         /*
         robot.drivetrain.followTrajectory(midPreloadLeft1);
         robot.drivetrain.turnTo(Math.toRadians(45));
         robot.scorer.grabber(grabberDown);
         robot.drivetrain.followTrajectory(midPreloadLeft2);
-
+sy
          */
+
         robot.scorer.v4b(v4bStartAuto);
+        robot.drivetrain.update();
         robot.drivetrain.followTrajectorySequenceAsync(driveToPreloadPole);
         while(robot.drivetrain.isBusy() && opModeIsActive()){
             robot.drivetrain.update();
             robot.scorer.v4bHold();
         }
-        robot.scorer.autoMid();
-        robot.scorer.sleep(2);
+        robot.scorer.sleep(1);
         robot.scorer.autoDeposit();
-        robot.scorer.grabber(grabberDown);
-        robot.drivetrain.followTrajectoryAsync(lowCycleLeft1);
-        while(robot.drivetrain.isBusy() && opModeIsActive()){
+        int stackheight = 5;
+        while(stackheight > 0) {
+            robot.scorer.grabber(grabberDown);
+            if(stackheight == 5) {
+                robot.drivetrain.followTrajectorySequenceAsync(lowCycleLeft1);
+            }else{
+                lowCycleLeft1HEHEHE = robot.drivetrain.trajectorySequenceBuilder(lowCycleLeft2.end())
+                        .lineToConstantHeading(new Vector2d(35,13))
+                        .turn(Math.toRadians(-90))
+                        .lineToConstantHeading(new Vector2d(42,10))
+                        .build();
+                robot.drivetrain.followTrajectorySequenceAsync(lowCycleLeft1HEHEHE);
+            }
+            while (robot.drivetrain.isBusy() && opModeIsActive()) {
+                robot.drivetrain.update();
+                robot.scorer.v4bHold();
+            }
+            robot.scorer.stackPickup(stackheight);
+            robot.scorer.open(false);
+            robot.drivetrain.setDrivePower(1, 0, 0, 0.2);
+            while (!robot.scorer.beamBroken()) {
+                robot.scorer.v4bHold();
+                robot.drivetrain.update();
+                multTelemetry.addData("breakbeams", robot.scorer.beamBroken());
+                multTelemetry.update();
+            }
+            multTelemetry.addData("breakbeams", robot.scorer.beamBroken());
+            multTelemetry.update();
+           robot.drivetrain.setDrivePower(0, 0, 0, 0);
+            robot.scorer.close();
+            robot.scorer.stackEscape(stackheight);
+            stackheight = stackheight - 1;
             robot.drivetrain.update();
-            robot.scorer.v4bHold();
+            lowCycleLeft2 = robot.drivetrain.trajectorySequenceBuilder(robot.drivetrain.getPoseEstimate())
+                    .lineToConstantHeading(new Vector2d(26,9))
+                    .turn(Math.toRadians(225))
+                    .build();
+            robot.drivetrain.followTrajectorySequenceAsync(lowCycleLeft2);
+            while (robot.drivetrain.isBusy() && opModeIsActive()) {
+                robot.drivetrain.update();
+                robot.scorer.v4bHold();
+            }
+            robot.scorer.autoMid();
+            robot.scorer.sleep(1);
+            robot.scorer.autoDeposit();
         }
+
+
+
+
 
     }
 
@@ -265,7 +302,9 @@ public class CursedAutoLeft extends LinearOpMode {
          */
 
         if (opModeIsActive()) {
-            preloadMidLeft();
+            multTelemetry.addData("breakbeams", robot.scorer.beamBroken());
+            midCycleAutos();
+
 //            robot.cycleLowLeft(5);
 //            if (signalSide == ONE) {
 //                robot.drivetrain.followTrajectory(robot.park1Left);

@@ -11,8 +11,10 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.localization.Localizer;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.google.ar.core.Pose;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.IMU;
+import org.firstinspires.ftc.teamcode.Odometry.drive.StandardTrackingWheelLocalizer;
 
 /**
  * A class for containing an FTC Mecanum robot
@@ -31,7 +33,7 @@ public class Robot {
    public Trajectory park1Left;
    public Trajectory park2Left;
    public Pose2d startRight;
-   public Localizer localizer;
+//   public StandardTrackingWheelLocalizer localizer;
 
 
 
@@ -53,89 +55,8 @@ public class Robot {
 
       drivetrain = new LupineMecanumDrive(hardwareMap);
       gyro = new IMU("imu");
-      localizer = new Localizer() {
-         @NonNull
-         @Override
-         public Pose2d getPoseEstimate() {
-            return null;
-         }
-
-         @Override
-         public void setPoseEstimate(@NonNull Pose2d pose2d) {
-
-         }
-
-         @Nullable
-         @Override
-         public Pose2d getPoseVelocity() {
-            return null;
-         }
-
-         @Override
-         public void update() {
-
-         }
-      };
+//      localizer = new StandardTrackingWheelLocalizer(hardwareMap);
 
 
-      multTelemetry.addData("Status", "Initialized");
-      multTelemetry.update();
-
-      //Trajectories for Left Cycles
-      startLeft = new Pose2d(30,60,Math.toRadians(90));
-
-      postRotateLeft = drivetrain.getPoseEstimate();
-
-      lowCycleLeft2 = drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
-              .lineToConstantHeading(new Vector2d(60,13))
-              .build();
-      lowCycleLeft3 = drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
-              .lineToConstantHeading(new Vector2d(47,17))
-              .build();
-      lowCycleLeft4 = drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
-              .lineToConstantHeading(new Vector2d(60,13))
-              .build();
-      park1Left = drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
-              .lineToConstantHeading(new Vector2d(11,12))
-              .build();
-      park2Left = drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
-              .lineToConstantHeading(new Vector2d(35,12))
-              .build();
-
-      //Trajectories for Right Cycles
-      startRight = new Pose2d();
    }
-
-
-   public void cycleLowLeft(int cycles){
-      int stackHeight = 5;
-      drivetrain.turnTo(Math.toRadians(180));
-      scorer.stackPickup(stackHeight);
-      drivetrain.setPoseEstimate(drivetrain.getPoseEstimate());
-      drivetrain.followTrajectory(lowCycleLeft2);
-      while(cycles > 0){
-         while (!scorer.beamBroken()){
-            drivetrain.setDrivePower(1,0,0,.2);
-         }
-         drivetrain.setDrivePower(1,0,0,0);
-         scorer.close();
-         scorer.stackEscape(stackHeight);
-         stackHeight = stackHeight - 1;
-         scorer.autoLow();
-         drivetrain.setPoseEstimate(drivetrain.getPoseEstimate());
-         drivetrain.followTrajectory(lowCycleLeft3);
-         drivetrain.turnTo(Math.toRadians(270));
-         scorer.autoDeposit();
-         cycles = cycles - 1;
-         if (cycles == 0){
-            break;
-         }
-         drivetrain.setPoseEstimate(drivetrain.getPoseEstimate());
-         drivetrain.followTrajectory(lowCycleLeft2);
-         }
-   }
-
-
-
-
 }

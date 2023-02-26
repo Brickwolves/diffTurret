@@ -9,10 +9,13 @@ import static org.firstinspires.ftc.teamcode.Vision.SignalPipeline.SignalSide.TW
 
 import android.os.Build;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.localization.Localizer;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.google.ar.core.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -45,6 +48,7 @@ public class CursedAutoRight extends LinearOpMode {
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
     public Pose2d startRight;
     public Pose2d cycleRightStart;
+    public Localizer localizer;
 
     static final double FEET_PER_METER = 3.28084;
 
@@ -74,6 +78,29 @@ public class CursedAutoRight extends LinearOpMode {
     public void initialize() {
         setOpMode(this);
         robot = new Robot(true);
+        localizer = new Localizer() {
+            @NonNull
+            @Override
+            public Pose2d getPoseEstimate() {
+                return null;
+            }
+
+            @Override
+            public void setPoseEstimate(@NonNull Pose2d pose2d) {
+
+            }
+
+            @Nullable
+            @Override
+            public Pose2d getPoseVelocity() {
+                return null;
+            }
+
+            @Override
+            public void update() {
+
+            }
+        };
 
         Side.setBlue();
         robot.scorer.autoStart();
