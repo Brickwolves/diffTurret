@@ -151,10 +151,11 @@ public class Scoring {
         openScore();
         sleep(0.8);
         close();
-        v4b(v4bDown);
-        sleep(0.6);
+        v4b(v4bHide);
+        sleep(0.4);
         slides(1, 0);
-
+        sleep(0.4);
+        v4b(v4bDown);
     }
 
     public void stackPickup(int height) {

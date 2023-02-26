@@ -46,9 +46,19 @@ public class CursedAutoLeft extends LinearOpMode {
     public Trajectory midPreloadLeft2;
     public Trajectory lowCycleLeft1;
     public TrajectorySequence driveToPreloadPole;
-    AprilTagDetectionPipeline aprilTagDetectionPipeline;
+
+    public Trajectory lowCycleLeft2;
+    public Trajectory lowCycleLeft3;
+    public Trajectory lowCycleLeft4;
+
     public Pose2d startLeft;
     public Pose2d postRotateLeft;
+
+    public Trajectory park1Left;
+    public Trajectory park2Left;
+
+
+    AprilTagDetectionPipeline aprilTagDetectionPipeline;
 
     static final double FEET_PER_METER = 3.28084;
 
@@ -105,6 +115,26 @@ public class CursedAutoLeft extends LinearOpMode {
                 .lineToConstantHeading(new Vector2d(26,27))
                 .build();
 
+        lowCycleLeft2 = robot.drivetrain.trajectoryBuilder(postRotateLeft)
+                .lineToConstantHeading(new Vector2d(60,13))
+                .build();
+
+        lowCycleLeft3 = robot.drivetrain.trajectoryBuilder(lowCycleLeft2.end())
+                .lineToConstantHeading(new Vector2d(47,17))
+                .build();
+
+        lowCycleLeft4 = robot.drivetrain.trajectoryBuilder(lowCycleLeft3.end())
+                .lineToConstantHeading(new Vector2d(60,13))
+                .build();
+
+        park1Left = robot.drivetrain.trajectoryBuilder(lowCycleLeft4.end())
+                .lineToConstantHeading(new Vector2d(11,12))
+                .build();
+
+        park2Left = robot.drivetrain.trajectoryBuilder(lowCycleLeft4.end())
+                .lineToConstantHeading(new Vector2d(35,12))
+                .build();
+
 
     }
 
@@ -116,16 +146,20 @@ public class CursedAutoLeft extends LinearOpMode {
         robot.drivetrain.followTrajectory(midPreloadLeft2);
 
          */
+        robot.scorer.v4b(v4bStartAuto);
+        robot.drivetrain.followTrajectorySequenceAsync(driveToPreloadPole);
         while(robot.drivetrain.isBusy() && opModeIsActive()){
-            robot.drivetrain.followTrajectorySequenceAsync(driveToPreloadPole);
+            robot.drivetrain.update();
             robot.scorer.v4bHold();
         }
         robot.scorer.autoMid();
         robot.scorer.sleep(2);
         robot.scorer.autoDeposit();
         robot.scorer.grabber(grabberDown);
+        robot.drivetrain.followTrajectoryAsync(lowCycleLeft1);
         while(robot.drivetrain.isBusy() && opModeIsActive()){
-            robot.drivetrain.followTrajectoryAsync(lowCycleLeft1);
+            robot.drivetrain.update();
+            robot.scorer.v4bHold();
         }
 
     }
@@ -160,6 +194,7 @@ public class CursedAutoLeft extends LinearOpMode {
 
         robot.drivetrain.setPoseEstimate(startLeft);
 
+        /*
         while(opModeInInit()){
             v4bOffset = 0;
             robot.scorer.v4bNeutral();
@@ -226,6 +261,8 @@ public class CursedAutoLeft extends LinearOpMode {
             sleep(20);
             robot.scorer.autoStart();
         }
+
+         */
 
         if (opModeIsActive()) {
             preloadMidLeft();
