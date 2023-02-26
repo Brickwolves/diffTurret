@@ -7,14 +7,14 @@ public class PositionsAndSpeeds {
 
     @Config
     public static class SlidePositions {
-        public static int slidesHighJunction = 700;
-        public static int slidesHighFront = 620;//9000
+        public static int slidesHighJunction = 680;
+        public static int slidesHighFront = 640;//9000
         public static int slidesHighFunny = 490;
         public static int slidesMidJunction = 380;  //6500
-        public static int slidesMidFunny = 150;
+        public static int slidesMidFunny = 230;
         public static int slidesMidFront = 310;
         public static int slidesDepositDrop = 20;  //1000
-        public static int slidesTippedHeight = 0;
+        public static int slidesTippedHeight = 50;
         public static int slidesStackIncrease = 45;
     }
     @Config
@@ -25,7 +25,7 @@ public class PositionsAndSpeeds {
         public static int v4bDownFunny = -30;
         public static int v4bScoreBack = 170;
         public static int v4bScoreBackLow = 0;
-        public static int v4bScoreFront = 18;
+        public static int v4bScoreFront = 20;
         public static int v4bScoreFrontLow = 14;
         public static int v4bStartAuto = -60;
         public static int v4b0 = -226;
@@ -40,7 +40,7 @@ public class PositionsAndSpeeds {
         public static double grabberScore = 0.95;
         public static double grabberScoreFront = 0.91;
         public static double grabberScoreFunnyFront = 0.8;
-        public static double grabberScoreFunny = 0.84;
+        public static double grabberScoreFunny = 0.86;
         public static double grabberTip = 0.98;
         public static double grabberHide = 0.88;
         public static double grabberStartAuto = 0.86;
@@ -57,6 +57,9 @@ public class PositionsAndSpeeds {
     public static double clawOpenBeacon = 0.2;
     public static double clawTipped = 0.3;
     public static double clawClose = 0;
+
+    public static double braceOut = 1;
+    public static double braceIn = 0.56;
 
     public static double tipAngle = 3;
 

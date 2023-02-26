@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.Hardware;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4b0;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4b90;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bHide;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.braceIn;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.braceOut;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawClose;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawOpen;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawOpenBeacon;
@@ -73,6 +75,7 @@ public class Scoring {
     public Servo grabberSpin;
     public TouchSensor beam1;
     public Intake intake;
+    public Servo brace;
     public boolean previousPress = false;
     public boolean clawToggleOpen = false;
     public static boolean beaconScore;
@@ -104,7 +107,7 @@ public class Scoring {
 
         //v4bPID = new PID(vP, vI, vD);
 
-
+        brace = hardwareMap.get(Servo.class, "brace");
 
         grabberSpin = hardwareMap.get(Servo.class, "spin");
 
@@ -258,6 +261,13 @@ public class Scoring {
 //        multTelemetry.addData("current", v4b.getCurrentPosition());
 //    }
 
+    public void braceIn(){
+        brace.setPosition(braceIn);
+    }
+
+    public void braceOut(){
+        brace.setPosition(braceOut);
+    }
     //FeedForward V4B
     public void v4b(int target) {
         v4BTarget = target;
@@ -322,6 +332,7 @@ public class Scoring {
 
     //Front Score
     public void highFront(boolean funny) {
+        braceIn();
         if (!funny) {
             close();
             slides(1, slidesHighFront);
@@ -340,6 +351,7 @@ public class Scoring {
     }
 
     public void midFront(boolean funny){
+        braceIn();
         if (!funny) {
             close();
             slides(1, slidesMidFront);
@@ -358,6 +370,7 @@ public class Scoring {
     }
 
     public void lowFront(boolean funny){
+        braceIn();
         if (!funny) {
             close();
             slides(1,0);
@@ -377,6 +390,7 @@ public class Scoring {
 
     //Back Score
     public void highBack(boolean funny){
+        braceOut();
         close();
         v4b(v4bScoreBack);
         if(time.seconds() > .2){
@@ -391,6 +405,7 @@ public class Scoring {
     }
 
     public void midBack(boolean funny){
+        braceOut();
         close();
         v4b(v4bScoreBack);
         if(time.seconds() > .2){
@@ -405,6 +420,7 @@ public class Scoring {
     }
 
     public void lowBack(boolean funny){
+        braceOut();
         close();
         slides(1,0);
         v4b(v4bScoreBack);
@@ -452,6 +468,7 @@ public class Scoring {
         }
         if(time.seconds()>1.8){
             fullyDown = true;
+            braceIn();
             if(coneAngle.equals("Forwards")){
                 v4b(v4bDownFunny);
             }else {
@@ -461,6 +478,7 @@ public class Scoring {
     }
 
     public void startTeleop(String coneAngle) {
+        braceIn();
         open(false);
         fullyDown = true;
         grabber(grabberDown);
@@ -480,6 +498,7 @@ public class Scoring {
     }
 
     public void autoStart(){
+        braceIn();
         close();
         grabber(grabberStartAuto);
         v4bNeutral();

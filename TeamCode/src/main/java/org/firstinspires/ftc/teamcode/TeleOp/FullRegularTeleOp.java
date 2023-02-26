@@ -11,6 +11,7 @@ import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.LB1;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.LB2;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.RB1;
+import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.RB2;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.SQUARE;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.TRIANGLE;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.LEFT;
@@ -184,7 +185,7 @@ public class FullRegularTeleOp extends OpMode {
             robot.scorer.time.reset();
         }
 
-        manualClaw = false;//controller.get(TRIANGLE, TOGGLE);
+        manualClaw = true;//controller.get(TRIANGLE, TOGGLE);
 
         clawOpen = (/*robot.scorer.updateBeam() || */controller.get(CIRCLE, TAP)) != clawOpen;
 
@@ -394,11 +395,11 @@ public class FullRegularTeleOp extends OpMode {
                 break;
         }
 
-        if(controller2.get(RB1, TAP) && score == ScoreState.STACKED_HEIGHT && stackedHeight < 5){
+        if(controller.get(RB1, TAP) && score == ScoreState.STACKED_HEIGHT && stackedHeight < 5){
             stackedHeight += 1;
         }
 
-        if(controller2.get(LB1, TAP) && score == ScoreState.STACKED_HEIGHT && stackedHeight > 1){
+        if(controller.get(LB1, TAP) && score == ScoreState.STACKED_HEIGHT && stackedHeight > 1){
             stackedHeight -= 1;
         }
 
@@ -406,6 +407,9 @@ public class FullRegularTeleOp extends OpMode {
             beaconScore = false;
             coneTipped = "Straight";
             isFunny = false;
+            if(score == ScoreState.ESCAPE){
+                stackedHeight--;
+            }
             score = ScoreState.DOWN;
             robot.scorer.time.reset();
         }
@@ -416,7 +420,7 @@ public class FullRegularTeleOp extends OpMode {
         }
 
 
-        if(controller2.get(CIRCLE,TAP)) {
+        if(controller.get(RB2,TAP)) {
             if (!isTipped && !isFunny) {
                 if (score != ScoreState.STACKED_HEIGHT) {
                     score = ScoreState.STACKED_HEIGHT;
@@ -431,7 +435,7 @@ public class FullRegularTeleOp extends OpMode {
             }
 
 
-        if (controller2.get(DPAD_DN, TAP) && score != ScoreState.SCORE_FRONT_LOW && !isTipped) {
+        if (controller2.get(DPAD_DN, TAP) && score != ScoreState.SCORE_LOW && !isTipped) {
             score = ScoreState.SCORE_LOW;
             robot.scorer.time.reset();
         }
@@ -446,32 +450,21 @@ public class FullRegularTeleOp extends OpMode {
             robot.scorer.time.reset();
         }
 
-        if(controller2.get(TRIANGLE, TAP)){
-            if(score == ScoreState.SCORE_LOW) {
-                score = ScoreState.SCORE_FRONT_LOW;
-                robot.scorer.time.reset();
-            }
-            else if(score == ScoreState.SCORE_MID){
-                score = ScoreState.SCORE_FRONT_MID;
-                robot.scorer.time.reset();
-            }
-            else if(score == ScoreState.SCORE_HIGH){
-                score = ScoreState.SCORE_FRONT_HIGH;
-                robot.scorer.time.reset();
-            }
-            else if(score == ScoreState.SCORE_FRONT_LOW) {
-                score = ScoreState.SCORE_LOW;
-                robot.scorer.time.reset();
-            }
-            else if(score == ScoreState.SCORE_FRONT_MID){
-                score = ScoreState.SCORE_MID;
-                robot.scorer.time.reset();
-            }
-            else if(score == ScoreState.SCORE_FRONT_HIGH){
-                score = ScoreState.SCORE_HIGH;
-                robot.scorer.time.reset();
-            }
+        if (controller2.get(CROSS, TAP) && score != ScoreState.SCORE_FRONT_LOW && !isTipped) {
+            score = ScoreState.SCORE_FRONT_LOW;
+            robot.scorer.time.reset();
         }
+
+        if (controller2.get(SQUARE, TAP) && score != ScoreState.SCORE_FRONT_MID && !isTipped) {
+            score = ScoreState.SCORE_FRONT_MID;
+            robot.scorer.time.reset();
+        }
+
+        if (controller2.get(TRIANGLE, TAP) && score != ScoreState.SCORE_FRONT_HIGH && !isTipped) {
+            score = ScoreState.SCORE_FRONT_HIGH;
+            robot.scorer.time.reset();
+        }
+
 
 
         if(score != ScoreState.DOWN){
@@ -518,14 +511,18 @@ public class FullRegularTeleOp extends OpMode {
         double strafe = controller.get(LEFT, SHIFTED_X);
 
 
-        if (controller.get(LB1, ButtonControls.ButtonState.DOWN) || controller.get(LB2, DOWN)) {
+        if (controller.get(LB2, DOWN)) {
             power = 0.3;
         } else {
             power = driveSpeed;
         }
 
         if(score != ScoreState.DOWN){
-            power = .3;
+            if(score == ScoreState.STACKED_HEIGHT){
+                power = 0.6;
+            }else {
+                power = .45;
+            }
         }
 
 
