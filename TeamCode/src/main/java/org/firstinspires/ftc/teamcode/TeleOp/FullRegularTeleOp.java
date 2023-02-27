@@ -7,6 +7,7 @@ import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.CIRCL
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.CROSS;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_DN;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_L;
+import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_R;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_UP;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.LB1;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.LB2;
@@ -64,6 +65,7 @@ public class FullRegularTeleOp extends OpMode {
     public boolean manualClaw = false;
     public boolean clawOpen = false;
     public boolean cacheBeam;
+    public boolean completeManual = false;
 
 
     public enum ScoreState {
@@ -161,72 +163,73 @@ public class FullRegularTeleOp extends OpMode {
 
     @Override
     public void loop() {
-        for (LynxModule hub: hubs) {
+
+        for (LynxModule hub : hubs) {
             hub.clearBulkCache();
         }
         Controller.update();
         robot.scorer.intake.updateSpeed();
-
-
-        double power;
-
-
-
-
-
-
-
-        //ANTI TIP CODE
-
-        isTipped = robot.gyro.getTipAngle() > tipAngle || robot.gyro.getTipAngle() < -tipAngle;
-
-        if(isTipped){
-            score = ScoreState.DOWN;
-            robot.scorer.time.reset();
+        if(controller2.get(RB1,TAP) && controller2.get(LB1,TAP)){
+            completeManual = !completeManual;
         }
 
-        manualClaw = true;//controller.get(TRIANGLE, TOGGLE);
 
-        clawOpen = (/*robot.scorer.updateBeam() || */controller.get(CIRCLE, TAP)) != clawOpen;
+        if(true) {
+
+            robot.scorer.resetAutomatic();
+
+            double power;
 
 
+            //ANTI TIP CODE
 
-        if(score == ScoreState.DOWN || score == ScoreState.STACKED_HEIGHT) {
-            if(!manualClaw && !isFunny) {
-                if (fullyDown) {
-                    if (clawOpen) {
-                        robot.scorer.open(false);
+            isTipped = robot.gyro.getTipAngle() > tipAngle || robot.gyro.getTipAngle() < -tipAngle;
+
+            if (isTipped) {
+                score = ScoreState.DOWN;
+                robot.scorer.time.reset();
+            }
+
+            manualClaw = true;//controller.get(TRIANGLE, TOGGLE);
+
+            clawOpen = (/*robot.scorer.updateBeam() || */controller.get(CIRCLE, TAP)) != clawOpen;
+
+
+            if (score == ScoreState.DOWN || score == ScoreState.STACKED_HEIGHT) {
+                if (!manualClaw && !isFunny) {
+                    if (fullyDown) {
+                        if (clawOpen) {
+                            robot.scorer.open(false);
+                        } else {
+                            robot.scorer.close();
+                        }
+                    }
+                } else {
+                    if (controller.get(CIRCLE, TOGGLE)) {
+                        robot.scorer.open(isFunny);
                     } else {
                         robot.scorer.close();
                     }
                 }
-            } else{
-                if(controller.get(CIRCLE,TOGGLE)){
-                    robot.scorer.open(isFunny);
-                }else{
-                    robot.scorer.close();
+            }
+
+
+            //Scoring
+
+            if (controller.get(DPAD_UP, TAP)) {
+                coneTipped = "Straight";
+                robot.scorer.intake.runIntake(0);
+                isFunny = false;
+            }
+            if (controller.get(DPAD_DN, TAP)) {
+                coneTipped = "Forwards";
+                if (score == ScoreState.DOWN) {
+                    robot.scorer.intake.runIntake(0);
+                } else {
+                    robot.scorer.intake.runIntake(0);
                 }
+                isFunny = true;
             }
-        }
-
-
-
-        //Scoring
-
-        if(controller.get(DPAD_UP,TAP)){
-            coneTipped = "Straight";
-            robot.scorer.intake.runIntake(0);
-            isFunny = false;
-        }
-        if(controller.get(DPAD_DN, TAP)){
-            coneTipped = "Forwards";
-            if(score == ScoreState.DOWN) {
-                robot.scorer.intake.runIntake(0);
-            }else{
-                robot.scorer.intake.runIntake(0);
-            }
-            isFunny = true;
-        }
 
 
 //
@@ -361,186 +364,182 @@ public class FullRegularTeleOp extends OpMode {
 //            }
 //        }
 
-        switch(score){
-            case DOWN:
-                if(!isTipped) {
-                    robot.scorer.deposit(coneTipped);
-                }else{
-                    robot.scorer.crashSlides();
+            switch (score) {
+                case DOWN:
+                    if (!isTipped) {
+                        robot.scorer.deposit(coneTipped);
+                    } else {
+                        robot.scorer.crashSlides();
+                    }
+                    break;
+                case SCORE_LOW:
+                    robot.scorer.lowBack(isFunny);
+                    break;
+                case SCORE_MID:
+                    robot.scorer.midBack(isFunny);
+                    break;
+                case SCORE_HIGH:
+                    robot.scorer.highBack(isFunny);
+                    break;
+                case SCORE_FRONT_LOW:
+                    robot.scorer.lowFront(isFunny);
+                    break;
+                case SCORE_FRONT_MID:
+                    robot.scorer.midFront(isFunny);
+                    break;
+                case SCORE_FRONT_HIGH:
+                    robot.scorer.highFront(isFunny);
+                    break;
+                case STACKED_HEIGHT:
+                    robot.scorer.stackPickup(stackedHeight);
+                    break;
+                case ESCAPE:
+                    robot.scorer.stackEscape(stackedHeight);
+                    break;
+            }
+
+            if (controller.get(RB1, TAP) && score == ScoreState.STACKED_HEIGHT && stackedHeight < 5) {
+                stackedHeight += 1;
+            }
+
+            if (controller.get(LB1, TAP) && score == ScoreState.STACKED_HEIGHT && stackedHeight > 1) {
+                stackedHeight -= 1;
+            }
+
+            if (controller.get(SQUARE, TAP) && score != ScoreState.DOWN && !isTipped) {
+                beaconScore = false;
+                coneTipped = "Straight";
+                isFunny = false;
+                if (score == ScoreState.ESCAPE) {
+                    stackedHeight--;
                 }
-                break;
-            case SCORE_LOW:
-                robot.scorer.lowBack(isFunny);
-                break;
-            case SCORE_MID:
-                robot.scorer.midBack(isFunny);
-                break;
-            case SCORE_HIGH:
-                robot.scorer.highBack(isFunny);
-                break;
-            case SCORE_FRONT_LOW:
-                robot.scorer.lowFront(isFunny);
-                break;
-            case SCORE_FRONT_MID:
-                robot.scorer.midFront(isFunny);
-                break;
-            case SCORE_FRONT_HIGH:
-                robot.scorer.highFront(isFunny);
-                break;
-            case STACKED_HEIGHT:
-                robot.scorer.stackPickup(stackedHeight);
-                break;
-            case ESCAPE:
-                robot.scorer.stackEscape(stackedHeight);
-                break;
-        }
-
-        if(controller.get(RB1, TAP) && score == ScoreState.STACKED_HEIGHT && stackedHeight < 5){
-            stackedHeight += 1;
-        }
-
-        if(controller.get(LB1, TAP) && score == ScoreState.STACKED_HEIGHT && stackedHeight > 1){
-            stackedHeight -= 1;
-        }
-
-        if (controller.get(SQUARE, TAP) && score != ScoreState.DOWN && !isTipped) {
-            beaconScore = false;
-            coneTipped = "Straight";
-            isFunny = false;
-            if(score == ScoreState.ESCAPE){
-                stackedHeight--;
+                score = ScoreState.DOWN;
+                robot.scorer.time.reset();
             }
-            score = ScoreState.DOWN;
-            robot.scorer.time.reset();
-        }
 
-        if (controller.get(TRIANGLE, TAP) && score != ScoreState.DOWN && !isTipped) {
-            beaconScore = true;
-            robot.scorer.openScore();
-        }
+            if (controller.get(TRIANGLE, TAP) && score != ScoreState.DOWN && !isTipped) {
+                beaconScore = true;
+                robot.scorer.openScore();
+            }
 
 
-        if(controller.get(RB2,TAP)) {
-            if (!isTipped && !isFunny) {
-                if (score != ScoreState.STACKED_HEIGHT) {
-                    score = ScoreState.STACKED_HEIGHT;
-                    robot.scorer.time.reset();
-                    isFunny = false;
-                    coneTipped = "Straight";
-                } else {
-                    score = ScoreState.ESCAPE;
-                    robot.scorer.time.reset();
+            if (controller.get(RB2, TAP)) {
+                if (!isTipped && !isFunny) {
+                    if (score != ScoreState.STACKED_HEIGHT) {
+                        score = ScoreState.STACKED_HEIGHT;
+                        robot.scorer.time.reset();
+                        isFunny = false;
+                        coneTipped = "Straight";
+                    } else {
+                        score = ScoreState.ESCAPE;
+                        robot.scorer.time.reset();
+                    }
                 }
             }
+
+
+            if (controller2.get(DPAD_DN, TAP) && score != ScoreState.SCORE_LOW && !isTipped) {
+                score = ScoreState.SCORE_LOW;
+                robot.scorer.time.reset();
+            }
+
+            if (controller2.get(DPAD_L, TAP) && score != ScoreState.SCORE_MID && !isTipped) {
+                score = ScoreState.SCORE_MID;
+                robot.scorer.time.reset();
+            }
+
+            if (controller2.get(DPAD_UP, TAP) && score != ScoreState.SCORE_HIGH && !isTipped) {
+                score = ScoreState.SCORE_HIGH;
+                robot.scorer.time.reset();
+            }
+
+            if (controller2.get(CROSS, TAP) && score != ScoreState.SCORE_FRONT_LOW && !isTipped) {
+                score = ScoreState.SCORE_FRONT_LOW;
+                robot.scorer.time.reset();
+            }
+
+            if (controller2.get(SQUARE, TAP) && score != ScoreState.SCORE_FRONT_MID && !isTipped) {
+                score = ScoreState.SCORE_FRONT_MID;
+                robot.scorer.time.reset();
+            }
+
+            if (controller2.get(TRIANGLE, TAP) && score != ScoreState.SCORE_FRONT_HIGH && !isTipped) {
+                score = ScoreState.SCORE_FRONT_HIGH;
+                robot.scorer.time.reset();
             }
 
 
-        if (controller2.get(DPAD_DN, TAP) && score != ScoreState.SCORE_LOW && !isTipped) {
-            score = ScoreState.SCORE_LOW;
-            robot.scorer.time.reset();
-        }
+            if (score != ScoreState.DOWN) {
+                clawOpen = true;
+            }
 
-        if (controller2.get(DPAD_L, TAP) && score != ScoreState.SCORE_MID && !isTipped) {
-            score = ScoreState.SCORE_MID;
-            robot.scorer.time.reset();
-        }
-
-        if (controller2.get(DPAD_UP, TAP) && score != ScoreState.SCORE_HIGH && !isTipped) {
-            score = ScoreState.SCORE_HIGH;
-            robot.scorer.time.reset();
-        }
-
-        if (controller2.get(CROSS, TAP) && score != ScoreState.SCORE_FRONT_LOW && !isTipped) {
-            score = ScoreState.SCORE_FRONT_LOW;
-            robot.scorer.time.reset();
-        }
-
-        if (controller2.get(SQUARE, TAP) && score != ScoreState.SCORE_FRONT_MID && !isTipped) {
-            score = ScoreState.SCORE_FRONT_MID;
-            robot.scorer.time.reset();
-        }
-
-        if (controller2.get(TRIANGLE, TAP) && score != ScoreState.SCORE_FRONT_HIGH && !isTipped) {
-            score = ScoreState.SCORE_FRONT_HIGH;
-            robot.scorer.time.reset();
-        }
-
-
-
-        if(score != ScoreState.DOWN){
-            clawOpen = true;
-        }
-
-        //IMU RESET
+            //IMU RESET
 //        if (controller.get(CROSS, TAP)) {
 //            robot.gyro.reset();
 //        }
 
-        //TURN WRAPPING
-        //PID and Kinetic Turning
-        double rotation = controller.get(RIGHT, X);
+            //TURN WRAPPING
+            //PID and Kinetic Turning
+            double rotation = controller.get(RIGHT, X);
 
 
-        //Gyro Reset
-        if(controller.get(CROSS,TAP)){
-            robot.gyro.reset();
-            pid_on = false;
-        }
-        // Turn off PID if we manually turn
-        // Turn on PID if we're not manually turning and the robot's stops rotating
-        double currentRateOfChange = robot.gyro.rateOfChange();
-        if (rotation != 0) {
-            pid_on = false;
-        } else if (currentRateOfChange <= rateOfChange) pid_on = true;
-
-
-        // Lock the heading if we JUST turned PID on
-        // Correct our heading if the PID has and is still on
-        if (pid_on && !pid_on_last_cycle) setPoint = robot.gyro.getAngle();
-        else if (pid_on) rotation = pid.update(robot.gyro.getAngle() - setPoint, true);
-
-        // Update whether the PID was on or not
-        pid_on_last_cycle = pid_on;
-
-
-        //DRIVING
-        controller.setJoystickShift(LEFT, robot.gyro.getAngle());
-
-
-        double drive = controller.get(LEFT, INVERT_SHIFTED_Y);
-        double strafe = controller.get(LEFT, SHIFTED_X);
-
-
-        if (controller.get(LB2, DOWN)) {
-            power = 0.3;
-        } else {
-            power = driveSpeed;
-        }
-
-        if(score != ScoreState.DOWN){
-            if(score == ScoreState.STACKED_HEIGHT){
-                power = 0.6;
-            }else {
-                power = .45;
+            //Gyro Reset
+            if (controller.get(CROSS, TAP)) {
+                robot.gyro.reset();
+                pid_on = false;
             }
-        }
+            // Turn off PID if we manually turn
+            // Turn on PID if we're not manually turning and the robot's stops rotating
+            double currentRateOfChange = robot.gyro.rateOfChange();
+            if (rotation != 0) {
+                pid_on = false;
+            } else if (currentRateOfChange <= rateOfChange) pid_on = true;
 
 
-        robot.drivetrain.setDrivePower(drive, strafe, rotation, power);
+            // Lock the heading if we JUST turned PID on
+            // Correct our heading if the PID has and is still on
+            if (pid_on && !pid_on_last_cycle) setPoint = robot.gyro.getAngle();
+            else if (pid_on) rotation = pid.update(robot.gyro.getAngle() - setPoint, true);
+
+            // Update whether the PID was on or not
+            pid_on_last_cycle = pid_on;
 
 
+            //DRIVING
+            controller.setJoystickShift(LEFT, robot.gyro.getAngle());
 
 
+            double drive = controller.get(LEFT, INVERT_SHIFTED_Y);
+            double strafe = controller.get(LEFT, SHIFTED_X);
 
-        //SIDE
-        Side.red = !controller2.get(RB1, TOGGLE);
 
-        //RUMBLE
-        if(robot.scorer.updateBeam() != cacheBeam){
-            controller.rumble(1);
-            controller2.rumble(1);
-        }
-        cacheBeam = robot.scorer.updateBeam();
+            if (controller.get(LB2, DOWN)) {
+                power = 0.3;
+            } else {
+                power = driveSpeed;
+            }
+
+            if (score != ScoreState.DOWN) {
+                if (score == ScoreState.STACKED_HEIGHT) {
+                    power = 0.6;
+                } else {
+                    power = .45;
+                }
+            }
+
+
+            robot.drivetrain.setDrivePower(drive, strafe, rotation, power);
+
+
+            //SIDE
+            Side.red = !controller2.get(RB1, TOGGLE);
+
+            //RUMBLE
+            if (robot.scorer.updateBeam() != cacheBeam) {
+                controller.rumble(1);
+                controller2.rumble(1);
+            }
+            cacheBeam = robot.scorer.updateBeam();
 
     /*
          ----------- L O G G I N G -----------
@@ -552,19 +551,114 @@ public class FullRegularTeleOp extends OpMode {
 //        logger.log("RawIMU", robot.gyro.rawAngle(), 3);
 //        logger.writeData();
 
-        multTelemetry.addData("Score State", score);
-        multTelemetry.addData("Manual", manualClaw);
-        multTelemetry.addData("claw open", clawOpen);
-        multTelemetry.addData("V4b score back", v4bScoreBack);
-        //multTelemetry.addData("Servo Bus MilliAmps",controlHub.getServoBusCurrentDraw(ExpansionHubEx.CurrentDrawUnits.MILLIAMPS));
+            multTelemetry.addData("Score State", score);
+            multTelemetry.addData("Manual", manualClaw);
+            multTelemetry.addData("claw open", clawOpen);
+            multTelemetry.addData("V4b score back", v4bScoreBack);
+            //multTelemetry.addData("Servo Bus MilliAmps",controlHub.getServoBusCurrentDraw(ExpansionHubEx.CurrentDrawUnits.MILLIAMPS));
 
 
-        multTelemetry.addData("Funny", isFunny);
-        multTelemetry.addData("Slides Height", -robot.scorer.spool.getCurrentPosition());
-        multTelemetry.addData("is beam broken", robot.scorer.beamBroken());
-        multTelemetry.addData("Intake Speed", robot.scorer.intake.getSpeed());
+            multTelemetry.addData("Funny", isFunny);
+            multTelemetry.addData("Slides Height", -robot.scorer.spool.getCurrentPosition());
+            multTelemetry.addData("is beam broken", robot.scorer.beamBroken());
+            multTelemetry.addData("Intake Speed", robot.scorer.intake.getSpeed());
 
-        multTelemetry.update();
+            multTelemetry.update();
+
+
+
+
+        }else{  //TODO BREAK ======================================================================================================================================================
+
+            robot.scorer.resetManual();
+
+            robot.scorer.braceOut();
+
+            double power;
+
+
+            if(controller.get(CIRCLE, TAP)){
+                clawOpen = !clawOpen;
+            }
+
+            if(clawOpen){
+                robot.scorer.openScore();
+            }else{
+                robot.scorer.close();
+            }
+
+            if(controller2.get(DPAD_UP,DOWN)){
+                robot.scorer.slidesManual(0.5);
+            }else if(controller2.get(DPAD_DN,DOWN)){
+                robot.scorer.slidesManual(-0.5);
+            } else{
+                robot.scorer.slidesManual(0);
+            }
+
+            if(controller2.get(DPAD_L,DOWN)){
+                robot.scorer.v4bManual(0.5);
+            }else if(controller2.get(DPAD_R,DOWN)){
+                robot.scorer.v4bManual(-0.5);
+            }else{
+                robot.scorer.v4bManual(0);
+            }
+
+            if(controller.get(DPAD_UP,DOWN)){
+                robot.scorer.grabberManual(0.005);
+            }else if(controller.get(DPAD_DN,DOWN)){
+                robot.scorer.grabberManual(-0.005);
+            }
+
+            //TURN WRAPPING
+            //PID and Kinetic Turning
+            double rotation = controller.get(RIGHT, X);
+
+
+            //Gyro Reset
+            if(controller.get(CROSS,TAP)){
+                robot.gyro.reset();
+                pid_on = false;
+            }
+            // Turn off PID if we manually turn
+            // Turn on PID if we're not manually turning and the robot's stops rotating
+            double currentRateOfChange = robot.gyro.rateOfChange();
+            if (rotation != 0) {
+                pid_on = false;
+            } else if (currentRateOfChange <= rateOfChange) pid_on = true;
+
+
+            // Lock the heading if we JUST turned PID on
+            // Correct our heading if the PID has and is still on
+            if (pid_on && !pid_on_last_cycle) setPoint = robot.gyro.getAngle();
+            else if (pid_on) rotation = pid.update(robot.gyro.getAngle() - setPoint, true);
+
+            // Update whether the PID was on or not
+            pid_on_last_cycle = pid_on;
+
+
+            //DRIVING
+            controller.setJoystickShift(LEFT, robot.gyro.getAngle());
+
+
+            double drive = controller.get(LEFT, INVERT_SHIFTED_Y);
+            double strafe = controller.get(LEFT, SHIFTED_X);
+
+
+            if (controller.get(LB2, DOWN)) {
+                power = 0.3;
+            } else {
+                power = driveSpeed;
+            }
+
+            robot.drivetrain.setDrivePower(drive, strafe, rotation, power);
+
+    /*
+         ----------- L O G G I N G -----------
+                                            */
+
+            multTelemetry.update();
+
+        }
 
     }
 

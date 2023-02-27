@@ -7,7 +7,7 @@ public class PositionsAndSpeeds {
 
     @Config
     public static class SlidePositions {
-        public static int slidesHighJunction = 680;
+        public static int slidesHighJunction = 590;
         public static int slidesHighFront = 640;//9000
         public static int slidesHighFunny = 490;
         public static int slidesMidJunction = 380;  //6500
@@ -23,7 +23,7 @@ public class PositionsAndSpeeds {
         public static int v4bDown = -60;
         public static int v4bHide = -20;
         public static int v4bDownFunny = -30;
-        public static int v4bScoreBack = 170;
+        public static int v4bScoreBack = 175;
         public static int v4bScoreBackLow = 0;
         public static int v4bScoreFront = 20;
         public static int v4bScoreFrontLow = 14;
@@ -37,7 +37,7 @@ public class PositionsAndSpeeds {
     @Config
     public static class grabberPositions {
         public static double grabberDown = 0.93 ;
-        public static double grabberScore = 0.95;
+        public static double grabberScore = 0.93;
         public static double grabberScoreFront = 0.91;
         public static double grabberScoreFunnyFront = 0.8;
         public static double grabberScoreFunny = 0.86;

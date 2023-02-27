@@ -133,6 +133,24 @@ public class Scoring {
         v4b(v4bScoreBack);
     }
 
+    public void resetManual(){
+        spool.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        spool2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        spool.setPower(0);
+        spool2.setPower(0);
+        spool.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        spool2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
+
+    public void resetAutomatic(){
+        spool.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        spool2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        spool.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        spool2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+    }
+
+
+
     public void autoMid() {
         braceOut();
         sleep(0.4);
@@ -160,7 +178,7 @@ public class Scoring {
         sleep(0.4);
         slides(1, 0);
         sleep(0.4);
-        braceIn();
+        braceOut();
         v4b(v4bDown);
     }
 
@@ -297,6 +315,10 @@ public class Scoring {
         multTelemetry.addData("current", v4b.getCurrentPosition());
     }
 
+    public void v4bManual(double power){
+        v4b.setPower(power);
+    }
+
     public void v4bHold(){
         v4b(v4BTarget);
     }
@@ -323,6 +345,10 @@ public class Scoring {
         //grabberSpin.setPosition(interpolateRanges(target, 0, 90, grabber0, grabber90));
     }
 
+    public void grabberManual(double power){
+        grabberSpin.setPosition(grabberSpin.getPosition() + power);
+    }
+
     public void slides(double power, int target){
         int newTarget = target - (int)slidesOffset;
         spool.setPower(power);
@@ -331,11 +357,17 @@ public class Scoring {
         spool2.setTargetPosition(newTarget);
     }
 
+    public void slidesManual(double power){
+        spool.setPower(-power);
+        spool2.setPower(power);
+
+    }
+
     //Score Methods
 
     //Front Score
     public void highFront(boolean funny) {
-        braceIn();
+        braceOut();
         if (!funny) {
             close();
             slides(1, slidesHighFront);
@@ -354,7 +386,7 @@ public class Scoring {
     }
 
     public void midFront(boolean funny){
-        braceIn();
+        braceOut();
         if (!funny) {
             close();
             slides(1, slidesMidFront);
@@ -373,7 +405,7 @@ public class Scoring {
     }
 
     public void lowFront(boolean funny){
-        braceIn();
+        braceOut();
         if (!funny) {
             close();
             slides(1,0);
@@ -423,7 +455,7 @@ public class Scoring {
     }
 
     public void lowBack(boolean funny){
-        braceOut();
+        braceIn();
         close();
         slides(1,0);
         v4b(v4bScoreBack);
@@ -471,7 +503,7 @@ public class Scoring {
         }
         if(time.seconds()>1.8){
             fullyDown = true;
-            braceIn();
+            braceOut();
             if(coneAngle.equals("Forwards")){
                 v4b(v4bDownFunny);
             }else {
