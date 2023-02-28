@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.tD;
 import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.tI;
 import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.tP;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
@@ -47,10 +48,14 @@ import java.util.List;
 /*
  * Simple mecanum drive hardware implementation for REV hardware.
  */
-//@Config
+@Config
 public class LupineMecanumDrive extends MecanumDrive {
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(tP, tI, tD);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(11, 0, 1);
+
+    public static double kP = 11;
+    public static double kI = 0;
+    public static double kD = 1;
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(kP,kI,kD);
 
     public static double LATERAL_MULTIPLIER = 1;
 

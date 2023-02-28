@@ -21,6 +21,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 import org.firstinspires.ftc.teamcode.Odometry.trajectorysequence.TrajectorySequence;
@@ -108,7 +109,8 @@ public class CursedAutoLeft extends LinearOpMode {
         moveToWallFive = robot.drivetrain.trajectorySequenceBuilder(driveToPreloadPole.end())
                 .lineToConstantHeading(new Vector2d(32,22))
                 .lineToConstantHeading(new Vector2d(35,0))
-                .turn(Math.toRadians(315))
+                .turn(Math.toRadians(315-360))
+                .lineToConstantHeading(new Vector2d(40,0))
                 .build();
 
 
@@ -156,26 +158,28 @@ sy
                 robot.drivetrain.update();
                 robot.scorer.v4bHold();
             }
-            robot.scorer.stackPickup(stackheight - 3);
+            robot.scorer.stackPickup(stackheight);
             robot.scorer.open(false);
             robot.drivetrain.setDrivePower(1, 0, 0, 0.2);
-//            while (!robot.scorer.beamBroken()) {
-//                robot.scorer.v4bHold();
-//                robot.drivetrain.update();
-//                robot.scorer.updateBeam();
-//                multTelemetry.addData("breakbeams", robot.scorer.beamBroken());
-//                multTelemetry.update();
-//            }
-//            multTelemetry.addData("breakbeams", robot.scorer.beamBroken());
-//            multTelemetry.update();
+            while (!robot.scorer.beamBroken()) {
+                robot.scorer.v4bHold();
+                robot.drivetrain.update();
+                robot.scorer.updateBeam();
+                telemetry.addData("breakbeams", robot.scorer.beamBroken());
+                telemetry.update();
+            }
+            telemetry.addData("breakbeams", robot.scorer.beamBroken());
+            telemetry.update();
+            robot.scorer.sleep(0.4);
             robot.drivetrain.setDrivePower(0, 0, 0, 0);
             robot.scorer.close();
+            robot.scorer.sleep(0.2);
             robot.scorer.stackEscape(stackheight);
             stackheight = stackheight - 1;
             robot.drivetrain.update();
             lowCycleLeft2 = robot.drivetrain.trajectorySequenceBuilder(robot.drivetrain.getPoseEstimate())
                     .lineToConstantHeading(new Vector2d(26,9))
-                    .turn(Math.toRadians(360 - 225))//THIS IS WACKY
+                    .turn(Math.toRadians(225-360))
                     .build();
             robot.drivetrain.followTrajectorySequenceAsync(lowCycleLeft2);
             while (robot.drivetrain.isBusy() && opModeIsActive()) {
