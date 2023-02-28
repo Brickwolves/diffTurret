@@ -152,11 +152,8 @@ public class Scoring {
 
 
     public void autoMid() {
-        braceOut();
-        sleep(0.4);
         slides(.5, slidesMidJunction);
         grabber(grabberScore);
-        sleep(0.4);
         v4b(v4bScoreBack);
 
     }

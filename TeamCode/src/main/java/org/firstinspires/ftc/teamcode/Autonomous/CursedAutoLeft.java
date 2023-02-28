@@ -102,15 +102,18 @@ public class CursedAutoLeft extends LinearOpMode {
 
         driveToPreloadPole = robot.drivetrain.trajectorySequenceBuilder(startLeft)
                 .lineToConstantHeading(new Vector2d(37,40))
-                .turn(Math.toRadians(-45))
+//                .turn(Math.toRadians(-45))
                 .addTemporalMarker(() -> robot.scorer.autoMid())
-                .lineToConstantHeading(new Vector2d(29,16))
+                .lineToLinearHeading(new Pose2d(28,19,45))
                 .build();
         moveToWallFive = robot.drivetrain.trajectorySequenceBuilder(driveToPreloadPole.end())
                 .lineToConstantHeading(new Vector2d(32,22))
                 .lineToConstantHeading(new Vector2d(35,0))
-                .turn(Math.toRadians(315-360))
-                .lineToConstantHeading(new Vector2d(40,0))
+
+//                .turn(Math.toRadians(315-360))
+//                .lineToConstantHeading(new Vector2d(40,-3))
+                .lineToLinearHeading(new Pose2d(40,3, 125))
+
                 .build();
 
 
@@ -138,7 +141,7 @@ sy
             robot.drivetrain.update();
             robot.scorer.v4bHold();
         }
-        robot.scorer.sleep(1);
+        robot.scorer.sleep(0.2);
         robot.scorer.autoDeposit();
         int stackheight = 5;
         while(stackheight > 0) {
@@ -147,9 +150,12 @@ sy
                 robot.drivetrain.followTrajectorySequenceAsync(moveToWallFive);
             }else{
                 moveToWallNotFive = robot.drivetrain.trajectorySequenceBuilder(lowCycleLeft2.end())
-                        .lineToConstantHeading(new Vector2d(25,13))
-                        .turn(Math.toRadians(270))
-                        .lineToConstantHeading(new Vector2d(35,10))
+                        .lineToConstantHeading(new Vector2d(35,0))
+                        //This line and the two lines after it are alternatives, don't run both
+                        .lineToLinearHeading(new Pose2d(40,-3, 0 ))
+//                        .turn(Math.toRadians(45))
+//                        .lineToConstantHeading(new Vector2d(40,-3))
+
                         .build();
                 robot.drivetrain.followTrajectorySequenceAsync(moveToWallNotFive);
             }
@@ -160,17 +166,14 @@ sy
             }
             robot.scorer.stackPickup(stackheight);
             robot.scorer.open(false);
+            robot.scorer.sleep(0.5);
             robot.drivetrain.setDrivePower(1, 0, 0, 0.2);
             while (!robot.scorer.beamBroken()) {
                 robot.scorer.v4bHold();
                 robot.drivetrain.update();
                 robot.scorer.updateBeam();
-                telemetry.addData("breakbeams", robot.scorer.beamBroken());
-                telemetry.update();
             }
-            telemetry.addData("breakbeams", robot.scorer.beamBroken());
-            telemetry.update();
-            robot.scorer.sleep(0.4);
+            robot.scorer.sleep(0.2);
             robot.drivetrain.setDrivePower(0, 0, 0, 0);
             robot.scorer.close();
             robot.scorer.sleep(0.2);
@@ -178,15 +181,16 @@ sy
             stackheight = stackheight - 1;
             robot.drivetrain.update();
             lowCycleLeft2 = robot.drivetrain.trajectorySequenceBuilder(robot.drivetrain.getPoseEstimate())
-                    .lineToConstantHeading(new Vector2d(26,9))
-                    .turn(Math.toRadians(225-360))
+                    .lineToConstantHeading(new Vector2d(35,0))
+//                    .turn(Math.toRadians(-45))
+                    .addTemporalMarker(() -> robot.scorer.autoMid())
+                    .lineToLinearHeading(new Pose2d(9,3,315))
                     .build();
             robot.drivetrain.followTrajectorySequenceAsync(lowCycleLeft2);
             while (robot.drivetrain.isBusy() && opModeIsActive()) {
                 robot.drivetrain.update();
                 robot.scorer.v4bHold();
             }
-            robot.scorer.autoMid();
             robot.scorer.sleep(1);
             robot.scorer.autoDeposit();
         }
