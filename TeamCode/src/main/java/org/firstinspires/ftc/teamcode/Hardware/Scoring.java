@@ -169,12 +169,11 @@ public class Scoring {
 
     public void autoDeposit() {
         openScore();
-        sleep(0.8);
+        sleep(0.4);
         close();
         v4b(v4bHide);
         sleep(0.4);
         slides(1, 0);
-        sleep(0.4);
         braceOut();
         v4b(v4bDown);
     }

@@ -9,6 +9,9 @@ import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.integra
 import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.proportionalWeight;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
+import static org.firstinspires.ftc.teamcode.Vision.SignalPipeline.SignalSide.ONE;
+import static org.firstinspires.ftc.teamcode.Vision.SignalPipeline.SignalSide.THREE;
+import static org.firstinspires.ftc.teamcode.Vision.SignalPipeline.SignalSide.TWO;
 
 import android.os.Build;
 
@@ -29,9 +32,12 @@ import org.firstinspires.ftc.teamcode.Utilities.PID;
 import org.firstinspires.ftc.teamcode.Utilities.Side;
 import org.firstinspires.ftc.teamcode.Vision.AprilTags.AprilTagDetectionPipeline;
 import org.firstinspires.ftc.teamcode.Vision.SignalPipeline;
+import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
+
+import java.util.ArrayList;
 
 
 @Autonomous(name="CURSED AUTO (left)", group="Autonomous Linear Opmode")
@@ -51,8 +57,8 @@ public class CursedAutoLeft extends LinearOpMode {
     public Pose2d startLeft;
     public Pose2d postRotateLeft;
 
-    public Trajectory park1Left;
-    public Trajectory park2Left;
+    public TrajectorySequence park3;
+    public TrajectorySequence park2;
 
     public PID pid;
 
@@ -101,24 +107,18 @@ public class CursedAutoLeft extends LinearOpMode {
         robot.drivetrain.setPoseEstimate(startLeft);
 
         driveToPreloadPole = robot.drivetrain.trajectorySequenceBuilder(startLeft)
-                .lineToConstantHeading(new Vector2d(37,40))
+                .lineToConstantHeading(new Vector2d(37,47))
 //                .turn(Math.toRadians(-45))
                 .addTemporalMarker(() -> robot.scorer.autoMid())
-                .lineToLinearHeading(new Pose2d(28,19,45))
+                .lineToLinearHeading(new Pose2d(28,22,45))
                 .build();
         moveToWallFive = robot.drivetrain.trajectorySequenceBuilder(driveToPreloadPole.end())
                 .lineToConstantHeading(new Vector2d(32,22))
-                .lineToConstantHeading(new Vector2d(35,0))
+                .lineToConstantHeading(new Vector2d(35,3))
 
-//                .turn(Math.toRadians(315-360))
-//                .lineToConstantHeading(new Vector2d(40,-3))
-                .lineToLinearHeading(new Pose2d(40,3, 125))
-
+                .turn(Math.toRadians(300-360))
+                .lineToConstantHeading(new Vector2d(40,-3))
                 .build();
-
-
-
-
 
         waitForStart();
 
@@ -144,18 +144,20 @@ sy
         robot.scorer.sleep(0.2);
         robot.scorer.autoDeposit();
         int stackheight = 5;
-        while(stackheight > 0) {
+        while(stackheight > 3) {
             robot.scorer.grabber(grabberDown);
             if(stackheight == 5) {
                 robot.drivetrain.followTrajectorySequenceAsync(moveToWallFive);
+//                robot.drivetrain.turnTo(0);
+
+                multTelemetry.addData("angle", robot.drivetrain.getPoseEstimate().getHeading());
+                multTelemetry.update();
             }else{
                 moveToWallNotFive = robot.drivetrain.trajectorySequenceBuilder(lowCycleLeft2.end())
                         .lineToConstantHeading(new Vector2d(35,0))
                         //This line and the two lines after it are alternatives, don't run both
-                        .lineToLinearHeading(new Pose2d(40,-3, 0 ))
-//                        .turn(Math.toRadians(45))
-//                        .lineToConstantHeading(new Vector2d(40,-3))
-
+                        .turn(Math.toRadians(45))
+                        .lineToConstantHeading(new Vector2d(40,-3))
                         .build();
                 robot.drivetrain.followTrajectorySequenceAsync(moveToWallNotFive);
             }
@@ -167,13 +169,13 @@ sy
             robot.scorer.stackPickup(stackheight);
             robot.scorer.open(false);
             robot.scorer.sleep(0.5);
-            robot.drivetrain.setDrivePower(1, 0, 0, 0.2);
+            robot.drivetrain.setDrivePower(1, 0, 0, 0.4);
             while (!robot.scorer.beamBroken()) {
                 robot.scorer.v4bHold();
                 robot.drivetrain.update();
                 robot.scorer.updateBeam();
             }
-            robot.scorer.sleep(0.2);
+            robot.scorer.sleep(0.1);
             robot.drivetrain.setDrivePower(0, 0, 0, 0);
             robot.scorer.close();
             robot.scorer.sleep(0.2);
@@ -181,23 +183,24 @@ sy
             stackheight = stackheight - 1;
             robot.drivetrain.update();
             lowCycleLeft2 = robot.drivetrain.trajectorySequenceBuilder(robot.drivetrain.getPoseEstimate())
-                    .lineToConstantHeading(new Vector2d(35,0))
-//                    .turn(Math.toRadians(-45))
+                    .lineToConstantHeading(new Vector2d(25,0))
+                    .turn(Math.toRadians(-45))
                     .addTemporalMarker(() -> robot.scorer.autoMid())
-                    .lineToLinearHeading(new Pose2d(9,3,315))
+                    .lineToConstantHeading(new Vector2d(10,3))
                     .build();
             robot.drivetrain.followTrajectorySequenceAsync(lowCycleLeft2);
             while (robot.drivetrain.isBusy() && opModeIsActive()) {
                 robot.drivetrain.update();
                 robot.scorer.v4bHold();
             }
-            robot.scorer.sleep(1);
             robot.scorer.autoDeposit();
         }
-
-
-
-
+        park3 = robot.drivetrain.trajectorySequenceBuilder(lowCycleLeft2.end())
+                .lineToConstantHeading(new Vector2d(15,0))
+                .build();
+        park2 = robot.drivetrain.trajectorySequenceBuilder(park3.end())
+                .lineToConstantHeading(new Vector2d(25,0))
+                .build();
 
     }
 
@@ -231,7 +234,6 @@ sy
 
         robot.drivetrain.setPoseEstimate(startLeft);
 
-        /*
         while(opModeInInit()){
             v4bOffset = 0;
             robot.scorer.v4bNeutral();
@@ -239,9 +241,9 @@ sy
 
             if(detections != null)
             {
-//                telemetry.addData("FPS", camera.getFps());
-//                telemetry.addData("Overhead ms", camera.getOverheadTimeMs());
-//                telemetry.addData("Pipeline ms", camera.getPipelineTimeMs());
+                telemetry.addData("FPS", camera.getFps());
+                telemetry.addData("Overhead ms", camera.getOverheadTimeMs());
+                telemetry.addData("Pipeline ms", camera.getPipelineTimeMs());
 
                 // If we don't see any tags
                 if(detections.size() == 0)
@@ -299,20 +301,23 @@ sy
             robot.scorer.autoStart();
         }
 
-         */
+         
 
         if (opModeIsActive()) {
-            multTelemetry.addData("breakbeams", robot.scorer.beamBroken());
             midCycleAutos();
 
-//            robot.cycleLowLeft(5);
-//            if (signalSide == ONE) {
-//                robot.drivetrain.followTrajectory(robot.park1Left);
-//            }else if(signalSide == TWO){
-//                robot.drivetrain.followTrajectory(robot.park2Left);
-//            }else if (signalSide == THREE){
-//                robot.drivetrain.followTrajectory(robot.lowCycleLeft4);
-//            }
+
+            if (signalSide == ONE) {
+                robot.drivetrain.followTrajectorySequence(moveToWallNotFive);
+                robot.drivetrain.turn(Math.toRadians(90));
+            }else if(signalSide == TWO){
+                robot.drivetrain.followTrajectorySequence(park2);
+                robot.drivetrain.turn(Math.toRadians(135));
+            }else if (signalSide == THREE){
+                robot.drivetrain.followTrajectorySequence(park2);
+                robot.drivetrain.followTrajectorySequence(park3);
+                robot.drivetrain.turn(Math.toRadians(135));
+            }
 
 
             multTelemetry.addData("signal side", signalSide);
