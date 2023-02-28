@@ -195,6 +195,8 @@ public class Scoring {
         return beam1.isPressed();
     }
 
+
+    //returns if beam just triggered
     public boolean updateBeam() {
         boolean retVal = beam1.isPressed() && !previousPress;
         previousPress = beam1.isPressed();
