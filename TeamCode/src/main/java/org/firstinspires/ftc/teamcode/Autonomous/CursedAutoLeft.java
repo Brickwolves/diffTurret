@@ -44,7 +44,6 @@ import java.util.ArrayList;
 @Autonomous(name="CURSED AUTO (left)", group="Autonomous Linear Opmode")
 public class CursedAutoLeft extends LinearOpMode {
     Robot robot;
-    OpenCvCamera camera;
     public Trajectory midPreloadLeft1;
     public Trajectory midPreloadLeft2;
     public TrajectorySequence moveToWallFive;
@@ -64,7 +63,7 @@ public class CursedAutoLeft extends LinearOpMode {
     public PID pid;
 
 
-
+    OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
 
     static final double FEET_PER_METER = 3.28084;
@@ -220,7 +219,6 @@ sy
 
         camera.setPipeline(aprilTagDetectionPipeline);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
-
         {
             @Override
             public void onOpened()
@@ -244,9 +242,9 @@ sy
 
             if(detections != null)
             {
-                telemetry.addData("FPS", camera.getFps());
-                telemetry.addData("Overhead ms", camera.getOverheadTimeMs());
-                telemetry.addData("Pipeline ms", camera.getPipelineTimeMs());
+                //telemetry.addData("FPS", camera.getFps());
+                //telemetry.addData("Overhead ms", camera.getOverheadTimeMs());
+                //telemetry.addData("Pipeline ms", camera.getPipelineTimeMs());
 
                 // If we don't see any tags
                 if(detections.size() == 0)
@@ -296,13 +294,15 @@ sy
                     }
                 }
 
-                telemetry.update();
+                //telemetry.update();
             }
 
 
             sleep(20);
-            robot.scorer.autoStart();
         }
+
+        robot.scorer.autoStart();
+
 
 
 
