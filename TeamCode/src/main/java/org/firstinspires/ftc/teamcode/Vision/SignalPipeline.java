@@ -62,7 +62,8 @@ import java.util.List;
 
             ONE,
             TWO,
-            THREE
+            THREE,
+            STOOPID
 
         }
 

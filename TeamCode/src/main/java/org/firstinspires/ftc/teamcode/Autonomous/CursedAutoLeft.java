@@ -10,6 +10,7 @@ import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.proport
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 import static org.firstinspires.ftc.teamcode.Vision.SignalPipeline.SignalSide.ONE;
+import static org.firstinspires.ftc.teamcode.Vision.SignalPipeline.SignalSide.STOOPID;
 import static org.firstinspires.ftc.teamcode.Vision.SignalPipeline.SignalSide.THREE;
 import static org.firstinspires.ftc.teamcode.Vision.SignalPipeline.SignalSide.TWO;
 
@@ -95,6 +96,8 @@ public class CursedAutoLeft extends LinearOpMode {
         setOpMode(this);
         robot = new Robot(true);
 
+
+
         Side.setBlue();
         robot.scorer.autoStart();
 
@@ -107,15 +110,17 @@ public class CursedAutoLeft extends LinearOpMode {
         robot.drivetrain.setPoseEstimate(startLeft);
 
         driveToPreloadPole = robot.drivetrain.trajectorySequenceBuilder(startLeft)
-                .lineToConstantHeading(new Vector2d(37,47))
+                .lineToLinearHeading(new Pose2d(37,37,45))
 //                .turn(Math.toRadians(-45))
                 .addTemporalMarker(() -> robot.scorer.autoMid())
-                .lineToLinearHeading(new Pose2d(30,21,45))
+                .lineToConstantHeading(new Vector2d(31,22))
                 .build();
         moveToWallFive = robot.drivetrain.trajectorySequenceBuilder(driveToPreloadPole.end())
-                .lineToLinearHeading(new Pose2d(30,22,0))
-                .lineToConstantHeading(new Vector2d(30,3))
-                .lineToConstantHeading(new Vector2d(40,-3))
+                .addTemporalMarker(() -> robot.scorer.braceIn())
+                .lineToLinearHeading(new Pose2d(23,22,0))
+                .lineToConstantHeading(new Vector2d(23,-5))
+                .addTemporalMarker(() -> robot.scorer.braceOut())
+                .lineToConstantHeading(new Vector2d(40,-5))
                 .build();
 
         waitForStart();
@@ -155,7 +160,7 @@ sy
                         .lineToConstantHeading(new Vector2d(35,0))
                         //This line and the two lines after it are alternatives, don't run both
                         .turn(Math.toRadians(45))
-                        .lineToConstantHeading(new Vector2d(40,-3))
+                        .lineToConstantHeading(new Vector2d(35,-3))
                         .build();
                 robot.drivetrain.followTrajectorySequenceAsync(moveToWallNotFive);
             }
