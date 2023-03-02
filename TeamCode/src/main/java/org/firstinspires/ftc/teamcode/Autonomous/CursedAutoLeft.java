@@ -10,7 +10,6 @@ import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.proport
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 import static org.firstinspires.ftc.teamcode.Vision.SignalPipeline.SignalSide.ONE;
-import static org.firstinspires.ftc.teamcode.Vision.SignalPipeline.SignalSide.STOOPID;
 import static org.firstinspires.ftc.teamcode.Vision.SignalPipeline.SignalSide.THREE;
 import static org.firstinspires.ftc.teamcode.Vision.SignalPipeline.SignalSide.TWO;
 
@@ -25,7 +24,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 import org.firstinspires.ftc.teamcode.Odometry.trajectorysequence.TrajectorySequence;
@@ -50,7 +48,7 @@ public class CursedAutoLeft extends LinearOpMode {
     public TrajectorySequence moveToWallNotFive;
     public TrajectorySequence driveToPreloadPole;
 
-    public TrajectorySequence lowCycleLeft2;
+    public TrajectorySequence cycleToMid;
     public Trajectory lowCycleLeft3;
     public Trajectory lowCycleLeft4;
 
@@ -61,6 +59,8 @@ public class CursedAutoLeft extends LinearOpMode {
     public TrajectorySequence park2;
 
     public PID pid;
+
+    public ElapsedTime timeout = new ElapsedTime();
 
 
     OpenCvCamera camera;
@@ -109,7 +109,7 @@ public class CursedAutoLeft extends LinearOpMode {
         robot.drivetrain.setPoseEstimate(startLeft);
 
         driveToPreloadPole = robot.drivetrain.trajectorySequenceBuilder(startLeft)
-                .lineToLinearHeading(new Pose2d(37,37,45))
+                .lineToLinearHeading(new Pose2d(36,36,45))
 //                .turn(Math.toRadians(-45))
                 .addTemporalMarker(() -> robot.scorer.autoMid())
                 .lineToConstantHeading(new Vector2d(31,22))
@@ -134,32 +134,35 @@ public class CursedAutoLeft extends LinearOpMode {
         robot.drivetrain.followTrajectory(midPreloadLeft2);
 sy
          */
-        robot.scorer.braceOut();
-
         robot.scorer.v4b(v4bStartAuto);
         robot.drivetrain.update();
+        //SET UP TO SCORE PRELOAD
         robot.drivetrain.followTrajectorySequenceAsync(driveToPreloadPole);
         while(robot.drivetrain.isBusy() && opModeIsActive()){
             robot.drivetrain.update();
             robot.scorer.v4bHold();
         }
+        //
         robot.scorer.sleep(0.2);
+        //SCORE PRELOAD ON MID
         robot.scorer.autoDeposit();
         int stackheight = 5;
         while(stackheight > 3) {
             robot.scorer.grabber(grabberDown);
             if(stackheight == 5) {
+                //MOVE TO WALL FROM SCORE PRELOAD - FIRST CYCLE
                 robot.drivetrain.followTrajectorySequenceAsync(moveToWallFive);
 //                robot.drivetrain.turnTo(0);
 
                 multTelemetry.addData("angle", robot.drivetrain.getPoseEstimate().getHeading());
                 multTelemetry.update();
             }else{
-                moveToWallNotFive = robot.drivetrain.trajectorySequenceBuilder(lowCycleLeft2.end())
-                        .lineToConstantHeading(new Vector2d(35,0))
+                //MOVE TO WALL FROM CYCLE - LATER CYCLES
+                moveToWallNotFive = robot.drivetrain.trajectorySequenceBuilder(cycleToMid.end())
+                        .lineToConstantHeading(new Vector2d(35,-3))
                         //This line and the two lines after it are alternatives, don't run both
                         .turn(Math.toRadians(45))
-                        .lineToConstantHeading(new Vector2d(35,-3))
+//                        .lineToConstantHeading(new Vector2d(35,-3))
                         .build();
                 robot.drivetrain.followTrajectorySequenceAsync(moveToWallNotFive);
             }
@@ -171,11 +174,19 @@ sy
             robot.scorer.stackPickup(stackheight);
             robot.scorer.open(false);
             robot.scorer.sleep(0.5);
+            //DRIVE TO WALL WHILE WAITING FOR BREAK BEAMS
             robot.drivetrain.setDrivePower(1, 0, 0, 0.4);
-            while (!robot.scorer.beamBroken()) {
-                robot.scorer.v4bHold();
-                robot.drivetrain.update();
-                robot.scorer.updateBeam();
+
+            timeout.reset();
+            while (!robot.scorer.beamBroken() /*&& timeout.seconds()<2*/) {
+//                if(timeout.seconds()<2){
+//                    robot.drivetrain.followTrajectorySequenceAsync(moveToWallNotFive);
+//                    timeout.reset();
+//                }else {
+                    robot.scorer.v4bHold();
+                    robot.drivetrain.update();
+                    robot.scorer.updateBeam();
+                }
             }
             robot.scorer.sleep(0.1);
             robot.drivetrain.setDrivePower(0, 0, 0, 0);
@@ -184,23 +195,22 @@ sy
             robot.scorer.stackEscape(stackheight);
             stackheight = stackheight - 1;
             robot.drivetrain.update();
-            lowCycleLeft2 = robot.drivetrain.trajectorySequenceBuilder(robot.drivetrain.getPoseEstimate())
+            cycleToMid = robot.drivetrain.trajectorySequenceBuilder(robot.drivetrain.getPoseEstimate())
                     .lineToConstantHeading(new Vector2d(25,0))
                     .turn(Math.toRadians(-45))
                     .addTemporalMarker(() -> robot.scorer.autoMid())
                     .lineToConstantHeading(new Vector2d(7,5))
                     .build();
-            robot.drivetrain.followTrajectorySequenceAsync(lowCycleLeft2);
+            robot.drivetrain.followTrajectorySequenceAsync(cycleToMid);
             while (robot.drivetrain.isBusy() && opModeIsActive()) {
                 robot.drivetrain.update();
                 robot.scorer.v4bHold();
             }
             robot.scorer.autoDeposit();
-        }
-        park2 = robot.drivetrain.trajectorySequenceBuilder(lowCycleLeft2.end())
+            park2 = robot.drivetrain.trajectorySequenceBuilder(cycleToMid.end())
                 .lineToConstantHeading(new Vector2d(15,0))
                 .build();
-        park3 = robot.drivetrain.trajectorySequenceBuilder(park2.end())
+            park3 = robot.drivetrain.trajectorySequenceBuilder(park2.end())
                 .lineToConstantHeading(new Vector2d(0,0))
                 .build();
 

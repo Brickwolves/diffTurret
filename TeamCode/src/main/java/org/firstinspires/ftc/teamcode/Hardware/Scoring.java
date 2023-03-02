@@ -152,6 +152,7 @@ public class Scoring {
 
 
     public void autoMid() {
+        braceOut();
         slides(.5, slidesMidJunction);
         grabber(grabberScore);
         v4b(v4bScoreBack);
