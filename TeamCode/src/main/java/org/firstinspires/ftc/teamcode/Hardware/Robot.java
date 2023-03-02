@@ -13,6 +13,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.google.ar.core.Pose;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.Hardware.Sensors.Distance_Sensor;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.IMU;
 import org.firstinspires.ftc.teamcode.Odometry.drive.StandardTrackingWheelLocalizer;
 
@@ -33,6 +34,7 @@ public class Robot {
    public Trajectory park1Left;
    public Trajectory park2Left;
    public Pose2d startRight;
+   public Distance_Sensor distance;
 //   public StandardTrackingWheelLocalizer localizer;
 
 
@@ -47,7 +49,8 @@ public class Robot {
    public Robot(boolean advancedScoring){
       initRobot();
       scorer = new Scoring();
-
+      distance = new Distance_Sensor();
+      distance.init("distance");
    }
 
 
