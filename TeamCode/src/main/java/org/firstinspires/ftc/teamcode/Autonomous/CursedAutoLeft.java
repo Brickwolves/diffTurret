@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberPositions.grabberDown;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bStartAuto;
+import static org.firstinspires.ftc.teamcode.Hardware.Scoring.idfk;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.slidesOffset;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.v4bOffset;
 import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.derivativeWeight;
@@ -112,13 +113,12 @@ public class CursedAutoLeft extends LinearOpMode {
                 .addTemporalMarker(() -> robot.scorer.braceOut())
                 .lineToLinearHeading(new Pose2d(32, 22, 45))
 //                .turn(Math.toRadians(-45))
-
                 .addTemporalMarker(() -> robot.scorer.autoMid())
                 .lineToConstantHeading(new Vector2d(22, 21))
                 .build();
         moveToWallFive = robot.drivetrain.trajectorySequenceBuilder(driveToPreloadPole.end())
-                .addTemporalMarker(() -> robot.scorer.braceIn())
                 .lineToLinearHeading(new Pose2d(23, 22, 0))
+                .addTemporalMarker(() -> robot.scorer.braceIn())
                 .lineToConstantHeading(new Vector2d(23, -5))
                 .addTemporalMarker(() -> robot.scorer.braceOut())
                 .lineToConstantHeading(new Vector2d(40, -5))
@@ -231,6 +231,7 @@ sy
         while (robot.drivetrain.isBusy() && opModeIsActive()) {
             robot.drivetrain.update();
             robot.scorer.v4bHold();
+            robot.scorer.slidesHold();
         }
         //
         robot.scorer.sleep(0.2);
@@ -260,6 +261,7 @@ sy
             while (robot.drivetrain.isBusy() && opModeIsActive()) {
                 robot.drivetrain.update();
                 robot.scorer.v4bHold();
+                robot.scorer.slidesHold();
             }
             robot.scorer.stackPickup(stackHeight);
             robot.scorer.open(false);
@@ -269,17 +271,21 @@ sy
             robot.distance.distanceUpdate();
             while (!robot.scorer.beamBroken()) {
                 robot.scorer.v4bHold();
+                robot.scorer.slidesHold();
                 robot.drivetrain.update();
                 robot.distance.distanceUpdate();
-                if (robot.distance.getCM() < 6) {
+                if (robot.distance.getCM() < 4) {
                     whoopsTryAgain = robot.drivetrain.trajectorySequenceBuilder(robot.drivetrain.getPoseEstimate())
                             .lineToLinearHeading(new Pose2d(40, -5, 0))
                             .build();
+                    robot.drivetrain.followTrajectorySequenceAsync(whoopsTryAgain);
                 }
+                multTelemetry.addData("distance", robot.distance.getCM());
+                multTelemetry.update();
             }
             robot.scorer.updateBeam();
             multTelemetry.addData("breakbeams", robot.scorer.beamBroken());
-            multTelemetry.addData("distance", robot.scorer.beamBroken());
+            multTelemetry.addData("distance", robot.distance.getCM());
             multTelemetry.update();
             robot.scorer.sleep(0.1);
             robot.drivetrain.setDrivePower(0, 0, 0, 0);
@@ -298,6 +304,7 @@ sy
             while (robot.drivetrain.isBusy() && opModeIsActive()) {
                 robot.drivetrain.update();
                 robot.scorer.v4bHold();
+                robot.scorer.slidesHold();
             }
             robot.scorer.autoDeposit();
             setUpPark();
@@ -339,11 +346,14 @@ sy
 
             multTelemetry.addData("signal side", signalSide);
             multTelemetry.addData("ending auto", "ok");
+            multTelemetry.addData("idfk",idfk);
             multTelemetry.update();
 
             slidesOffset = robot.scorer.getHeight();
             v4bOffset = robot.scorer.v4b.getCurrentPosition();
 
         }
+        multTelemetry.addData("idfk",idfk);
+        multTelemetry.update();
     }
 }

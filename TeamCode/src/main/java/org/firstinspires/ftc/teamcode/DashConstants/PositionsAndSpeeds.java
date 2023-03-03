@@ -7,16 +7,16 @@ public class PositionsAndSpeeds {
 
     @Config
     public static class SlidePositions {
-        public static int slidesHighJunction = 590;
-        public static int slidesHighFront = 640;//9000
+        public static int slidesHighJunction = 650;
+        public static int slidesHighFront = 600;//9000
         public static int slidesHighFunny = 490;
         public static int slidesMidJunction = 380;
-        public static int slidesMidAuto = 280;
+        public static int slidesMidAuto = 300;
         public static int slidesMidFunny = 230;
-        public static int slidesMidFront = 310;
+        public static int slidesMidFront = 240;
         public static int slidesDepositDrop = 20;  //1000
         public static int slidesTippedHeight = 50;
-        public static int slidesStackIncrease = 42;
+        public static int slidesStackIncrease = 45;
 
         public static double SlidesP = .003, SlidesI = 0, SlidesD = .0002, F = .3;
     }
@@ -25,12 +25,12 @@ public class PositionsAndSpeeds {
         //works in degrees
         public static int v4bDown = -64;
         public static int v4bHide = -20;
-        public static int v4bDownFunny = -30;
-        public static int v4bScoreBack = 180;
+        public static int v4bDownFunny = -40;
+        public static int v4bScoreBack = 160;
         public static int v4bScoreBackAuto = 170;
-        public static int v4bScoreBackLow = 0;
+        public static int v4bScoreBackLow = 175;
         public static int v4bScoreFront = 20;
-        public static int v4bScoreFrontLow = 14;
+        public static int v4bScoreFrontLow = 7;
         public static int v4bStartAuto = -60;
         public static int v4b0 = -226;
         public static int v4b90 = -520;
@@ -40,15 +40,15 @@ public class PositionsAndSpeeds {
 
     @Config
     public static class grabberPositions {
-        public static double grabberDown = 0.89 ;
+        public static double grabberDown = 0.89;
         public static double grabberScore = 0.89;
-        public static double grabberScoreAuto = 0.89;
-        public static double grabberScoreFront = 0.87;
-        public static double grabberScoreFunnyFront = 0.76;
-        public static double grabberScoreFunny = 0.82;
-        public static double grabberTip = 0.94;
-        public static double grabberHide = 0.84;
-        public static double grabberStartAuto = 0.82;
+        public static double grabberScoreAuto = 0.90;
+        public static double grabberScoreFront = 0.86;
+        public static double grabberScoreFunnyFront = 0.75;
+        public static double grabberScoreFunny = 0.81;
+        public static double grabberTip = 0.93;
+        public static double grabberHide = 0.85;
+        public static double grabberStartAuto = 0.81;
         public static double grabber0 = 0.5;
         public static double grabber90 = 0.6;
     }

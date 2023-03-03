@@ -87,6 +87,7 @@ public class Scoring {
     public TouchSensor beam1;
     public Intake intake;
     public Servo brace;
+    public static int idfk = 0;
     public boolean previousPress = false;
     public boolean clawToggleOpen = false;
     public static boolean beaconScore;
@@ -102,6 +103,7 @@ public class Scoring {
     public LoopTimer loopTimer = new LoopTimer();
     public AlphaNoiseFilter armAccelFilter = new AlphaNoiseFilter(0, Vinno);
     public int v4BTarget = -60;
+    public int slidesTarget = 0;
 
 
     public Scoring() {
@@ -334,6 +336,10 @@ public class Scoring {
         v4b(v4BTarget);
     }
 
+    public void slidesHold(){
+        slides(1, slidesTarget);
+    }
+
     public void v4bNeutral(){
         v4b.setPower(0);
     }
@@ -361,12 +367,14 @@ public class Scoring {
     }
 
     public void slides(double power, int target){
+        slidesTarget = target;
         double newTarget = target - slidesOffset;
         double current = (-spool.getCurrentPosition() + spool2.getCurrentPosition()) * .5;
         double dist = newTarget - current;
+
         if(!(newTarget < 30 && dist < 30)) {
             slidesPID.setWeights(SlidesP, SlidesI, SlidesD);
-
+            idfk ++;
             double pow = slidesPID.update(dist, false) + ((dist > 10) ? F : 0);
 //            multTelemetry.addData("Spool1", spool.getCurrentPosition());
 //            multTelemetry.addData("Spool2", spool2.getCurrentPosition());
@@ -374,6 +382,8 @@ public class Scoring {
 //            multTelemetry.addData("Target", newTarget);
 //            multTelemetry.addData("Power", pow);
 //            multTelemetry.addData("Dist", dist);
+            multTelemetry.addData("idfk", idfk);
+            multTelemetry.update();
             spool.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             spool2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             spool.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -491,7 +501,7 @@ public class Scoring {
         braceIn();
         close();
         slides(1,0);
-        v4b(v4bScoreBack);
+        v4b(v4bScoreBackLow);
         if(time.seconds() > .2){
             if(funny) {
                 grabber(grabberScoreFunny);
