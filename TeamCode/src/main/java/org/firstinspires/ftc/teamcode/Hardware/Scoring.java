@@ -1,8 +1,14 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.SlidePositions.F;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.SlidePositions.SlidesD;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.SlidePositions.SlidesI;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.SlidePositions.SlidesP;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.SlidePositions.slidesMidAuto;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4b0;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4b90;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bHide;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bScoreBackAuto;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.braceIn;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.braceOut;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawClose;
@@ -10,6 +16,7 @@ import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.cl
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawOpenBeacon;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawOpenScore;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.clawTipped;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberPositions.grabberScoreAuto;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberPositions.grabberScoreFunny;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberPositions.grabberDown;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberPositions.grabberHide;
@@ -53,14 +60,18 @@ import static java.lang.Math.abs;
 import static java.lang.Math.round;
 import static java.lang.Math.signum;
 
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.controller.wpilibcontroller.ArmFeedforward;
 import com.arcrobotics.ftclib.controller.wpilibcontroller.SimpleMotorFeedforward;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.ejml.equation.IntegerSequence;
+import org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds;
 import org.firstinspires.ftc.teamcode.Utilities.AlphaNoiseFilter;
 import org.firstinspires.ftc.teamcode.Utilities.Files.BlackBox.LoopTimer;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
@@ -80,6 +91,7 @@ public class Scoring {
     public boolean clawToggleOpen = false;
     public static boolean beaconScore;
 
+    private PID slidesPID = new PID(SlidesP, SlidesI, SlidesD);
 
     public boolean wentDown = false;
 
@@ -115,14 +127,14 @@ public class Scoring {
         spool = hardwareMap.get(DcMotor.class, "spool");
         spool.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         spool.setTargetPosition(0);
-        spool.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        spool.setPower(.6);
+        spool.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        spool.setPower(.6);
 
         spool2 = hardwareMap.get(DcMotor.class, "spool2");
         spool2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         spool2.setTargetPosition(0);
-        spool2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        spool2.setPower(.6);
+        spool2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        spool2.setPower(.6);
 
         beam1 = hardwareMap.get(TouchSensor.class, "beam1");
         loopTimer.reset();
@@ -134,17 +146,17 @@ public class Scoring {
     }
 
     public void resetManual(){
-        spool.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        spool2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        spool.setPower(0);
-        spool2.setPower(0);
-        spool.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        spool2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        spool.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        spool2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        spool.setPower(0);
+//        spool2.setPower(0);
+//        spool.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        spool2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public void resetAutomatic(){
-        spool.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        spool2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        spool.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        spool2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         spool.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         spool2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
@@ -153,9 +165,9 @@ public class Scoring {
 
     public void autoMid() {
         braceOut();
-        slides(.5, slidesMidJunction);
-        grabber(grabberScore);
-        v4b(v4bScoreBack);
+        slides(.5, slidesMidAuto);
+        grabber(grabberScoreAuto);
+        v4b(v4bScoreBackAuto);
 
     }
 
@@ -349,16 +361,38 @@ public class Scoring {
     }
 
     public void slides(double power, int target){
-        int newTarget = target - (int)slidesOffset;
-        spool.setPower(power);
-        spool2.setPower(power);
-        spool.setTargetPosition(-newTarget);
-        spool2.setTargetPosition(newTarget);
+        double newTarget = target - slidesOffset;
+        double current = (-spool.getCurrentPosition() + spool2.getCurrentPosition()) * .5;
+        double dist = newTarget - current;
+        if(!(newTarget < 30 && dist < 30)) {
+            slidesPID.setWeights(SlidesP, SlidesI, SlidesD);
+
+            double pow = slidesPID.update(dist, false) + ((dist > 10) ? F : 0);
+//            multTelemetry.addData("Spool1", spool.getCurrentPosition());
+//            multTelemetry.addData("Spool2", spool2.getCurrentPosition());
+//            multTelemetry.addData("Current", current);
+//            multTelemetry.addData("Target", newTarget);
+//            multTelemetry.addData("Power", pow);
+//            multTelemetry.addData("Dist", dist);
+            spool.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            spool2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            spool.setDirection(DcMotorSimple.Direction.FORWARD);
+            spool2.setDirection(DcMotorSimple.Direction.FORWARD);
+            spool.setPower(-pow);
+            spool2.setPower(pow);
+        }else{
+            spool.setPower(-0);
+            spool2.setPower(0);
+        }
+
+//
+//        spool.setTargetPosition(-newTarget);
+//        spool2.setTargetPosition(newTarget);
     }
 
     public void slidesManual(double power){
-        spool.setPower(-power);
-        spool2.setPower(power);
+//        spool.setPower(-power);
+//        spool2.setPower(power);
 
     }
 
