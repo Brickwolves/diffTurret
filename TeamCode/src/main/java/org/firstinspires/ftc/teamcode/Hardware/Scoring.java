@@ -592,6 +592,7 @@ public class Scoring {
         sleep.reset();
         while(sleep.seconds()<sleepTime && linearOpMode.opModeIsActive()){
             v4b(v4BTarget);
+            slidesHold();
         }
     }
 

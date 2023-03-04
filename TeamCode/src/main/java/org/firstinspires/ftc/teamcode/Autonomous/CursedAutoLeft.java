@@ -274,7 +274,7 @@ sy
                 robot.scorer.v4bHold();
                 robot.drivetrain.update();
                 robot.distance.distanceUpdate();
-                robot.scorer.slides(1,(stackHeight + 4) * slidesStackIncrease);
+                robot.scorer.slidesHold();
                 multTelemetry.update();
                 if (robot.distance.getCM() < 4) {
                     whoopsTryAgain = robot.drivetrain.trajectorySequenceBuilder(robot.drivetrain.getPoseEstimate())
