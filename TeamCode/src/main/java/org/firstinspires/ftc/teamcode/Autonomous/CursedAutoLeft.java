@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.SlidePositions.slidesStackIncrease;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberPositions.grabberDown;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bStartAuto;
 import static org.firstinspires.ftc.teamcode.Hardware.Scoring.idfk;
@@ -269,11 +270,12 @@ sy
             //DRIVE TO WALL WHILE WAITING FOR BREAK BEAMS
             robot.drivetrain.setDrivePower(1, 0, 0, 0.4);
             robot.distance.distanceUpdate();
-            while (!robot.scorer.beamBroken()) {
+            while (!robot.scorer.beamBroken() && opModeIsActive()) {
                 robot.scorer.v4bHold();
-                robot.scorer.slidesHold();
                 robot.drivetrain.update();
                 robot.distance.distanceUpdate();
+                robot.scorer.slides(1,(stackHeight + 4) * slidesStackIncrease);
+                multTelemetry.update();
                 if (robot.distance.getCM() < 4) {
                     whoopsTryAgain = robot.drivetrain.trajectorySequenceBuilder(robot.drivetrain.getPoseEstimate())
                             .lineToLinearHeading(new Pose2d(40, -5, 0))
@@ -307,7 +309,15 @@ sy
                 robot.scorer.slidesHold();
             }
             robot.scorer.autoDeposit();
+            //HEEHAW
+            while (robot.scorer.spool2.getCurrentPosition() > 30 && opModeIsActive()) {
+                robot.drivetrain.update();
+                robot.scorer.v4bHold();
+                robot.scorer.slidesHold();
+            }
             setUpPark();
+            //HEEHAW
+            robot.scorer.slides(1,0);
         }
     }
 

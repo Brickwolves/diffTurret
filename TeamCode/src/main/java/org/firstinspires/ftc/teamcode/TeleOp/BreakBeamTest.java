@@ -30,7 +30,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Robot;
 import org.firstinspires.ftc.teamcode.Utilities.Side;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
 
-@Disabled
+
 @TeleOp(name="Beam Test", group="Iterative Opmode")
 public class BreakBeamTest extends OpMode {
 

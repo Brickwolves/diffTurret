@@ -247,7 +247,7 @@ public class Scoring {
         return (int) interpolateRanges(target, 0, 90, v4b0, v4b90);
     }
 
-    public int uninterpolate(int target) {
+    public int unterpolate(int target) {
         return (int) interpolateRanges(target, v4b0, v4b90, 0, 90);
     }
 
@@ -337,6 +337,10 @@ public class Scoring {
     }
 
     public void slidesHold(){
+        slides(1, slidesTarget);
+    }
+
+    public void slidesHoldWTF(){
         slides(1, slidesTarget);
     }
 
