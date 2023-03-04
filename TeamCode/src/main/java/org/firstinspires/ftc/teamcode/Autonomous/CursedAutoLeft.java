@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.Sl
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberPositions.grabberDown;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bStartAuto;
 import static org.firstinspires.ftc.teamcode.Hardware.Scoring.idfk;
+import static org.firstinspires.ftc.teamcode.Utilities.Constants.imuOffset;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.slidesOffset;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.v4bOffset;
 import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.derivativeWeight;
@@ -361,6 +362,7 @@ sy
 
             slidesOffset = robot.scorer.getHeight();
             v4bOffset = robot.scorer.v4b.getCurrentPosition();
+            imuOffset = robot.gyro.getAngle();
 
         }
         multTelemetry.addData("idfk",idfk);

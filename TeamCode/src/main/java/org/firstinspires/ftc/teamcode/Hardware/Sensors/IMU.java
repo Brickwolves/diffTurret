@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.Hardware.Sensors;
 
 
+import static org.firstinspires.ftc.teamcode.Utilities.Constants.imuOffset;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -81,7 +83,7 @@ public class IMU {
 
         // Update the previous angle
         previousAngle = currentAngle;
-        return currentAngle + deltaAngle + offsetAngle - datum;
+        return currentAngle + deltaAngle + offsetAngle - datum - imuOffset;
     }
 
     public double rawAngle(){
