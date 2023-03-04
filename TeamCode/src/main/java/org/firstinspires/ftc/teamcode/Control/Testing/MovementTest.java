@@ -1,16 +1,15 @@
 package org.firstinspires.ftc.teamcode.Control.Testing;
 
 
-
-import static org.firstinspires.ftc.teamcode.zLibraries.Utilities.OpModeUtils.multTelemetry;
-import static org.firstinspires.ftc.teamcode.zLibraries.Utilities.OpModeUtils.setOpMode;
+import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
+import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Control.Hardware.V6Hardware;
 import org.firstinspires.ftc.teamcode.Control.Movement;
-import org.firstinspires.ftc.teamcode.Subsystems.ClawIntake;
+
 
 @Autonomous(name="Movement Test", group="Testing")
 public class MovementTest extends LinearOpMode {
@@ -36,8 +35,6 @@ public class MovementTest extends LinearOpMode {
         double[][] path6points = {{-x, 0}, {-x, -y}, {0, -y}, {0, 0}};
         setOpMode(this);
         V6Hardware hardware = new V6Hardware(hardwareMap);
-        ClawIntake intake = new ClawIntake(hardware);
-        intake.slidesRetract();
         Movement drive = new Movement(0, 0, hardware);
 
 
