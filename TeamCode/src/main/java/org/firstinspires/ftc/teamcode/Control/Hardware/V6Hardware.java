@@ -17,8 +17,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class V6Hardware extends Hardware{
 
-    private DcMotor liftMotor1, liftMotor2, intakeMotor1, intakeMotor2;
-
     public VoltageSensor batteryVoltage;
 
     public BNO055IMU imu;
@@ -35,7 +33,7 @@ public class V6Hardware extends Hardware{
 
     @Override
     public double getRightBackPowerScalar() {
-        return .9;
+        return 1;
     }
 
     @Override
@@ -50,22 +48,13 @@ public class V6Hardware extends Hardware{
 
     @Override
     public double getVerticalEncoderTicksToCm() {
-        return -0.002414; //should be different than one another (*60/48)
+        return 0.00132968; //should be different than one another (*60/48)
     }
 
     @Override
     public double getHorizontalEncoderTicksToCm() {
-        return 0.0018948; // -0.001927 everything *243.84/126.5
+        return -0.00132968; // -0.001927 everything *243.84/126.5
     }
-
-    public DcMotor getLiftMotor2(){return liftMotor2;}
-
-    public DcMotor getLiftMotor1(){return liftMotor1;}
-
-    public DcMotor getIntakeMotor1(){return intakeMotor1;}
-
-    public DcMotor getIntakeMotor2(){return intakeMotor2;}
-
     @Override
     public double getBatteryVoltage(){return batteryVoltage.getVoltage();}
 
@@ -91,42 +80,20 @@ public class V6Hardware extends Hardware{
         batteryVoltage = hardwareMap.voltageSensor.iterator().next();
 
         //DRIVE
-        rightFront = hardwareMap.dcMotor.get("drivefr");
-        leftFront = hardwareMap.dcMotor.get("drivefl");
-        leftBack = hardwareMap.dcMotor.get("drivebl");
-        rightBack = hardwareMap.dcMotor.get("drivebr");
+        rightFront = hardwareMap.dcMotor.get("fr");
+        leftFront = hardwareMap.dcMotor.get("fl");
+        leftBack = hardwareMap.dcMotor.get("bl");
+        rightBack = hardwareMap.dcMotor.get("br");
 
-        verticalEncoder = hardwareMap.dcMotor.get("verticalEncoder");
-        horizontalEncoder = hardwareMap.dcMotor.get("horizontalEncoder");
+        verticalEncoder = hardwareMap.dcMotor.get("fl");
+        horizontalEncoder = hardwareMap.dcMotor.get("bl");
 
-        driveWithEncoders();
+        driveWithoutEncoders();
 
         rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
         rightBack.setDirection(DcMotorSimple.Direction.FORWARD);
         leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        //DEPOSITOR
-        liftMotor1 = hardwareMap.dcMotor.get("dr4b");
-        liftMotor2 = verticalEncoder;
-
-        liftMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        liftMotor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        liftMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        liftMotor1.setDirection(DcMotorSimple.Direction.FORWARD);
-        liftMotor2.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        //INTAKE
-        intakeMotor1 = hardwareMap.dcMotor.get("intakeslides");
-        intakeMotor2 = horizontalEncoder;
-
-        intakeMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        intakeMotor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        intakeMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        intakeMotor1.setDirection(DcMotorSimple.Direction.FORWARD);
-        intakeMotor2.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
         imu =  hardwareMap.get(BNO055IMU.class, "imu");

@@ -11,8 +11,10 @@ import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.DPAD_UP;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.LB1;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.LB2;
+import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.OPTIONS;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.RB1;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.RB2;
+import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.SHARE;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.SQUARE;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.TRIANGLE;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.LEFT;
@@ -21,14 +23,29 @@ import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.INV
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.SHIFTED_X;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.X;
 
+import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.Y;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.SlidePositions.slidesAdjust;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.V4BAdjust;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bDown;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bScoreFront;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bScoreFrontLow;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.driveSpeed;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberPositions.grabberAdjust;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberPositions.grabberDown;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberPositions.grabberScore;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberPositions.grabberScoreFront;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberPositions.grabberScoreFunny;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberPositions.grabberTip;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.rateOfChange;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.stackedHeight;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.tipAngle;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bScoreBack;
 import static org.firstinspires.ftc.teamcode.Hardware.Scoring.beaconScore;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.IMU_DATUM;
+import static org.firstinspires.ftc.teamcode.Utilities.Constants.slidesOffset;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.v4bOffset;
+
+import static org.firstinspires.ftc.teamcode.Utilities.Constants.grabberOffset;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.derivativeWeight;
@@ -40,10 +57,15 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.Control.Hardware.V6Hardware;
+import org.firstinspires.ftc.teamcode.Control.Movement;
+import org.firstinspires.ftc.teamcode.Control.Vector2d;
 import org.firstinspires.ftc.teamcode.Controls.ButtonControls;
 import org.firstinspires.ftc.teamcode.Controls.Controller;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
+import org.firstinspires.ftc.teamcode.Utilities.Constants;
 import org.firstinspires.ftc.teamcode.Utilities.Side;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
 import org.firstinspires.ftc.teamcode.Utilities.revextensions2.ExpansionHubEx;
@@ -66,6 +88,8 @@ public class FullRegularTeleOp extends OpMode {
     public boolean clawOpen = false;
     public boolean cacheBeam;
     public boolean completeManual = false;
+
+    private boolean pressed = false;
 
 
     public enum ScoreState {
@@ -93,9 +117,15 @@ public class FullRegularTeleOp extends OpMode {
      * Code to run ONCE when the driver hits INIT
      */
 
+
+    Movement drive;
     @Override
     public void init() {
         setOpMode(this);
+
+        V6Hardware hardware = new V6Hardware(hardwareMap);
+
+        drive = new Movement(0,0, hardware);
 
         stackedHeight = 1;
         hubs = hardwareMap.getAll(LynxModule.class);
@@ -173,9 +203,6 @@ public class FullRegularTeleOp extends OpMode {
             completeManual = !completeManual;
         }
 
-
-        if(true) {
-
             robot.scorer.resetAutomatic();
 
             double power;
@@ -214,6 +241,8 @@ public class FullRegularTeleOp extends OpMode {
             }
 
 
+
+
             //Scoring
 
             if (controller.get(DPAD_UP, TAP)) {
@@ -232,137 +261,46 @@ public class FullRegularTeleOp extends OpMode {
             }
 
 
-//
-//    //IVAN CODE
-//    //LEFT - Grabber Orientation
-//        //Increase
-//        if(controller2.get(LB2, TAP)){
-//            //Not funny
-//            if(!isFunny) {
-//                //Down
-//                if (score == ScoreState.DOWN) {
-//                    grabberDown += 0.005;
-//                    grabberDown = Range.clip(grabberDown,0.3,0.4);
-//                //Score Back
-//                } else if (score == ScoreState.SCORE_HIGH || score == ScoreState.SCORE_MID || score == ScoreState.SCORE_LOW) {
-//                    grabberScore += 0.005;
-//                    grabberScore = Range.clip(grabberScore,0.3,0.4);
-//                //Score Front
-//                } else if (score == ScoreState.SCORE_FRONT_LOW || score == ScoreState.SCORE_FRONT_MID || score == ScoreState.SCORE_FRONT_HIGH) {
-//                    grabberScoreFront += 0.005;
-//                    grabberScoreFront = Range.clip(grabberScoreFront,0.28,0.35);
-//                }
-//            //Funny
-//            }else {
-//                //Down Funny
-//                if (score == ScoreState.DOWN) {
-//                    grabberTip += 0.005;
-//                    grabberTip = Range.clip(grabberTip,0.3,0.5);
-//                    //Score Back Funny
-//                } else if (score == ScoreState.SCORE_HIGH || score == ScoreState.SCORE_MID || score == ScoreState.SCORE_LOW) {
-//                    grabberFunny += 0.005;
-//                    grabberFunny = Range.clip(grabberFunny,0.25,0.35);
-//                }
-//            }
-//        //Decrease
-//        } else if(controller2.get(RB2, TAP)){
-//            //Not funny
-//            if(!isFunny) {
-//                //Down
-//                if (score == ScoreState.DOWN) {
-//                    grabberDown -= 0.005;
-//                    grabberDown = Range.clip(grabberDown,0.3,0.4);
-//                    //Score Back
-//                } else if (score == ScoreState.SCORE_HIGH || score == ScoreState.SCORE_MID || score == ScoreState.SCORE_LOW) {
-//                    grabberScore -= 0.005;
-//                    grabberScore = Range.clip(grabberScore,0.3,0.4);
-//                    //Score Front
-//                } else if (score == ScoreState.SCORE_FRONT_LOW || score == ScoreState.SCORE_FRONT_MID || score == ScoreState.SCORE_FRONT_HIGH) {
-//                    grabberScoreFront -= 0.005;
-//                    grabberScoreFront = Range.clip(grabberScoreFront,0.28,0.35);
-//                }
-//                //Funny
-//            }else {
-//                //Down Funny
-//                if (score == ScoreState.DOWN) {
-//                    grabberTip -= 0.005;
-//                    grabberTip = Range.clip(grabberTip,0.3,0.5);
-//                    //Score Back Funny
-//                } else if (score == ScoreState.SCORE_HIGH || score == ScoreState.SCORE_MID || score == ScoreState.SCORE_LOW) {
-//                    grabberFunny -= 0.005;
-//                    grabberFunny = Range.clip(grabberFunny,0.25,0.35);
-//                }
-//            }
-//        }
-//
-//    //Right - Height
-//        //Increase
-//        if(controller2.get(LB1, TAP)){
-//            //Not funny
-//            if(!isFunny) {
-//                //Down
-//                if (score == ScoreState.DOWN) {
-//                    v4bDown += 0.005;
-//                    v4bDown = Range.clip(v4bDown,0.8,0.9);
-//                    //Score Back
-//                } else if (score == ScoreState.SCORE_HIGH || score == ScoreState.SCORE_MID || score == ScoreState.SCORE_LOW) {
-//                    v4bScoreBack += 0.005;
-//                    v4bScoreBack = Range.clip(v4bScoreBack,0.9,1);
-//                    //Score Front Not Low
-//                } else if (score == ScoreState.SCORE_FRONT_MID || score == ScoreState.SCORE_FRONT_HIGH) {
-//                    v4bScoreFront += 0.005;
-//                    v4bScoreFront = Range.clip(v4bScoreFront,0.85,0.95);
-//                    //Score Front Low
-//                }else if(score == ScoreState.SCORE_FRONT_LOW){
-//                    v4bScoreFrontLow += 0.005;
-//                    v4bScoreFrontLow = Range.clip(v4bScoreFrontLow,0.85,0.95);
-//                }
-//                //Funny
-//            }else {
-//                //Down Funny
-//                if (score == ScoreState.DOWN) {
-//                    tippedHeight += 5;
-//                    tippedHeight = Range.clip(tippedHeight,90,150);
-//                    //Score Back Funny
-//                } else if (score == ScoreState.SCORE_HIGH || score == ScoreState.SCORE_MID || score == ScoreState.SCORE_LOW) {
-//                    v4bScoreBack += 0.005;
-//                    v4bScoreBack = Range.clip(v4bScoreBack,0.9,1);
-//                }
-//            }
-//            //Decrease
-//        } else if(controller2.get(RB1, TAP)){
-//            //Not funny
-//            if(!isFunny) {
-//                //Down
-//                if (score == ScoreState.DOWN) {
-//                    v4bDown -= 0.005;
-//                    v4bDown = Range.clip(v4bDown,0.8,0.9);
-//                    //Score Back
-//                } else if (score == ScoreState.SCORE_HIGH || score == ScoreState.SCORE_MID || score == ScoreState.SCORE_LOW) {
-//                    v4bScoreBack -= 0.005;
-//                    v4bScoreBack = Range.clip(v4bScoreBack,0.9,1);
-//                    //Score Front Not Low
-//                } else if (score == ScoreState.SCORE_FRONT_MID || score == ScoreState.SCORE_FRONT_HIGH) {
-//                    v4bScoreFront -= 0.005;
-//                    v4bScoreFront = Range.clip(v4bScoreFront,0.85,0.95);
-//                    //Score Front Low
-//                }else if(score == ScoreState.SCORE_FRONT_LOW){
-//                    v4bScoreFrontLow -= 0.005;
-//                    v4bScoreFrontLow = Range.clip(v4bScoreFrontLow,0.85,0.95);
-//                }
-//                //Funny
-//            }else {
-//                //Down Funny
-//                if (score == ScoreState.DOWN) {
-//                    tippedHeight -= 5;
-//                    tippedHeight = Range.clip(tippedHeight,90,150);
-//                    //Score Back Funny
-//                } else if (score == ScoreState.SCORE_HIGH || score == ScoreState.SCORE_MID || score == ScoreState.SCORE_LOW) {
-//                    v4bScoreBack -= 0.005;
-//                    v4bScoreBack = Range.clip(v4bScoreBack,0.9,1);
-//                }
-//            }
-//        }
+            if(!pressed && gamepad2.right_bumper){
+                //increment
+                pressed = true;
+            }else if(!pressed && gamepad2.left_bumper){
+
+                pressed = true;
+            }else if(!gamepad2.left_bumper && !gamepad2.right_bumper){
+                pressed = false;
+            }
+
+
+//IVAN CODE
+    //Grabber Orientation
+        //Increase
+        if(controller2.get(RB2, DOWN)){
+            v4bOffset += V4BAdjust;
+            v4bDown += V4BAdjust;
+        //Decrease
+        } else if(controller2.get(LB2, DOWN)){
+            v4bOffset -= V4BAdjust;
+            v4bDown -= V4BAdjust;
+        }
+
+
+    //Slides
+        //Increase
+        if(controller2.get(LB1, DOWN)){
+            slidesOffset += slidesAdjust;
+            //Decrease
+        } else if(controller2.get(RB1, DOWN)){
+            slidesOffset -=slidesAdjust;
+        }
+
+    //V4B
+        if(controller2.get(SHARE, TAP)){
+            grabberOffset -= grabberAdjust;
+        } else if(controller2.get(OPTIONS,TAP)){
+            grabberOffset += grabberAdjust;
+        }
+
 
             switch (score) {
                 case DOWN:
@@ -438,7 +376,7 @@ public class FullRegularTeleOp extends OpMode {
             }
 
 
-            if (controller2.get(DPAD_DN, TAP) && score != ScoreState.SCORE_LOW && !isTipped) {
+            if (controller2.get(DPAD_DN, TAP) && (score == ScoreState.DOWN || score == ScoreState.ESCAPE) && !isTipped) {
                 score = ScoreState.SCORE_LOW;
                 robot.scorer.time.reset();
             }
@@ -453,7 +391,7 @@ public class FullRegularTeleOp extends OpMode {
                 robot.scorer.time.reset();
             }
 
-            if (controller2.get(CROSS, TAP) && score != ScoreState.SCORE_FRONT_LOW && !isTipped) {
+            if (controller2.get(CROSS, TAP) && (score == ScoreState.DOWN || score == ScoreState.ESCAPE) && !isTipped) {
                 score = ScoreState.SCORE_FRONT_LOW;
                 robot.scorer.time.reset();
             }
@@ -486,6 +424,7 @@ public class FullRegularTeleOp extends OpMode {
             //Gyro Reset
             if (controller.get(CROSS, TAP)) {
                 robot.gyro.reset();
+                Constants.imuOffset = 0;
                 pid_on = false;
             }
             // Turn off PID if we manually turn
@@ -552,9 +491,9 @@ public class FullRegularTeleOp extends OpMode {
 //        logger.writeData();
 
             multTelemetry.addData("Score State", score);
-            multTelemetry.addData("Manual", manualClaw);
-            multTelemetry.addData("claw open", clawOpen);
-            multTelemetry.addData("V4b score back", v4bScoreBack);
+            multTelemetry.addData("slidesOffset", slidesOffset);
+            multTelemetry.addData("v4bOffset", v4bOffset);
+            multTelemetry.addData("grabberOffset", grabberOffset);
             //multTelemetry.addData("Servo Bus MilliAmps",controlHub.getServoBusCurrentDraw(ExpansionHubEx.CurrentDrawUnits.MILLIAMPS));
 
 
@@ -568,97 +507,6 @@ public class FullRegularTeleOp extends OpMode {
 
 
 
-        }else{  //TODO BREAK ======================================================================================================================================================
-
-            robot.scorer.resetManual();
-
-            robot.scorer.braceOut();
-
-            double power;
-
-
-            if(controller.get(CIRCLE, TAP)){
-                clawOpen = !clawOpen;
-            }
-
-            if(clawOpen){
-                robot.scorer.openScore();
-            }else{
-                robot.scorer.close();
-            }
-
-            if(controller2.get(DPAD_UP,DOWN)){
-                robot.scorer.slidesManual(0.5);
-            }else if(controller2.get(DPAD_DN,DOWN)){
-                robot.scorer.slidesManual(-0.5);
-            } else{
-                robot.scorer.slidesManual(0);
-            }
-
-            if(controller2.get(DPAD_L,DOWN)){
-                robot.scorer.v4bManual(0.5);
-            }else if(controller2.get(DPAD_R,DOWN)){
-                robot.scorer.v4bManual(-0.5);
-            }else{
-                robot.scorer.v4bManual(0);
-            }
-
-            if(controller.get(DPAD_UP,DOWN)){
-                robot.scorer.grabberManual(0.005);
-            }else if(controller.get(DPAD_DN,DOWN)){
-                robot.scorer.grabberManual(-0.005);
-            }
-
-            //TURN WRAPPING
-            //PID and Kinetic Turning
-            double rotation = controller.get(RIGHT, X);
-
-
-            //Gyro Reset
-            if(controller.get(CROSS,TAP)){
-                robot.gyro.reset();
-                pid_on = false;
-            }
-            // Turn off PID if we manually turn
-            // Turn on PID if we're not manually turning and the robot's stops rotating
-            double currentRateOfChange = robot.gyro.rateOfChange();
-            if (rotation != 0) {
-                pid_on = false;
-            } else if (currentRateOfChange <= rateOfChange) pid_on = true;
-
-
-            // Lock the heading if we JUST turned PID on
-            // Correct our heading if the PID has and is still on
-            if (pid_on && !pid_on_last_cycle) setPoint = robot.gyro.getAngle();
-            else if (pid_on) rotation = pid.update(robot.gyro.getAngle() - setPoint, true);
-
-            // Update whether the PID was on or not
-            pid_on_last_cycle = pid_on;
-
-
-            //DRIVING
-            controller.setJoystickShift(LEFT, robot.gyro.getAngle());
-
-
-            double drive = controller.get(LEFT, INVERT_SHIFTED_Y);
-            double strafe = controller.get(LEFT, SHIFTED_X);
-
-
-            if (controller.get(LB2, DOWN)) {
-                power = 0.3;
-            } else {
-                power = driveSpeed;
-            }
-
-            robot.drivetrain.setDrivePower(drive, strafe, rotation, power);
-
-    /*
-         ----------- L O G G I N G -----------
-                                            */
-
-            multTelemetry.update();
-
-        }
 
     }
 

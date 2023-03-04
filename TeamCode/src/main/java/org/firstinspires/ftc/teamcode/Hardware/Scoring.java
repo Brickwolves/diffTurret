@@ -40,8 +40,11 @@ import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bScoreFront;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bScoreFrontLow;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bStartAuto;
+import static org.firstinspires.ftc.teamcode.Utilities.Constants.grabberOffset;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.slidesOffset;
+import static org.firstinspires.ftc.teamcode.Utilities.Constants.slidesOffsetAuto;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.v4bOffset;
+import static org.firstinspires.ftc.teamcode.Utilities.Constants.v4bOffsetAuto;
 import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.Vinno;
 import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.VkA;
 import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.VkS;
@@ -71,6 +74,8 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.ejml.equation.IntegerSequence;
+import org.firstinspires.ftc.teamcode.Control.Localization.TwoWheelOdometry;
+import org.firstinspires.ftc.teamcode.Control.Movement;
 import org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds;
 import org.firstinspires.ftc.teamcode.Utilities.AlphaNoiseFilter;
 import org.firstinspires.ftc.teamcode.Utilities.Files.BlackBox.LoopTimer;
@@ -173,6 +178,7 @@ public class Scoring {
 
     }
 
+
     public void autoLow() {
         braceOut();
         sleep(0.4);
@@ -180,6 +186,18 @@ public class Scoring {
         v4b(v4bScoreFrontLow);
         grabber(grabberScore);
 
+    }
+
+    public void autoDeposit(Movement drive, double x, double y, double heading) {
+        openScore();
+        sleep(0.4,drive,x,y,heading);
+        close();
+        v4b(v4bHide);
+        sleep(0.4,drive,x,y,heading);
+        slides(1, 0);
+//        braceOut();
+        sleep(0.6,drive,x,y,heading);
+        v4b(v4bDown);
     }
 
     public void autoDeposit() {
@@ -195,6 +213,7 @@ public class Scoring {
 
     public void stackPickup(int height) {
         v4b(v4bDown);
+        grabber(grabberDown);
         slides(1, (height - 1) * slidesStackIncrease);
     }
 
@@ -309,7 +328,7 @@ public class Scoring {
         armAccelFilter.setInnovationGain(Vinno);
         //v4bPID.setWeights(vP, vI, vD);
         feedforward = new SimpleMotorFeedforward(VkS, VkV, VkA);
-        int newTarget = interpolate(target - (int)v4bOffset);
+        int newTarget = interpolate(target - (int)v4bOffsetAuto - (int)v4bOffset);
         double error = newTarget - v4b.getCurrentPosition();
         double velocity = error * vP;
         double accel = (velocity - prevV4BVelocity) / loopTimer.getSeconds();
@@ -362,7 +381,7 @@ public class Scoring {
 
 
     public void grabber(double target){
-        grabberSpin.setPosition(target);
+        grabberSpin.setPosition(target -  grabberOffset);
         //grabberSpin.setPosition(interpolateRanges(target, 0, 90, grabber0, grabber90));
     }
 
@@ -372,7 +391,7 @@ public class Scoring {
 
     public void slides(double power, int target){
         slidesTarget = target;
-        double newTarget = target - slidesOffset;
+        double newTarget = target - slidesOffset - slidesOffsetAuto;
         double current = (-spool.getCurrentPosition() + spool2.getCurrentPosition()) * .5;
         double dist = newTarget - current;
 
@@ -415,7 +434,7 @@ public class Scoring {
     //Front Score
     public void highFront(boolean funny) {
         braceOut();
-        if (!funny) {
+        if (true) {
             close();
             slides(1, slidesHighFront);
             v4b(v4bScoreFront);
@@ -434,7 +453,7 @@ public class Scoring {
 
     public void midFront(boolean funny){
         braceOut();
-        if (!funny) {
+        if (true) {
             close();
             slides(1, slidesMidFront);
             v4b(v4bScoreFront);
@@ -453,7 +472,7 @@ public class Scoring {
 
     public void lowFront(boolean funny){
         braceOut();
-        if (!funny) {
+        if (true) {
             close();
             slides(1,0);
             v4b(v4bScoreFrontLow);
@@ -588,11 +607,29 @@ public class Scoring {
         slides(1,0);
     }
 
-    public void sleep(double sleepTime){
+    public void sleep(double sleepTime, TwoWheelOdometry odo){
         sleep.reset();
         while(sleep.seconds()<sleepTime && linearOpMode.opModeIsActive()){
             v4b(v4BTarget);
             slidesHold();
+            odo.localize();
+        }
+    }
+
+    public void sleep(double sleepTime){
+        sleep.reset();
+        while(sleep.seconds()<sleepTime  && linearOpMode.opModeIsActive()){
+            v4b(v4BTarget);
+            slidesHold();
+        }
+    }
+
+    public void sleep(double sleepTime, Movement drive, double x, double y, double heading){
+        sleep.reset();
+        while(sleep.seconds()<sleepTime && linearOpMode.opModeIsActive()){
+            v4b(v4BTarget);
+            slidesHold();
+            drive.holdPosition(x, y, heading);
         }
     }
 

@@ -42,7 +42,7 @@ public class Movement {
         public static double slideExtensionHeadingPIDConversionFactorScalar = 0.001;
         public static double holdMoveP = .05, holdMoveI = 0, holdMoveD = 0.008;
         public static double holdHeadP = 4, holdHeadI = 0, holdHeadD = 0.4;
-        public static double FcConstant = 3000;
+        public static double FcConstant = 2000;
         public static double testingPower = .75;
         public static double teleopcirclePowScalar = 1;
 

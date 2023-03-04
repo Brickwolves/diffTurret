@@ -33,6 +33,7 @@ import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.proport
 import static org.firstinspires.ftc.teamcode.Utilities.NonConstants.fullyDown;
 
 import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -44,7 +45,7 @@ import org.firstinspires.ftc.teamcode.Utilities.Side;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
 import org.firstinspires.ftc.teamcode.Utilities.revextensions2.ExpansionHubEx;
 
-//@Disabled
+@Disabled
 @TeleOp(name="TeleOp", group="Iterative Opmode")
 public class CantonTeleOp extends OpMode {
 

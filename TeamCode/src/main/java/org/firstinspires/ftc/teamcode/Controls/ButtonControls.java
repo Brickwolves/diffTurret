@@ -13,7 +13,8 @@ public class ButtonControls {
         LB1, RB1,
         LB2, RB2,
         DPAD_UP, DPAD_DN, DPAD_L, DPAD_R, DPAD,
-        TOUCHPAD
+        TOUCHPAD,
+        OPTIONS, SHARE
     }
 
     public enum ButtonState {
@@ -50,6 +51,8 @@ public class ButtonControls {
         buttons.put(Input.DPAD_R,     new Button(() -> src.dpad_right));
         buttons.put(Input.DPAD,       new Button(() -> src.dpad_down || src.dpad_left || src.dpad_right || src.dpad_up));
         buttons.put(Input.TOUCHPAD,   new Button(() -> src.touchpad));
+        buttons.put(Input.OPTIONS,    new Button(() -> src.options));
+        buttons.put(Input.SHARE,      new Button(() -> src.share));
         buttons.put(Input.LB2,        new Button(() -> src.left_trigger > 0.75));
         buttons.put(Input.RB2,        new Button(() -> src.right_trigger > 0.75));
     }

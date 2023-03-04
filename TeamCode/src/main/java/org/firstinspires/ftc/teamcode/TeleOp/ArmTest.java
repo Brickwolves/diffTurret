@@ -22,6 +22,8 @@ import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.derivativeWeight;
 import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.integralWeight;
 import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.proportionalWeight;
+
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -31,7 +33,7 @@ import org.firstinspires.ftc.teamcode.Controls.Controller;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 import org.firstinspires.ftc.teamcode.Utilities.Side;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
-
+@Disabled
 @TeleOp(name="ArmTest TeleOp", group="Iterative Opmode")
 public class ArmTest extends OpMode {
 

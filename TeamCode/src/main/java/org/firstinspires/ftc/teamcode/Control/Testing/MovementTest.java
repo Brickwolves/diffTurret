@@ -112,6 +112,7 @@ public class MovementTest extends LinearOpMode {
                 telemetry.update();
                 multTelemetry.update();
 
+
             }
 
             while (opModeIsActive() && drive.followPath(path2, Movement.MovementDash.testingPower, 0, .95,.002, 2000, .25, false, true)) {

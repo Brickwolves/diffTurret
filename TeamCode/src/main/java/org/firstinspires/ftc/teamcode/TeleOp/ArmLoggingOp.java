@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.Utilities.Files.Clocks.SystemClockMillis;
 import org.firstinspires.ftc.teamcode.Utilities.Files.FileUtils.FileLogWriter;
 import org.firstinspires.ftc.teamcode.Utilities.Files.Loggers.GridLogger;
 
-//@Disabled
+@Disabled
 @TeleOp(name="ArmLogOpmode", group="Iterative Opmode")
 public class ArmLoggingOp extends OpMode {
 
