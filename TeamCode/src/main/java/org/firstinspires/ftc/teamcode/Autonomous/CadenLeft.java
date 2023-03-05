@@ -201,7 +201,7 @@ public class CadenLeft extends LinearOpMode {
         ElapsedTime runtime = new ElapsedTime();
         runtime.reset();
         double startPower = .6;
-        while(opModeIsActive() && runtime.seconds() < 4 && drive.followPath(preloadScore, startPower, heading, .55,.005, 2, .35, true, true)){
+        while(opModeIsActive() && runtime.seconds() < 3 && drive.followPath(preloadScore, startPower, heading, .55,.005, 2, .35, true, true)){
             if(drive.t > 0.3){
                 startPower = .5;
                 heading = .69;
@@ -213,7 +213,7 @@ public class CadenLeft extends LinearOpMode {
         //SCORE PRELOAD ON MID
         robot.scorer.autoDeposit(drive,0,-84,.69);
         int stackHeight = 5;
-        while (stackHeight > 1) {
+        while (stackHeight > 0) {
             if (stackHeight == 5) {
                 //MOVE TO WALL FROM SCORE PRELOAD - FIRST CYCLE
                 while(opModeIsActive() && drive.followPath(goToWallSetUp, 0.65, 1.57, .85,.005, 2000, .35, false, false)) {
@@ -260,7 +260,7 @@ public class CadenLeft extends LinearOpMode {
             double cycleHeading =1.57;
             double cycleSpeed = 0.6;
             runtime.reset();
-            while(opModeIsActive() && runtime.seconds() < 6 && drive.followPath(cycle, cycleSpeed, cycleHeading, .75,.005, 2, .35, true, false)){
+            while(opModeIsActive() && runtime.seconds() < 4 && drive.followPath(cycle, cycleSpeed, cycleHeading, .75,.005, 2, .35, true, false)){
                 if(drive.t>0.56){
                     cycleHeading = 2.19;
                     robot.scorer.autoMid();
@@ -294,14 +294,23 @@ public class CadenLeft extends LinearOpMode {
             while (signalSide == ONE && opModeIsActive()) {
                 drive.holdPosition(73, -130, 3.14);
                 robot.scorer.autoStart();
+                slidesOffsetAuto = robot.scorer.getHeight();
+                v4bOffsetAuto = robot.scorer.v4b.getCurrentPosition();
+                imuOffset = robot.gyro.getAngle();
             }
             while(signalSide == THREE && opModeIsActive()) {
                 drive.holdPosition(-43, -130, 3.14);
                 robot.scorer.autoStart();
+                slidesOffsetAuto = robot.scorer.getHeight();
+                v4bOffsetAuto = robot.scorer.v4b.getCurrentPosition();
+                imuOffset = robot.gyro.getAngle();
             }
             while(opModeIsActive()){
                 drive.holdPosition(21, -130,3.14);
                 robot.scorer.autoStart();
+                slidesOffsetAuto = robot.scorer.getHeight();
+                v4bOffsetAuto = robot.scorer.v4b.getCurrentPosition();
+                imuOffset = robot.gyro.getAngle();
             }
 
 
@@ -310,14 +319,14 @@ public class CadenLeft extends LinearOpMode {
             multTelemetry.addData("idfk",idfk);
             multTelemetry.update();
 
-            slidesOffsetAuto = robot.scorer.getHeight();
-            v4bOffsetAuto = robot.scorer.v4b.getCurrentPosition();
-            imuOffset = robot.gyro.getAngle();
+
 
         }
         multTelemetry.addData("idfk",idfk);
         multTelemetry.update();
     }
+
+
 
     private void buildPaths(){
         preloadScore = drive.getBezierCurve(preloadFromStart);
