@@ -74,11 +74,11 @@ public class CadenLeft extends LinearOpMode {
     double[][] wallSetUpFromPreload = {{0, -84}, {20, -102}};
     double[][] wallFromWallSetUp = {{20, -102}, {20, -133}, {63, -133}};
     double[][] stackFromWall = {{63, -133},{93,-133}};
-    double[][] cycleFromStack = {{93,-133}, {9,-133},{9, -120}};
-    double[][] park2FromCycle = {{9, -120}, {21, -136}};
+    double[][] cycleFromStack = {{93,-133}, {9,-133},{13, -118}};
+    double[][] park2FromCycle = {{13, -118}, {21, -136}};
     double[][] park1FromCycle = {{21,-136}, {73, -136}};
     double[][] park3FromCycle = {{21,-136}, {-43, -136}};
-    double[][] wallFromCycle = {{9,-120}, {63, -133}};
+    double[][] wallFromCycle = {{13, -118}, {63, -133}};
 
 
     Movement.Function[] preloadScore, goToWall, cycle, parkSignal1, parkSignal2, parkSignal3, goToWallCycle, approachStack, goToWallSetUp;
@@ -209,12 +209,12 @@ public class CadenLeft extends LinearOpMode {
         //SCORE PRELOAD ON MID
         robot.scorer.autoDeposit(drive,0,-84,.69);
         int stackHeight = 5;
-        while (stackHeight > 3) {
+        while (stackHeight > 1) {
             if (stackHeight == 5) {
                 //MOVE TO WALL FROM SCORE PRELOAD - FIRST CYCLE
-                while(opModeIsActive() && drive.followPath(goToWallSetUp, 0.7, 1.57, .85,.005, 2000, .35, false, false)) {
+                while(opModeIsActive() && drive.followPath(goToWallSetUp, 0.65, 1.57, .85,.005, 2000, .35, false, false)) {
                 }
-                while(opModeIsActive() && drive.followPath(goToWall, 0.7, 1.57, .85,.005, 2000, .35, false, false)){
+                while(opModeIsActive() && drive.followPath(goToWall, 0.6, 1.57, .85,.005, 2000, .35, false, false)){
                     if(drive.t > 0.5){
                         robot.scorer.stackPickup(stackHeight);
                         robot.scorer.open(false);
@@ -223,7 +223,7 @@ public class CadenLeft extends LinearOpMode {
 
             } else {
                 //MOVE TO WALL FROM CYCLE - LATER CYCLES
-                while(opModeIsActive() && drive.followPath(goToWallCycle, 0.7, 1.57, .85,.005, 2000, .35, false, false)){
+                while(opModeIsActive() && drive.followPath(goToWallCycle, 0.6, 1.57, .85,.005, 2000, .35, false, false)){
                     if(drive.t > 0.4) {
                         robot.scorer.stackPickup(stackHeight);
                         robot.scorer.open(false);
@@ -236,31 +236,33 @@ public class CadenLeft extends LinearOpMode {
             double power = .35;
             while(opModeIsActive() && drive.followPath(approachStack, power, 1.57, 1,.005, 5000, .25, true, false)){
                 if(drive.t > .2){
-                    power = .25;
+                    power = .3;
                 }
                 robot.scorer.slidesHold();
                 robot.scorer.v4bHold();
                 if(robot.scorer.beamBroken()){
+                    drive.stopDrive();
                     break;
                 }
             }
             //STACK ESCAPE HEIGHT
             robot.scorer.close();
-            robot.scorer.sleep(0.5,drive.odo);
+            robot.scorer.sleep(0.8,drive.odo);
             robot.scorer.stackEscape(stackHeight);
             robot.scorer.sleep(0.5,drive.odo);
             //GO TO MID AND SCORE
             double cycleHeading =1.57;
-            while(opModeIsActive() && drive.followPath(cycle, 0.7, cycleHeading, .75,.005, 2, .35, true, false)){
-                if(drive.t>0.5){
+            while(opModeIsActive() && drive.followPath(cycle, 0.5, cycleHeading, .75,.005, 2, .35, true, false)){
+                if(drive.t>0.7){
                     cycleHeading = 2.19;
                     robot.scorer.autoMid();
                 }
             }
-            robot.scorer.sleep(0.6,drive,9,-120,2.19);
-            robot.scorer.autoDeposit(drive,9,-120,2.19);
+            robot.scorer.autoMid();
+            robot.scorer.sleep(0.8,drive,13,-118,2.19);
+            robot.scorer.autoDeposit(drive,13,-118,2.19);
             //TODO DELETE
-            robot.scorer.sleep(1,drive,9,-120,2.19);
+            robot.scorer.sleep(1,drive,13,-118,2.19);
             stackHeight--;
         }
     }

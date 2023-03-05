@@ -7,10 +7,10 @@ public class PositionsAndSpeeds {
 
     @Config
     public static class SlidePositions {
-        public static int slidesHighJunction = 735;
-        public static int slidesHighFront = 600;//9000
+        public static int slidesHighJunction = 685;
+        public static int slidesHighFront = 570;//9000
         public static int slidesHighFunny = 490;
-        public static int slidesMidJunction = 225;
+        public static int slidesMidJunction = 350;
         public static int slidesMidAuto = 300;
         public static int slidesMidFunny = 110;
         public static int slidesMidFront = 240;

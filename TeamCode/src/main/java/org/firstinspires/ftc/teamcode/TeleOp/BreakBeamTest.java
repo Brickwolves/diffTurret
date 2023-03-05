@@ -97,6 +97,7 @@ public class BreakBeamTest extends OpMode {
     @Override
     public void loop() {
         Controller.update();
+        robot.scorer.open(false);
 
     /*
          ----------- L O G G I N G -----------

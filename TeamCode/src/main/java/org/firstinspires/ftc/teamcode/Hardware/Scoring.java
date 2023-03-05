@@ -182,7 +182,7 @@ public class Scoring {
     public void autoLow() {
         braceOut();
         sleep(0.4);
-        slides(1, 0);
+        slides(1, (int)slidesOffset);
         v4b(v4bScoreFrontLow);
         grabber(grabberScore);
 
@@ -194,10 +194,11 @@ public class Scoring {
         close();
         v4b(v4bHide);
         sleep(0.4,drive,x,y,heading);
-        slides(1, 0);
+        slides(1, (int)slidesOffset);
 //        braceOut();
         sleep(0.6,drive,x,y,heading);
         v4b(v4bDown);
+        open(false);
     }
 
     public void autoDeposit() {
@@ -206,7 +207,7 @@ public class Scoring {
         close();
         v4b(v4bHide);
         sleep(0.4);
-        slides(1, 0);
+        slides(1, (int)slidesOffset);
         braceOut();
         v4b(v4bDown);
     }
@@ -474,14 +475,14 @@ public class Scoring {
         braceOut();
         if (true) {
             close();
-            slides(1,0);
+            slides(1, (int)slidesOffset);
             v4b(v4bScoreFrontLow);
             if(time.seconds() > .2){
                 grabber(grabberScoreFront);
             }
         }else{
             close();
-            slides(1,0);
+            slides(1, (int)slidesOffset);
             if(time.seconds() > .2){
                 v4b(v4bScoreFrontLow);
                 grabber(grabberScoreFunnyFront);
@@ -523,7 +524,7 @@ public class Scoring {
     public void lowBack(boolean funny){
         braceIn();
         close();
-        slides(1,0);
+        slides(1, (int)slidesOffset);
         v4b(v4bScoreBackLow);
         if(time.seconds() > .2){
             if(funny) {
@@ -551,7 +552,7 @@ public class Scoring {
             v4b(v4bHide);
         }
         if(inRange(1.5,time.seconds(),1.7)){
-            slides(1,0);
+            slides(1, (int)slidesOffset);
             if(coneAngle.equals("Straight")) {
                 open(false);
             } else if(coneAngle.equals("Forwards")) {
@@ -561,7 +562,7 @@ public class Scoring {
         if(2<time.seconds()) {
             if(coneAngle.equals("Straight")) {
                 grabber(grabberDown);
-                slides(1,0);
+                slides(1, (int)slidesOffset);
             } else if(coneAngle.equals("Forwards")) {
                 grabber(grabberTip);
                 slides(.5, slidesTippedHeight);
@@ -585,7 +586,7 @@ public class Scoring {
         grabber(grabberDown);
         v4b(v4bDown);
         if (time.seconds() > 1) {
-            slides(1, 0);
+            slides(1, (int)slidesOffset);
         }
     }
 
@@ -594,7 +595,7 @@ public class Scoring {
     //Immediately Drop Slides
     public void crashSlides(){
         close();
-        slides(1,0);
+        slides(1, (int)slidesOffset);
         v4b(v4bDown);
     }
 
@@ -604,7 +605,7 @@ public class Scoring {
         grabber(grabberStartAuto);
         v4bNeutral();
         v4BTarget = v4bStartAuto;
-        slides(1,0);
+        slides(1, (int)slidesOffset);
     }
 
     public void sleep(double sleepTime, TwoWheelOdometry odo){
