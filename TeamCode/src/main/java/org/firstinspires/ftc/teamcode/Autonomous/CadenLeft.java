@@ -39,7 +39,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import java.util.ArrayList;
 
 
-@Autonomous(name="Left 1+2", group="Autonomous Linear Opmode")
+@Autonomous(name="Left 1+4", group="Autonomous Linear Opmode")
 public class CadenLeft extends LinearOpMode {
     Robot robot;
 
@@ -70,15 +70,15 @@ public class CadenLeft extends LinearOpMode {
 
     Movement drive;
 
-    double[][] preloadFromStart = {{0, 0}, {18, -26}, {18, -82}, {7, -90}};
-    double[][] wallSetUpFromPreload = {{7, -90}, {20, -102}};
+    double[][] preloadFromStart = {{0, 0}, {18, -26}, {18, -82}, {7, -88}};
+    double[][] wallSetUpFromPreload = {{7, -88}, {20, -102}};
     double[][] wallFromWallSetUp = {{20, -102}, {20, -133}, {63, -133}};
     double[][] stackFromWall = {{63, -133}, {93,-133}};
-    double[][] cycleFromStack = {{93,-133}, {6, -113}};
-    double[][] park2FromCycle = {{6, -113}, {21, -136}};
-    double[][] park1FromCycle = {{6, -113}, {73, -136}};
-    double[][] park3FromCycle = {{6, -113}, {-43, -136}};
-    double[][] wallFromCycle = {{6, -113},{13, -140}, {63, -133}};
+    double[][] cycleFromStack = {{93,-133}, {7, -114}};
+    double[][] park2FromCycle = {{7, -114}, {21, -136}};
+    double[][] park1FromCycle = {{7, -114}, {73, -136}};
+    double[][] park3FromCycle = {{7, -114}, {-43, -136}};
+    double[][] wallFromCycle = {{7, -114},{13, -140}, {63, -133}};
 
 
     Movement.Function[] preloadScore, goToWall, cycle, parkSignal1, parkSignal2, parkSignal3, goToWallCycle, approachStack, goToWallSetUp;
@@ -203,7 +203,7 @@ public class CadenLeft extends LinearOpMode {
         double startPower = .6;
         while(opModeIsActive() && runtime.seconds() < 3 && drive.followPath(preloadScore, startPower, heading, .55,.005, 2, .35, true, true)){
             if(drive.t > 0.3){
-                startPower = .5;
+                startPower = .45;
                 heading = .69;
                 robot.scorer.braceOut();
                 robot.scorer.autoMid();
@@ -251,7 +251,7 @@ public class CadenLeft extends LinearOpMode {
             }
             //STACK ESCAPE HEIGHT
             robot.scorer.close();
-            robot.scorer.sleep(0.3,drive.odo);
+            robot.scorer.sleep(0.4,drive.odo);
             robot.scorer.stackEscape(stackHeight);
             robot.scorer.sleep(0.5,drive.odo);
             double location[] = drive.odo.getLocation();
@@ -260,7 +260,7 @@ public class CadenLeft extends LinearOpMode {
             double cycleHeading =1.57;
             double cycleSpeed = 0.6;
             runtime.reset();
-            while(opModeIsActive() && runtime.seconds() < 4 && drive.followPath(cycle, cycleSpeed, cycleHeading, .75,.005, 2, .35, true, false)){
+            while(opModeIsActive() && runtime.seconds() < 2.5 && drive.followPath(cycle, cycleSpeed, cycleHeading, .75,.005, 2, .35, true, false)){
                 if(drive.t>0.56){
                     cycleHeading = 2.19;
                     robot.scorer.autoMid();
@@ -272,6 +272,10 @@ public class CadenLeft extends LinearOpMode {
             robot.scorer.autoDeposit(drive,6, -113,2.19);
 
             stackHeight--;
+
+            if(runtime.seconds()>25){
+                break;
+            }
 
         }
     }
@@ -289,6 +293,7 @@ public class CadenLeft extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
+            runtime.reset();
             midCycleAutos();
             robot.scorer.sleep(0.3);
             while (signalSide == ONE && opModeIsActive()) {
