@@ -70,15 +70,15 @@ public class CadenLeft extends LinearOpMode {
 
     Movement drive;
 
-    double[][] preloadFromStart = {{0, 0}, {18, -26}, {18, -64}, {0, -84}};
-    double[][] wallSetUpFromPreload = {{0, -84}, {20, -102}};
+    double[][] preloadFromStart = {{0, 0}, {18, -26}, {18, -82}, {7, -90}};
+    double[][] wallSetUpFromPreload = {{7, -90}, {20, -102}};
     double[][] wallFromWallSetUp = {{20, -102}, {20, -133}, {63, -133}};
     double[][] stackFromWall = {{63, -133}, {93,-133}};
-    double[][] cycleFromStack = {{93,-133}, {12, -116}};
-    double[][] park2FromCycle = {{12, -116}, {21, -136}};
-    double[][] park1FromCycle = {{12, -116}, {73, -136}};
-    double[][] park3FromCycle = {{12, -116}, {-43, -136}};
-    double[][] wallFromCycle = {{12, -116},{13, -140}, {63, -133}};
+    double[][] cycleFromStack = {{93,-133}, {6, -113}};
+    double[][] park2FromCycle = {{6, -113}, {21, -136}};
+    double[][] park1FromCycle = {{6, -113}, {73, -136}};
+    double[][] park3FromCycle = {{6, -113}, {-43, -136}};
+    double[][] wallFromCycle = {{6, -113},{13, -140}, {63, -133}};
 
 
     Movement.Function[] preloadScore, goToWall, cycle, parkSignal1, parkSignal2, parkSignal3, goToWallCycle, approachStack, goToWallSetUp;
@@ -198,14 +198,18 @@ public class CadenLeft extends LinearOpMode {
     public void midCycleAutos() {
         //SET UP TO SCORE PRELOAD
         double heading = 0;
-        while(opModeIsActive() && drive.followPath(preloadScore, 0.7, heading, .65,.005, 2, .35, true, true)){
-            if(drive.t > 0.5){
+        ElapsedTime runtime = new ElapsedTime();
+        runtime.reset();
+        double startPower = .6;
+        while(opModeIsActive() && runtime.seconds() < 4 && drive.followPath(preloadScore, startPower, heading, .55,.005, 2, .35, true, true)){
+            if(drive.t > 0.3){
+                startPower = .5;
                 heading = .69;
                 robot.scorer.braceOut();
                 robot.scorer.autoMid();
             }
         }
-        robot.scorer.sleep(0.6,drive,0,-84,.69);
+        robot.scorer.sleep(0.24,drive,0,-84,.69);
         //SCORE PRELOAD ON MID
         robot.scorer.autoDeposit(drive,0,-84,.69);
         int stackHeight = 5;
@@ -233,6 +237,7 @@ public class CadenLeft extends LinearOpMode {
 
             //DRIVE TO WALL WHILE WAITING FOR BREAK BEAMS
             double power = .35;
+
             while(opModeIsActive() && drive.followPath(approachStack, power, 1.57, 1,.005, 5000, .25, true, false)){
                 if(drive.t > .2){
                     power = .3;
@@ -246,23 +251,28 @@ public class CadenLeft extends LinearOpMode {
             }
             //STACK ESCAPE HEIGHT
             robot.scorer.close();
-            robot.scorer.sleep(0.8,drive.odo);
+            robot.scorer.sleep(0.3,drive.odo);
             robot.scorer.stackEscape(stackHeight);
             robot.scorer.sleep(0.5,drive.odo);
+            double location[] = drive.odo.getLocation();
+            drive.odo.setPosition(location[0] + 2, location[1] + 1);
             //GO TO MID AND SCORE
             double cycleHeading =1.57;
             double cycleSpeed = 0.6;
-            while(opModeIsActive() && drive.followPath(cycle, cycleSpeed, cycleHeading, .75,.005, 2, .35, true, false)){
-                if(drive.t>0.7){
-                    cycleSpeed = 0.7;
+            runtime.reset();
+            while(opModeIsActive() && runtime.seconds() < 6 && drive.followPath(cycle, cycleSpeed, cycleHeading, .75,.005, 2, .35, true, false)){
+                if(drive.t>0.56){
                     cycleHeading = 2.19;
                     robot.scorer.autoMid();
                 }
             }
+            //SCORE
             robot.scorer.autoMid();
-            robot.scorer.sleep(0.8,drive,12, -116,2.19);
-            robot.scorer.autoDeposit(drive,12, -116,2.19);
+            robot.scorer.sleep(0.4,drive,6, -113,2.19);
+            robot.scorer.autoDeposit(drive,6, -113,2.19);
+
             stackHeight--;
+
         }
     }
 
@@ -280,17 +290,19 @@ public class CadenLeft extends LinearOpMode {
 
         if (opModeIsActive()) {
             midCycleAutos();
-//            if (signalSide == ONE) {
-//                robot.drivetrain.followTrajectorySequence(moveToWallThird);
-//                robot.drivetrain.turn(Math.toRadians(90));
-//            }else if(signalSide == TWO){
-//                robot.drivetrain.followTrajectorySequence(park2);
-//                robot.drivetrain.turn(Math.toRadians(135));
-//            }else if (signalSide == THREE){
-//                robot.drivetrain.followTrajectorySequence(park2);
-//                robot.drivetrain.followTrajectorySequence(park3);
-//                robot.drivetrain.turn(Math.toRadians(135));
-//            }
+            robot.scorer.sleep(0.3);
+            while (signalSide == ONE && opModeIsActive()) {
+                drive.holdPosition(73, -130, 3.14);
+                robot.scorer.autoStart();
+            }
+            while(signalSide == THREE && opModeIsActive()) {
+                drive.holdPosition(-43, -130, 3.14);
+                robot.scorer.autoStart();
+            }
+            while(opModeIsActive()){
+                drive.holdPosition(21, -130,3.14);
+                robot.scorer.autoStart();
+            }
 
 
             multTelemetry.addData("signal side", signalSide);

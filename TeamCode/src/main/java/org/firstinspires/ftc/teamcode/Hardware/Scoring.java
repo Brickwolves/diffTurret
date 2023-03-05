@@ -190,13 +190,13 @@ public class Scoring {
 
     public void autoDeposit(Movement drive, double x, double y, double heading) {
         openScore();
-        sleep(0.4,drive,x,y,heading);
+        sleep(0.2,drive,x,y,heading);
         close();
         v4b(v4bHide);
-        sleep(0.4,drive,x,y,heading);
+        sleep(0.1,drive,x,y,heading);
         slides(1, (int)slidesOffset);
 //        braceOut();
-        sleep(0.6,drive,x,y,heading);
+        sleep(0.25,drive,x,y,heading);
         v4b(v4bDown);
         open(false);
     }

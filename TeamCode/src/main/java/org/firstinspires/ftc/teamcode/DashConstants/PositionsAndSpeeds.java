@@ -11,12 +11,12 @@ public class PositionsAndSpeeds {
         public static int slidesHighFront = 570;//9000
         public static int slidesHighFunny = 490;
         public static int slidesMidJunction = 350;
-        public static int slidesMidAuto = 300;
+        public static int slidesMidAuto = 315;
         public static int slidesMidFunny = 110;
         public static int slidesMidFront = 240;
         public static int slidesDepositDrop = 20;  //1000
         public static int slidesTippedHeight = 90;
-        public static int slidesStackIncrease = 52;
+        public static int slidesStackIncrease = 45;
         public static int slidesAdjust = 3;
 
         public static double SlidesP = .003, SlidesI = 0, SlidesD = .0002, F = .3;
