@@ -42,12 +42,12 @@ public class PositionsAndSpeeds {
 
     @Config
     public static class grabberPositions {
-        public static double grabberDown = 0.89;
+        public static double grabberDown = 0.88;
         public static double grabberScore = 0.9;
         public static double grabberScoreAuto = 0.90;
         public static double grabberScoreFront = 0.86;
         public static double grabberScoreFunnyFront = 0.75;
-        public static double grabberScoreFunny = 0.83;
+        public static double grabberScoreFunny = 0.8;
         public static double grabberTip = 0.93;
         public static double grabberHide = 0.85;
         public static double grabberStartAuto = 0.81;

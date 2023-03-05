@@ -222,8 +222,8 @@ public class ParkOnlyLeft extends LinearOpMode {
             multTelemetry.addData("ending auto", "ok");
             multTelemetry.update();
 
-            slidesOffset = robot.scorer.getHeight();
-            v4bOffset = robot.scorer.v4b.getCurrentPosition();
+            slidesOffset = 0;
+            v4bOffset = 0;
         }
     }
 }

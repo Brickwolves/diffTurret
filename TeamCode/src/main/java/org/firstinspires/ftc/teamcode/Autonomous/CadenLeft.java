@@ -245,8 +245,9 @@ public class CadenLeft extends LinearOpMode {
                 }
                 robot.scorer.slidesHold();
                 robot.scorer.v4bHold();
-                if(robot.scorer.beamBroken() || driveTime.seconds()>4){
+                if(robot.scorer.beamBroken() || driveTime.seconds()>5){
                     drive.stopDrive();
+                    robot.scorer.sleep(.2);
                     break;
                 }
             }

@@ -83,7 +83,7 @@ public class IMU {
 
         // Update the previous angle
         previousAngle = currentAngle;
-        return currentAngle + deltaAngle + offsetAngle - datum - imuOffset;
+        return currentAngle + deltaAngle + offsetAngle - datum;
     }
 
     public double rawAngle(){

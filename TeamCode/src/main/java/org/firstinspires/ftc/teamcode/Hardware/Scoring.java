@@ -329,7 +329,7 @@ public class Scoring {
         armAccelFilter.setInnovationGain(Vinno);
         //v4bPID.setWeights(vP, vI, vD);
         feedforward = new SimpleMotorFeedforward(VkS, VkV, VkA);
-        int newTarget = interpolate(target - (int)v4bOffsetAuto - (int)v4bOffset);
+        int newTarget = interpolate(target + (int)v4bOffsetAuto - (int)v4bOffset);
         double error = newTarget - v4b.getCurrentPosition();
         double velocity = error * vP;
         double accel = (velocity - prevV4BVelocity) / loopTimer.getSeconds();
@@ -392,7 +392,7 @@ public class Scoring {
 
     public void slides(double power, int target){
         slidesTarget = target;
-        double newTarget = target - slidesOffset - slidesOffsetAuto;
+        double newTarget = target - slidesOffset + slidesOffsetAuto;
         double current = (-spool.getCurrentPosition() + spool2.getCurrentPosition()) * .5;
         double dist = newTarget - current;
 

@@ -424,7 +424,6 @@ public class FullRegularTeleOp extends OpMode {
             //Gyro Reset
             if (controller.get(CROSS, TAP)) {
                 robot.gyro.reset();
-                Constants.imuOffset = 0;
                 pid_on = false;
             }
             // Turn off PID if we manually turn
