@@ -84,7 +84,7 @@ public class CadenLeft extends LinearOpMode {
     Movement.Function[] preloadScore, goToWall, cycle, parkSignal1, parkSignal2, parkSignal3, goToWallCycle, approachStack, goToWallSetUp;
 
     // Declare OpMode members.
-    private ElapsedTime runtime = new ElapsedTime();
+    private ElapsedTime timeOutTime = new ElapsedTime();
     public SignalPipeline.SignalSide signalSide;
 
 
@@ -237,14 +237,15 @@ public class CadenLeft extends LinearOpMode {
 
             //DRIVE TO WALL WHILE WAITING FOR BREAK BEAMS
             double power = .35;
-
+            ElapsedTime driveTime = new ElapsedTime();
+            driveTime.reset();
             while(opModeIsActive() && drive.followPath(approachStack, power, 1.57, 1,.005, 5000, .25, true, false)){
                 if(drive.t > .2){
                     power = .3;
                 }
                 robot.scorer.slidesHold();
                 robot.scorer.v4bHold();
-                if(robot.scorer.beamBroken()){
+                if(robot.scorer.beamBroken() || driveTime.seconds()>4){
                     drive.stopDrive();
                     break;
                 }
@@ -273,7 +274,7 @@ public class CadenLeft extends LinearOpMode {
 
             stackHeight--;
 
-            if(runtime.seconds()>25){
+            if(timeOutTime.seconds()>25){
                 break;
             }
 
@@ -293,7 +294,7 @@ public class CadenLeft extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
-            runtime.reset();
+            timeOutTime.reset();
             midCycleAutos();
             robot.scorer.sleep(0.3);
             while (signalSide == ONE && opModeIsActive()) {
