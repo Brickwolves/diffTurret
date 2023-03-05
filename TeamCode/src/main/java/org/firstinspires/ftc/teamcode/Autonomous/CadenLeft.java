@@ -73,12 +73,12 @@ public class CadenLeft extends LinearOpMode {
     double[][] preloadFromStart = {{0, 0}, {18, -26}, {18, -64}, {0, -84}};
     double[][] wallSetUpFromPreload = {{0, -84}, {20, -102}};
     double[][] wallFromWallSetUp = {{20, -102}, {20, -133}, {63, -133}};
-    double[][] stackFromWall = {{63, -133},{93,-133}};
-    double[][] cycleFromStack = {{93,-133}, {9,-133},{13, -118}};
-    double[][] park2FromCycle = {{13, -118}, {21, -136}};
-    double[][] park1FromCycle = {{21,-136}, {73, -136}};
-    double[][] park3FromCycle = {{21,-136}, {-43, -136}};
-    double[][] wallFromCycle = {{13, -118}, {63, -133}};
+    double[][] stackFromWall = {{63, -133}, {93,-133}};
+    double[][] cycleFromStack = {{93,-133}, {12, -116}};
+    double[][] park2FromCycle = {{12, -116}, {21, -136}};
+    double[][] park1FromCycle = {{12, -116}, {73, -136}};
+    double[][] park3FromCycle = {{12, -116}, {-43, -136}};
+    double[][] wallFromCycle = {{12, -116},{13, -140}, {63, -133}};
 
 
     Movement.Function[] preloadScore, goToWall, cycle, parkSignal1, parkSignal2, parkSignal3, goToWallCycle, approachStack, goToWallSetUp;
@@ -223,15 +223,14 @@ public class CadenLeft extends LinearOpMode {
 
             } else {
                 //MOVE TO WALL FROM CYCLE - LATER CYCLES
-                while(opModeIsActive() && drive.followPath(goToWallCycle, 0.6, 1.57, .85,.005, 2000, .35, false, false)){
+                while(opModeIsActive() && drive.followPath(goToWallCycle, 0.6, 1.57, .85,.005, 2000, .35, true, true)){
                     if(drive.t > 0.4) {
                         robot.scorer.stackPickup(stackHeight);
                         robot.scorer.open(false);
                     }
                 }
             }
-            //TODO DELETE
-//            robot.scorer.sleep(1,drive,63,-133,1.57);
+
             //DRIVE TO WALL WHILE WAITING FOR BREAK BEAMS
             double power = .35;
             while(opModeIsActive() && drive.followPath(approachStack, power, 1.57, 1,.005, 5000, .25, true, false)){
@@ -252,17 +251,17 @@ public class CadenLeft extends LinearOpMode {
             robot.scorer.sleep(0.5,drive.odo);
             //GO TO MID AND SCORE
             double cycleHeading =1.57;
-            while(opModeIsActive() && drive.followPath(cycle, 0.5, cycleHeading, .75,.005, 2, .35, true, false)){
+            double cycleSpeed = 0.6;
+            while(opModeIsActive() && drive.followPath(cycle, cycleSpeed, cycleHeading, .75,.005, 2, .35, true, false)){
                 if(drive.t>0.7){
+                    cycleSpeed = 0.7;
                     cycleHeading = 2.19;
                     robot.scorer.autoMid();
                 }
             }
             robot.scorer.autoMid();
-            robot.scorer.sleep(0.8,drive,13,-118,2.19);
-            robot.scorer.autoDeposit(drive,13,-118,2.19);
-            //TODO DELETE
-            robot.scorer.sleep(1,drive,13,-118,2.19);
+            robot.scorer.sleep(0.8,drive,12, -116,2.19);
+            robot.scorer.autoDeposit(drive,12, -116,2.19);
             stackHeight--;
         }
     }
@@ -316,7 +315,7 @@ public class CadenLeft extends LinearOpMode {
         parkSignal2 = drive.getLine(park2FromCycle);
         parkSignal1 = drive.getLine(park1FromCycle);
         parkSignal3 = drive.getLine(park3FromCycle);
-        goToWallCycle = drive.getLine(wallFromCycle);
+        goToWallCycle = drive.getBezierCurve(wallFromCycle);
         approachStack = drive.getLine(stackFromWall);
     }
 }
