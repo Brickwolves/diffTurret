@@ -28,7 +28,7 @@ public class PositionsAndSpeeds {
         public static int v4bHide = -20;
         public static int v4bDownFunny = -40;
         public static int v4bScoreBack = 167;
-        public static int v4bScoreBackAuto = 170;
+        public static int v4bScoreBackAuto = 173;
         public static int v4bScoreBackLow = 185;
         public static int v4bScoreFront = 35;
         public static int v4bScoreFrontLow = 15;
@@ -44,7 +44,7 @@ public class PositionsAndSpeeds {
     public static class grabberPositions {
         public static double grabberDown = 0.88;
         public static double grabberScore = 0.9;
-        public static double grabberScoreAuto = 0.90;
+        public static double grabberScoreAuto = 0.89;
         public static double grabberScoreFront = 0.86;
         public static double grabberScoreFunnyFront = 0.75;
         public static double grabberScoreFunny = 0.8;

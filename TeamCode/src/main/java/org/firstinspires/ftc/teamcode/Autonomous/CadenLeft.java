@@ -213,7 +213,7 @@ public class CadenLeft extends LinearOpMode {
         //SCORE PRELOAD ON MID
         robot.scorer.autoDeposit(drive,0,-84,.69);
         int stackHeight = 5;
-        while (stackHeight > 0) {
+        while (stackHeight > 1) {
             if (stackHeight == 5) {
                 //MOVE TO WALL FROM SCORE PRELOAD - FIRST CYCLE
                 while(opModeIsActive() && drive.followPath(goToWallSetUp, 0.65, 1.57, .85,.005, 2000, .35, false, false)) {
@@ -245,9 +245,9 @@ public class CadenLeft extends LinearOpMode {
                 }
                 robot.scorer.slidesHold();
                 robot.scorer.v4bHold();
-                if(robot.scorer.beamBroken() || driveTime.seconds()>5){
+                if(robot.scorer.beamBroken()){
                     drive.stopDrive();
-                    robot.scorer.sleep(.2);
+                    robot.scorer.sleep(.4);
                     break;
                 }
             }
@@ -301,23 +301,23 @@ public class CadenLeft extends LinearOpMode {
             while (signalSide == ONE && opModeIsActive()) {
                 drive.holdPosition(73, -130, 3.14);
                 robot.scorer.autoStart();
-                slidesOffsetAuto = robot.scorer.getHeight();
-                v4bOffsetAuto = robot.scorer.v4b.getCurrentPosition();
-                imuOffset = robot.gyro.getAngle();
+                slidesOffsetAuto = 0;
+                v4bOffsetAuto = 0;
+                imuOffset = 0;
             }
             while(signalSide == THREE && opModeIsActive()) {
                 drive.holdPosition(-43, -130, 3.14);
                 robot.scorer.autoStart();
-                slidesOffsetAuto = robot.scorer.getHeight();
-                v4bOffsetAuto = robot.scorer.v4b.getCurrentPosition();
-                imuOffset = robot.gyro.getAngle();
+                slidesOffsetAuto = 0;
+                v4bOffsetAuto = 0;
+                imuOffset = 0;
             }
             while(opModeIsActive()){
                 drive.holdPosition(21, -130,3.14);
                 robot.scorer.autoStart();
-                slidesOffsetAuto = robot.scorer.getHeight();
-                v4bOffsetAuto = robot.scorer.v4b.getCurrentPosition();
-                imuOffset = robot.gyro.getAngle();
+                slidesOffsetAuto = 0;
+                v4bOffsetAuto = 0;
+                imuOffset = 0;
             }
 
 
