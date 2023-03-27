@@ -11,13 +11,13 @@ import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.INV
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.SHIFTED_X;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.X;
 
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.rateOfChange;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.IMU_DATUM;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.derivativeWeight;
 import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.integralWeight;
 import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.proportionalWeight;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.rateOfChange;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -65,7 +65,6 @@ public class BasicTeleOp extends OpMode {
         pid = new PID(proportionalWeight, integralWeight, derivativeWeight);
 
 
-        robot = new Robot(true);
         controller = new Controller(gamepad1);
         controller2 = new Controller(gamepad2);
         /*
