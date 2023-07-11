@@ -5,12 +5,13 @@ import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Control.Hardware.V6Hardware;
 import org.firstinspires.ftc.teamcode.Control.Movement;
 
-
+@Disabled
 @Autonomous(name="Movement Test", group="Testing")
 public class MovementTest extends LinearOpMode {
 

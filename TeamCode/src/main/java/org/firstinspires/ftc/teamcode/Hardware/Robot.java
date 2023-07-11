@@ -19,10 +19,21 @@ public class Robot {
       initRobot();
    }
 
+   public Robot(int thing){
+      initRobotFunny();
+   }
+
    public void initRobot() {
 
       drivetrain = new Mecanum();
       gyro = new IMU("imu");
+
+
+   }
+
+   public void initRobotFunny() {
+
+      drivetrain = new Mecanum();
 
 
    }

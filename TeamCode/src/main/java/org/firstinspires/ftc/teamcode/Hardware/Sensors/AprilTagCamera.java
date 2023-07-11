@@ -11,23 +11,21 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvPipeline;
 
-public class Camera {
+public class AprilTagCamera {
 
     private OpenCvCamera webcam;
     private String id;
-    public TurretPipeline pipeline = new TurretPipeline();
-    public RGBDiagnostic pipeline2 = new RGBDiagnostic();
-    public AprilTagPipeline pipeline3 = new AprilTagPipeline(0.04, 1399.629,1399.22,653.019,364.454);
+    public AprilTagPipeline pipeline = new AprilTagPipeline(0.04, 1399.629,1399.22,653.019,364.454);
 
 
-    public Camera(String name){
+    public AprilTagCamera(String name){
         id = name;
 
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, name), cameraMonitorViewId);
 
-        webcam.setPipeline(pipeline3);
+        webcam.setPipeline(pipeline);
 
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
@@ -50,9 +48,6 @@ public class Camera {
 
         });
 
-
     }
-
-
-
 }
+
