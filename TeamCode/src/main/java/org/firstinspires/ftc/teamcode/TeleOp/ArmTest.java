@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState.DOWN;
+import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState.TAP;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState.TOGGLE;
+import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.CIRCLE;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.LB1;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.LB2;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.RB1;
@@ -10,7 +12,9 @@ import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.RIG
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.INVERT_SHIFTED_Y;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.SHIFTED_X;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.X;
-
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bDown;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.V4BPositions.v4bScoreBack;
+import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.grabberPositions.grabberHide;
 import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.rateOfChange;
 import static org.firstinspires.ftc.teamcode.Utilities.Constants.IMU_DATUM;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
@@ -29,10 +33,9 @@ import org.firstinspires.ftc.teamcode.Controls.Controller;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 import org.firstinspires.ftc.teamcode.Utilities.Side;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
-
 @Disabled
-@TeleOp(name="Basic TeleOp", group="Iterative Opmode")
-public class BasicTeleOp extends OpMode {
+@TeleOp(name="ArmTest TeleOp", group="Iterative Opmode")
+public class ArmTest extends OpMode {
 
     // Declare OpMode members.
     private final ElapsedTime runtime = new ElapsedTime();
@@ -43,7 +46,7 @@ public class BasicTeleOp extends OpMode {
     private boolean pid_on_last_cycle = false;
     private boolean KETurns = false;
     public boolean isTipped = false;
-
+    public boolean isDown = true;
 
 
     // Declare OpMode members.
@@ -116,8 +119,8 @@ public class BasicTeleOp extends OpMode {
 
         double power;
 
-
-
+        robot.scorer.grabber(grabberHide);
+        robot.scorer.close();
         //PID and Kinetic Turning
         double rotation = controller.get(RIGHT, X);
 
@@ -128,6 +131,20 @@ public class BasicTeleOp extends OpMode {
             pid_on = false;
         } else if (currentRateOfChange <= rateOfChange) pid_on = true;
 
+
+
+        if(controller2.get(CIRCLE,TAP)){
+            isDown = !isDown;
+
+        }
+
+        if(isDown) {
+            robot.scorer.v4b(v4bDown);
+        }
+
+        else {
+            robot.scorer.v4b(v4bScoreBack);
+        }
 
         // Lock the heading if we JUST turned PID on
         // Correct our heading if the PID has and is still on
@@ -162,10 +179,7 @@ public class BasicTeleOp extends OpMode {
 
         //SIDE
         Side.red = !controller2.get(RB1, TOGGLE);
-    /*
-         ----------- L O G G I N G -----------
-                                            */
-        multTelemetry.addData("Tipping?", isTipped);
+        multTelemetry.addData("isDown", isDown);
         multTelemetry.update();
     }
 
