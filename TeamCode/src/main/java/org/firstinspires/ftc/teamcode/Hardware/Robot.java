@@ -54,22 +54,11 @@ public class Robot {
    }
 
 
-   public Robot(int thing){
-      initRobotFunny();
-   }
-
    public void initRobot() {
 
       drivetrain = new LupineMecanumDrive(hardwareMap);
       gyro = new IMU("imu");
 //      localizer = new StandardTrackingWheelLocalizer(hardwareMap);
-
-
-   }
-
-   public void initRobotFunny() {
-
-      drivetrain = new Mecanum();
 
 
    }

@@ -58,9 +58,6 @@ public class PositionsAndSpeeds {
 
 
     public static double rateOfChange = 100;
-    public static double yp = -0.005;
-    public static double yi = 0;
-    public static double yd = 0;
 
 
     public static double clawOpen = 0.36;
@@ -81,5 +78,4 @@ public class PositionsAndSpeeds {
 
 
 }
-
 

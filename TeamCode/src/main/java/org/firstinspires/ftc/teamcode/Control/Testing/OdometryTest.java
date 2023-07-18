@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.Control.Testing;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -9,7 +8,6 @@ import org.firstinspires.ftc.teamcode.Control.Hardware.Hardware;
 import org.firstinspires.ftc.teamcode.Control.Hardware.V6Hardware;
 import org.firstinspires.ftc.teamcode.Control.Localization.TwoWheelOdometry;
 
-@Disabled
 @Autonomous(name="Odometer Test", group="Testing")
 public class OdometryTest extends LinearOpMode {
 

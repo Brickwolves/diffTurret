@@ -3,32 +3,31 @@ package org.firstinspires.ftc.teamcode.Hardware.Sensors;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.Diagnostics.RGBDiagnostic;
-import org.firstinspires.ftc.teamcode.Vision.AprilTagPipeline;
-import org.firstinspires.ftc.teamcode.Vision.TurretPipeline;
+import org.firstinspires.ftc.teamcode.Vision.ColorPicker;
+import org.firstinspires.ftc.teamcode.Vision.SignalPipeline;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvPipeline;
 
 public class Camera {
 
+    public SignalPipeline sigPipe = new SignalPipeline();
+    public SignalPipeline junkPipe = new SignalPipeline();
+    public ColorPicker colorPicker = new ColorPicker();
     private OpenCvCamera webcam;
     private String id;
-    public TurretPipeline pipeline = new TurretPipeline();
-    public RGBDiagnostic pipeline2 = new RGBDiagnostic();
-    public AprilTagPipeline pipeline3 = new AprilTagPipeline(0.04, 1399.629,1399.22,653.019,364.454);
+    private boolean display2Phone;
 
 
-    public Camera(String name){
-        id = name;
+    public Camera(String id, boolean display2Phone){
+        this.id = id;
 
-
+        // If we enabled display, add the cameraMonitorViewId to the creation of our webcam
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, name), cameraMonitorViewId);
+        webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, id), cameraMonitorViewId);
 
-        webcam.setPipeline(pipeline3);
 
+        //start streaming
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
@@ -43,16 +42,40 @@ public class Camera {
             {
 
             }
-
-            public void close(){
-                webcam.closeCameraDevice();
-            }
-
         });
 
+        // Set the pipeline depending on id
 
     }
 
+    public Camera(String id){
+        this.id = id;
+
+        //no display to phone
+        webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, id));
+
+        //start streaming
+        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        {
+            @Override
+            public void onOpened()
+            {
+
+                webcam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_LEFT);
+            }
+
+            @Override
+            public void onError(int errorCode)
+            {
+
+            }
+        });
+
+
+        // Set the pipeline depending on id
+
+
+    }
 
 
 }
