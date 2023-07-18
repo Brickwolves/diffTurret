@@ -1,39 +1,20 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState.DOWN;
-import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.ButtonState.TOGGLE;
-import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.LB1;
-import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.LB2;
-import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.RB1;
 import static org.firstinspires.ftc.teamcode.Controls.ButtonControls.Input.RB2;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.LEFT;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Input.RIGHT;
-import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.INVERT_SHIFTED_Y;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.INVERT_Y;
-import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.SHIFTED_X;
 import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.X;
-
-import static org.firstinspires.ftc.teamcode.Controls.JoystickControls.Value.Y;
-import static org.firstinspires.ftc.teamcode.Utilities.Constants.IMU_DATUM;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
-import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.derivativeWeight;
-import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.integralWeight;
-import static org.firstinspires.ftc.teamcode.Utilities.ControllerWeights.proportionalWeight;
-import static org.firstinspires.ftc.teamcode.DashConstants.PositionsAndSpeeds.rateOfChange;
-
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.checkerframework.checker.units.qual.C;
-import org.firstinspires.ftc.teamcode.Controls.ButtonControls;
 import org.firstinspires.ftc.teamcode.Controls.Controller;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.Color_Sensor;
-import org.firstinspires.ftc.teamcode.Utilities.Side;
-import org.firstinspires.ftc.teamcode.Utilities.PID;
+
 
 
 @TeleOp(name="Rocket League", group="Iterative Opmode")
@@ -117,27 +98,6 @@ public class RocketLeague extends OpMode {
 
         double power;
 
-
-
-//        //PID and Kinetic Turning
-//        double rotation = controller.get(RIGHT, X);
-//
-//        // Turn off PID if we manually turn
-//        // Turn on PID if we're not manually turning and the robot's stops rotating
-//        double currentRateOfChange = robot.gyro.rateOfChange();
-//        if (rotation != 0) {
-//            pid_on = false;
-//        } else if (currentRateOfChange <= rateOfChange) pid_on = true;
-//
-//
-//        // Lock the heading if we JUST turned PID on
-//        // Correct our heading if the PID has and is still on
-//        if (pid_on && !pid_on_last_cycle) setPoint = robot.gyro.getAngle();
-//        else if (pid_on) rotation = pid.update(robot.gyro.getAngle() - setPoint, true);
-//
-//        // Update whether the PID was on or not
-//        pid_on_last_cycle = pid_on;
-
         // BOOST
         if(colorSensor.getRedCacheValue()>1000){
             if(boostTimer.seconds()>3){
@@ -148,8 +108,9 @@ public class RocketLeague extends OpMode {
 
         if(controller.get(RB2,DOWN)) {
             if (charge > 0) {
-                if (runtime.seconds() % 1 == 0) {
+                if (runtime.seconds()>1) {
                     charge--;
+                    runtime.reset();
                 }
                 power = .9;
             } else {

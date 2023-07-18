@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.Utilities;
 
 import static org.firstinspires.ftc.teamcode.Utilities.MathUtils.angleMode.RADIANS;
+import static java.lang.Math.atan;
 import static java.lang.Math.sqrt;
+import static java.lang.Math.toDegrees;
 import static java.lang.Math.toRadians;
 import static java.lang.StrictMath.floorMod;
 
@@ -91,6 +93,16 @@ public class MathUtils {
         return (mode == RADIANS) ? Math.tan(value) : Math.tan(toRadians(value));
     }
 
+    public static double acos(double value, angleMode mode){
+        return (mode == RADIANS) ? Math.cos(value) : Math.cos(toRadians(value));
+    }
+    public static double asin(double value, angleMode mode){
+        return (mode == RADIANS) ? Math.asin(value) : Math.sin(toRadians(value));
+    }
+    public static double atan(double value, angleMode mode){
+        return (mode == RADIANS) ? Math.atan(value) : Math.tan(toRadians(value));
+    }
+    
 
 
     /*
